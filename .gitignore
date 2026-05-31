@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.tmp/
+.DS_Store
+coverage/
+
+# Course runtime data (personal progress, local PDF sources)
+courses/*/sources/
+courses/*/progress.json
