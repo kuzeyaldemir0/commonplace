@@ -1,8 +1,10 @@
 # commonplace
 
-A local desktop learning engine that turns your study materials into flashcards and quizzes. Courses are authored by AI agents from PDFs and notes; everything lives in plain JSON files on your machine that you can inspect, edit, and version-control.
+A local learning engine that turns study materials into flashcards and quizzes. Courses are agent-authored from PDFs and notes; everything lives in plain JSON files you can inspect and edit.
 
-The name comes from the [commonplace book](https://en.wikipedia.org/wiki/Commonplace_book) — a personal knowledge collection practice dating back centuries.
+Named after the [commonplace book](https://en.wikipedia.org/wiki/Commonplace_book) — a personal knowledge collection practice dating back centuries.
+
+> **This repo is designed to be used with AI coding tools** (Claude Code, Codex, Cursor, etc.) that can read the full codebase. It is not intended for pasting into chat interfaces.
 
 ## Quick Start
 
@@ -15,65 +17,45 @@ Open `http://localhost:5173`.
 
 ## Adding a Course
 
-**1. Scaffold a new course**
-
 ```sh
+# 1. Scaffold
 npm run cli -- scaffold <course-id> "<Course Title>"
-```
 
-**2. Drop your source files** (PDFs, notes) into `courses/<course-id>/sources/`.
+# 2. Drop source files into courses/<course-id>/sources/
 
-**3. Register each source** in `courses/<course-id>/course.json` under the `sources` array.
-
-**4. Generate content with an agent** — run the prompt command to get the authoring prompt for your AI agent of choice:
-
-```sh
+# 3. Get the authoring prompt for your agent
 npm run cli -- prompt <course-id>
-```
 
-Paste the output into Claude, GPT-4o, or any capable model. The agent will produce `cards.json` and `quizzes.json` ready to paste into `courses/<course-id>/content/`.
-
-**5. Validate**
-
-```sh
+# 4. Validate
 npm run cli -- validate
 ```
-
-The app hot-reloads valid edits automatically while running.
 
 ## CLI Reference
 
 | Command | Description |
 |---|---|
-| `npm run cli -- scaffold <id> "<title>"` | Create a new course skeleton |
-| `npm run cli -- add-source <id> "<file>"` | Register a source file |
-| `npm run cli -- prompt <id>` | Print the authoring prompt for an agent |
-| `npm run cli -- render-pdf <id> "<file>"` | Render PDF pages to `.tmp/` for scanned docs |
-| `npm run cli -- validate [id]` | Validate all courses (or one) |
+| `scaffold <id> "<title>"` | Create a new course skeleton |
+| `add-source <id> "<file>"` | Register a source file |
+| `prompt <id>` | Print the agent authoring prompt |
+| `render-pdf <id> "<file>"` | Render PDF pages to `.tmp/` for scanned docs |
+| `validate [id]` | Validate all courses (or one) |
 
-## Project Layout
+All commands run via `npm run cli -- <command>`.
+
+## Layout
 
 ```
 courses/<course-id>/
-  course.json          # course metadata and source registry
-  sources/             # your original PDFs / notes (gitignored)
+  course.json          # metadata and source registry
+  sources/             # original PDFs / notes (gitignored)
   content/
-    cards.json         # flashcards
-    quizzes.json       # quiz questions
+    cards.json
+    quizzes.json
   progress.json        # local study progress (gitignored)
-
 src/                   # React frontend
 server/                # Express API + CLI
-public/illustrations/  # UI artwork
 ```
 
-## Content Format
+## Stack
 
-Courses are validated against Zod schemas defined in `src/lib/schemas.ts`. Agents follow the authoring guide in `AGENTS.md`.
-
-## Tech Stack
-
-- **Frontend**: React 19, Vite, KaTeX (math rendering)
-- **Backend**: Express 5, TypeScript, tsx
-- **Validation**: Zod
-- **Tests**: Vitest
+React 19 · Express 5 · TypeScript · Vite · KaTeX · Zod · Vitest
