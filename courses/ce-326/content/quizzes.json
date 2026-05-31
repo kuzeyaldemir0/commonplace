@@ -1,0 +1,435 @@
+{
+  "version": 1,
+  "quizzes": [
+    {
+      "id": "quiz-filter-ip",
+      "type": "multiple-choice",
+      "prompt": "Which Wireshark filter shows traffic where `192.168.1.100` is either the source or destination?",
+      "choices": [
+        "ip.addr == 192.168.1.100",
+        "tcp.port == 192.168.1.100",
+        "http.request.method == \"GET\"",
+        "ip.src == 22"
+      ],
+      "answer": "ip.addr == 192.168.1.100",
+      "explanation": "`ip.addr` matches either direction for the specified IP address.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-filter-http",
+      "type": "multiple-choice",
+      "prompt": "Which Wireshark filter narrows the visible packets to HTTP GET requests?",
+      "choices": [
+        "http.request.method == \"GET\"",
+        "tcp.port == 22",
+        "ip.addr == \"GET\"",
+        "http.response == 200"
+      ],
+      "answer": "http.request.method == \"GET\"",
+      "explanation": "The filter inspects the HTTP request method field and matches GET requests.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-arp-name",
+      "type": "multiple-choice",
+      "prompt": "ARP maps an IP address to which type of address?",
+      "choices": [
+        "MAC (physical) address",
+        "DNS hostname",
+        "Port number",
+        "Subnet mask"
+      ],
+      "answer": "MAC (physical) address",
+      "explanation": "ARP (Address Resolution Protocol) resolves an IP address to the hardware MAC address of the device on the local network.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-arp-type",
+      "type": "multiple-choice",
+      "prompt": "Which ARP-cache entry type is normally discovered from the network and may expire after inactivity?",
+      "choices": ["Dynamic", "Static", "Broadcast", "Multicast"],
+      "answer": "Dynamic",
+      "explanation": "Dynamic mappings are learned and may be removed if they are not used for a while.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-even-parity",
+      "type": "short-answer",
+      "prompt": "A bit string contains an odd number of `1` bits. What parity bit must be appended to produce even parity?",
+      "answer": "1",
+      "explanation": "Appending `1` changes the total number of set bits from odd to even.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-component",
+      "type": "multiple-choice",
+      "prompt": "In a graph, what is the term for a maximal set of vertices that can all reach each other (ignoring edge directions)?",
+      "choices": ["Connected component", "Parity group", "Socket pool", "ARP cache"],
+      "answer": "Connected component",
+      "explanation": "A connected component groups the vertices that can reach one another when edge directions are ignored.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-server-first",
+      "type": "multiple-choice",
+      "prompt": "For a basic client-server socket program, which process should run first?",
+      "choices": ["Server", "Client", "Either one", "ARP resolver"],
+      "answer": "Server",
+      "explanation": "The server must already be listening when the client attempts to connect. Starting the client first results in a connection error because there is no server to connect to.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-java-socket",
+      "type": "multiple-choice",
+      "prompt": "Which transport protocol is used by Java `Socket` and `ServerSocket` classes?",
+      "choices": ["TCP", "UDP", "ARP", "ICMP"],
+      "answer": "TCP",
+      "explanation": "The classes provide reliable connection-oriented communication using TCP.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-connect-info",
+      "type": "short-answer",
+      "prompt": "Name the two pieces of information required to connect to a server.",
+      "answer": "IP address and port number",
+      "explanation": "The IP address identifies the host and the port identifies the listening service.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-multiple-client",
+      "type": "multiple-choice",
+      "prompt": "Which approach helps a server handle multiple clients simultaneously?",
+      "choices": ["Multithreading or asynchronous programming", "Only static ARP entries", "CRC division", "Wireshark display filters"],
+      "answer": "Multithreading or asynchronous programming",
+      "explanation": "Concurrent or asynchronous execution prevents one client from blocking all others.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-udp-reliability",
+      "type": "multiple-choice",
+      "prompt": "Can an application add reliability even when it uses UDP?",
+      "choices": ["Yes, in the application layer", "No, UDP makes reliability impossible", "Only with ARP", "Only by switching to HTTP"],
+      "answer": "Yes, in the application layer",
+      "explanation": "Applications can add acknowledgements, retransmission, or other reliability mechanisms above UDP.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-centralized",
+      "type": "multiple-choice",
+      "prompt": "Which architectural model uses a central server that all clients connect to, as opposed to peers communicating directly with each other?",
+      "choices": [
+        "Client-server model",
+        "Peer-to-peer model",
+        "Multithreaded model",
+        "Datagram model"
+      ],
+      "answer": "Client-server model",
+      "explanation": "In the client-server model, a single central server provides the service. Peer-to-peer (P2P) is the alternative where every node can act as both client and server.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-mkdir",
+      "type": "multiple-choice",
+      "prompt": "Which shell command creates a directory named `exams`?",
+      "choices": ["mkdir exams", "cd exams", "mv exams", "rm -rf exams"],
+      "answer": "mkdir exams",
+      "explanation": "`mkdir` creates a new directory.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-parent-directory",
+      "type": "multiple-choice",
+      "prompt": "Which shell command moves from the current directory to its parent?",
+      "choices": ["cd ..", "mkdir ..", "mv ..", "rm .."],
+      "answer": "cd ..",
+      "explanation": "`cd ..` changes the working directory to the parent directory.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-rename-directory",
+      "type": "short-answer",
+      "prompt": "Write the Linux or macOS command that renames the `presentation` directory to `projects`.",
+      "answer": "mv presentation projects",
+      "explanation": "`mv` renames or moves filesystem entries.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-remove-directory",
+      "type": "multiple-choice",
+      "prompt": "Which command recursively removes the `labs` directory and its contents without prompting?",
+      "choices": ["rm -rf labs", "cd labs", "mkdir labs", "mv labs"],
+      "answer": "rm -rf labs",
+      "explanation": "`rm -rf` recursively and forcibly removes the specified directory. It should be used carefully.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-two-host-filter",
+      "type": "short-answer",
+      "prompt": "Write a Wireshark display filter that shows only traffic between `10.0.55.1` and `10.0.55.2`.",
+      "answer": "ip.addr == 10.0.55.1 and ip.addr == 10.0.55.2",
+      "explanation": "Both `ip.addr` conditions must match, so each displayed packet involves both endpoints.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-ipconfig-renew",
+      "type": "multiple-choice",
+      "prompt": "What does `ipconfig /renew` do on Windows?",
+      "choices": ["Requests a renewed IP configuration", "Deletes a directory", "Decrypts captured TCP traffic", "Creates a static ARP entry"],
+      "answer": "Requests a renewed IP configuration",
+      "explanation": "The command renews the network interface's IP configuration.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-tcp-sniffing",
+      "type": "multiple-choice",
+      "prompt": "Is TCP inherently protected from packet sniffing?",
+      "choices": ["No", "Yes", "Only on port 22", "Only when ARP is disabled"],
+      "answer": "No",
+      "explanation": "TCP traffic can be captured; encryption is needed for confidentiality.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-encrypted-payload",
+      "type": "multiple-choice",
+      "prompt": "Can Wireshark normally interpret an encrypted application payload without decryption material?",
+      "choices": ["No", "Yes", "Only after `ipconfig /renew`", "Only for multicast addresses"],
+      "answer": "No",
+      "explanation": "The packet can be captured, but its encrypted contents remain protected without the required keys or secrets.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-coloring-rules",
+      "type": "multiple-choice",
+      "prompt": "Can Wireshark packet-coloring rules be configured and extended?",
+      "choices": ["Yes", "No", "Only for UDP", "Only for static ARP entries"],
+      "answer": "Yes",
+      "explanation": "Wireshark supports configurable coloring rules.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-arp-physical-address",
+      "type": "short-answer",
+      "prompt": "What does the Physical Address column in an ARP cache represent?",
+      "answer": "The device's MAC address",
+      "explanation": "ARP maps an Internet Address to a physical MAC address on the local network.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-broadcast-address",
+      "type": "multiple-choice",
+      "prompt": "Which address is the limited broadcast address?",
+      "choices": ["255.255.255.255", "224.0.0.22", "127.0.0.1", "10.0.55.1"],
+      "answer": "255.255.255.255",
+      "explanation": "`255.255.255.255` is the limited broadcast address.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-crc-example",
+      "type": "short-answer",
+      "prompt": "For data `100101` and generator `101`, what CRC remainder is shown in the worked example?",
+      "answer": "100",
+      "explanation": "The modulo-2 division leaves the three-bit remainder `100`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-crc-code",
+      "type": "short-answer",
+      "prompt": "For data `100101` and CRC remainder `100`, what complete transmitted code is produced?",
+      "answer": "100101100",
+      "explanation": "Concatenate the original data and the three-bit remainder.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-directed-edge",
+      "type": "multiple-choice",
+      "prompt": "In a directed adjacency matrix, what does a `1` in row A and column B mean?",
+      "choices": ["There is an edge from A to B", "There is an edge from B to A", "A and B are always connected both ways", "A and B have no edge"],
+      "answer": "There is an edge from A to B",
+      "explanation": "The matrix is read from row node to column node.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-f-ping-b",
+      "type": "multiple-choice",
+      "prompt": "In a directed graph, the only edges reachable from node F are `F → A`, `A → D`, and `A → F`. Can node F successfully ping node B?",
+      "choices": ["No", "Yes, through A → D", "Yes, through A → F", "Only if B can ping F first"],
+      "answer": "No",
+      "explanation": "F reaches A, and A reaches D and F. There is no directed path from F to B.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-udp-class",
+      "type": "multiple-choice",
+      "prompt": "Which Java class represents a UDP socket?",
+      "choices": ["DatagramSocket", "ServerSocket", "Socket", "DataOutputStream"],
+      "answer": "DatagramSocket",
+      "explanation": "`DatagramSocket` sends and receives UDP datagrams.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-udp-bind",
+      "type": "multiple-choice",
+      "prompt": "Which constructor call binds a UDP server socket to port `8080`?",
+      "choices": ["new DatagramSocket(8080)", "new DatagramPacket(8080)", "new ServerSocket()", "new Socket(8080)"],
+      "answer": "new DatagramSocket(8080)",
+      "explanation": "The UDP server socket should bind to a specific local port.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-runtime-failure",
+      "type": "multiple-choice",
+      "prompt": "Which option can explain a program failure even after known code errors are fixed and the network is stable?",
+      "choices": ["Missing dependencies", "Only a Wireshark coloring rule", "Only an ARP-cache display", "Only a renamed folder"],
+      "answer": "Missing dependencies",
+      "explanation": "Programs can still fail because of resources, operating-system differences, dependencies, updates, unexpected input, or undiscovered bugs.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-rarp-shell-command",
+      "type": "multiple-choice",
+      "prompt": "Which statement about `rarp` is correct?",
+      "choices": [
+        "It is a Wireshark display filter keyword but not a general shell command like `arp -a`",
+        "It is a shell command that displays the reverse ARP cache",
+        "It works identically to `arp -a` on both Windows and Linux",
+        "It is both a Wireshark filter and a shell command with identical behavior"
+      ],
+      "answer": "It is a Wireshark display filter keyword but not a general shell command like `arp -a`",
+      "explanation": "`rarp` can be entered as a Wireshark display filter to show Reverse ARP packets, but it is not a standard interactive shell command available in a Windows or Linux terminal the way `arp` is.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-crc-xor-arithmetic",
+      "type": "multiple-choice",
+      "prompt": "What arithmetic operation replaces subtraction in CRC binary division?",
+      "choices": ["XOR (modulo-2)", "Regular integer subtraction", "Bitwise AND", "Bitwise OR"],
+      "answer": "XOR (modulo-2)",
+      "explanation": "CRC uses modulo-2 arithmetic where each bit subtraction is a bitwise XOR. There are no carries or borrows: 1 XOR 1 = 0 and 0 XOR 0 = 0.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-parity-zero-case",
+      "type": "multiple-choice",
+      "prompt": "The data string `110011` has four `1` bits. What parity bit is appended under an **even parity** scheme?",
+      "choices": ["0", "1", "It depends on the generator", "No parity bit is needed"],
+      "answer": "0",
+      "explanation": "The data already contains an even count of `1` bits (four), so appending `0` keeps the total even. The resulting string is `1100110`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-graph-cluster-count",
+      "type": "multiple-choice",
+      "prompt": "The directed graph below has edges: A→D, A→F, B→C, B→G, F→A, G→B, G→E (nodes C, D, E have no outgoing edges).\n\n```\n    A  B  C  D  E  F  G\nA [ 0  0  0  1  0  1  0 ]\nB [ 0  0  1  0  0  0  1 ]\nF [ 1  0  0  0  0  0  0 ]\nG [ 0  1  0  0  1  0  0 ]\n```\n\nHow many clusters (strongly connected components) does this graph have?",
+      "choices": ["5", "2", "3", "7"],
+      "answer": "5",
+      "explanation": "A and F form a mutual cycle (A→F, F→A). B and G form a mutual cycle (B→G, G→B). C, D, and E each have no outgoing edges and cannot return to any other node, making them singleton clusters. Total: {A,F}, {B,G}, {C}, {D}, {E} = 5 clusters.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-server-accept-return",
+      "type": "multiple-choice",
+      "prompt": "What does `server.accept()` return in a Java TCP server?",
+      "choices": [
+        "A Socket connected to the newly accepted client",
+        "A DatagramPacket from the client",
+        "An integer port number",
+        "A new ServerSocket on a different port"
+      ],
+      "answer": "A Socket connected to the newly accepted client",
+      "explanation": "`ServerSocket.accept()` blocks until a client connects, then returns a `Socket` object that the server uses to communicate with that client.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-udp-no-port",
+      "type": "multiple-choice",
+      "prompt": "A UDP server is created with `new DatagramSocket()` (no port argument). What problem does this cause?",
+      "choices": [
+        "The socket binds to a random ephemeral port clients cannot predict",
+        "The socket binds to the default port 80",
+        "The constructor throws a compile-time error",
+        "The server automatically broadcasts its port via ARP"
+      ],
+      "answer": "The socket binds to a random ephemeral port clients cannot predict",
+      "explanation": "A server must bind to a well-known port so clients know where to send datagrams. Without specifying a port, the OS assigns an arbitrary ephemeral port. The fix is `new DatagramSocket(8080)` (or another agreed-upon port).",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-writeUTF-method",
+      "type": "multiple-choice",
+      "prompt": "In the Java TCP client example, which call sends the user's input string to the server?",
+      "choices": [
+        "out.writeUTF(line)",
+        "in.readUTF()",
+        "socket.send(line)",
+        "new DatagramPacket(line)"
+      ],
+      "answer": "out.writeUTF(line)",
+      "explanation": "`DataOutputStream.writeUTF(line)` encodes the string in UTF format and writes it over the TCP connection's output stream.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-readUTF-method",
+      "type": "multiple-choice",
+      "prompt": "In the Java TCP server example, which call reads the string sent by the client?",
+      "choices": [
+        "in.readUTF()",
+        "out.writeUTF()",
+        "socket.receive(packet)",
+        "server.accept()"
+      ],
+      "answer": "in.readUTF()",
+      "explanation": "`DataInputStream.readUTF()` reads a UTF-encoded string from the TCP connection's input stream, exactly matching what the client wrote with `writeUTF()`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-tcp-client-first-false",
+      "type": "multiple-choice",
+      "prompt": "A developer starts the TCP client before starting the server. What happens?",
+      "choices": [
+        "The client fails with a connection error because no server is listening",
+        "The client waits indefinitely until the server starts",
+        "The client connects successfully and the server catches up",
+        "ARP resolves the address automatically, so order does not matter"
+      ],
+      "answer": "The client fails with a connection error because no server is listening",
+      "explanation": "The server must be running and listening first. If the client attempts to connect before the server is ready, it finds no open port and throws a connection-refused error.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-crc-receiver-check",
+      "type": "multiple-choice",
+      "prompt": "How does a receiver detect transmission errors in a CRC-protected message?",
+      "choices": [
+        "Divide the received code by the generator; a zero remainder means no error was detected",
+        "Compare the received code length to the original length",
+        "Re-compute even parity on the received code",
+        "Check the ARP cache for the sender's IP address"
+      ],
+      "answer": "Divide the received code by the generator; a zero remainder means no error was detected",
+      "explanation": "The receiver performs the same modulo-2 division on the full received bit string (data + CRC bits). A zero remainder confirms integrity; any non-zero remainder signals a detected error.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-ip-src-vs-ip-addr",
+      "type": "multiple-choice",
+      "prompt": "Which Wireshark filter shows **only** packets originating from `10.0.55.1`, excluding packets where that address is only the destination?",
+      "choices": [
+        "ip.src == 10.0.55.1",
+        "ip.addr == 10.0.55.1",
+        "ip.dst == 10.0.55.1",
+        "tcp.port == 10"
+      ],
+      "answer": "ip.src == 10.0.55.1",
+      "explanation": "`ip.src` matches only the source address field. `ip.addr` would match packets where `10.0.55.1` appears in either the source or destination.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "quiz-parity-data-1101",
+      "type": "short-answer",
+      "prompt": "Data `1101` has three `1` bits. Write the complete 5-bit string after appending an **even parity bit**.",
+      "answer": "11011",
+      "explanation": "Three `1` bits is odd, so the parity bit must be `1` to make the total even (four `1` bits). The parity bit is appended at the end: `1101` + `1` = `11011`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    }
+  ]
+}

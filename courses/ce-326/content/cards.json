@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "cards": [
+    {
+      "id": "wireshark-display-filter-purpose",
+      "front": "Why are **display filters** useful in Wireshark?",
+      "back": "They narrow the packet list visible in the main pane so you can focus on relevant traffic. Display filters do **not** affect the underlying capture — all packets remain stored and the filter can be changed or cleared at any time.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-ip-filter",
+      "front": "What does this Wireshark display filter show?\n\n```text\nip.addr == 192.168.1.100\n```",
+      "back": "All packets where `192.168.1.100` is either the source **or** destination IP address.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-port-filter",
+      "front": "What does this Wireshark display filter show?\n\n```text\ntcp.port == 22\n```",
+      "back": "TCP packets where port `22` is the source or destination port. Port 22 is commonly used for SSH traffic.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "arp-purpose",
+      "front": "What does **ARP** stand for, and what does it do?",
+      "back": "**Address Resolution Protocol** maps an IP address to a physical MAC address on a local network.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "arp-a",
+      "front": "What does the `arp -a` command display?",
+      "back": "It displays the ARP cache tables for the available network interfaces, including IP-to-MAC mappings and whether entries are dynamic or static.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "arp-dynamic-static",
+      "front": "How do **dynamic** and **static** ARP entries differ?",
+      "back": "A dynamic entry is discovered on the network and can expire after inactivity. A static entry is manually configured and does not expire from the ARP cache.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "crc-purpose",
+      "front": "What is the purpose of a **CRC** code?",
+      "back": "A Cyclic Redundancy Check adds derived bits to transmitted data so the receiver can detect corruption.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "even-parity",
+      "front": "How is an **even parity bit** chosen?",
+      "back": "Choose the parity bit so the total count of `1` bits (data + parity bit) is even.\n\n- If the data already has an **even** count of `1`s → append `0`.\n- If the data has an **odd** count of `1`s → append `1`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "graph-connectivity",
+      "front": "How should an adjacency-matrix edge be read in the directed connectivity example?",
+      "back": "A `1` in row $A$, column $B$ means there is an edge directed **from A to B**. It does not automatically imply an edge from B to A.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "server-first",
+      "front": "In a basic client-server socket program, which process should start first, and what happens if the order is reversed?",
+      "back": "Start the **server** first so it is already listening when the client attempts to connect. If the client runs first, it will find no listening server and fail with a connection error.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "java-socket-protocol",
+      "front": "Which transport protocol is used by Java's `Socket` and `ServerSocket` classes?",
+      "back": "They use **TCP** for reliable communication.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "connect-server-info",
+      "front": "What two pieces of information are required to connect to a server?",
+      "back": "The server's **IP address** and **port number**.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "multiple-clients",
+      "front": "What approaches help a server handle multiple clients simultaneously?",
+      "back": "**Multithreading** or **asynchronous programming**. Without one of these, a single-threaded server blocks on each client and cannot accept new connections until it finishes the current one.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "udp-reliability",
+      "front": "Can reliability be added when using UDP?",
+      "back": "Yes. An application can implement reliability mechanisms (acknowledgements, retransmission, sequencing) in the **application layer**, even when the transport layer uses UDP.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "centralized-model",
+      "front": "Which architectural model is appropriate for a centralized application, and how does it differ from the alternative?",
+      "back": "The **client-server model**, where one central server provides the service and clients connect to it. This contrasts with a **peer-to-peer (P2P)** model, where each node can act as both client and server with no single central authority.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "shell-mkdir",
+      "front": "Which shell command creates a new directory?",
+      "back": "Use `mkdir <directory-name>`. For example, `mkdir exams` creates a directory named `exams`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "shell-cd",
+      "front": "Which shell command moves into a directory, and how do you move to its parent directory?",
+      "back": "Use `cd <directory-name>` to enter a directory and `cd ..` to move to its parent.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "shell-mv",
+      "front": "How can you rename a directory named `presentation` to `projects` on Linux or macOS?",
+      "back": "Run:\n\n```sh\nmv presentation projects\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "shell-rm-rf",
+      "front": "What does this command do?\n\n```sh\nrm -rf labs\n```",
+      "back": "It recursively removes the `labs` directory and its contents without prompting. Use it carefully.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-http-filter",
+      "front": "What does this Wireshark filter show?\n\n```text\nhttp.request.method == \"GET\"\n```",
+      "back": "Packets containing HTTP GET requests, which is useful for examining website requests.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-two-host-filter",
+      "front": "How do you display only traffic between `10.0.55.1` and `10.0.55.2` in Wireshark?",
+      "back": "Use:\n\n```text\nip.addr == 10.0.55.1 and ip.addr == 10.0.55.2\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "ipconfig-renew",
+      "front": "What does `ipconfig /renew` do on Windows?",
+      "back": "It requests a renewed IP configuration for the network interface.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-tcp-sniffing",
+      "front": "Is TCP inherently protected from packet sniffing?",
+      "back": "No. TCP traffic can be captured. Confidentiality requires encryption such as TLS.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-encrypted-data",
+      "front": "Can Wireshark automatically reveal the meaning of encrypted payload data?",
+      "back": "No. Wireshark can capture encrypted packets, but it cannot normally interpret the protected payload without the relevant decryption material.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-coloring-rules",
+      "front": "Can Wireshark packet-coloring rules be customized?",
+      "back": "Yes. Coloring rules can be configured and new rules can be added when needed.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "arp-cache-fields",
+      "front": "Which fields commonly appear in the output of `arp -a`?",
+      "back": "The network **interface**, an **Internet Address** (IP address), a **Physical Address** (MAC address), and the entry **Type** such as dynamic or static.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "arp-mac-address",
+      "front": "What does the **Physical Address** column represent in an ARP cache?",
+      "back": "The MAC address of the network device: a hardware identifier assigned to its network interface.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "multicast-broadcast-addresses",
+      "front": "What do the addresses `224.0.0.0` through `239.255.255.255` represent, and what is `255.255.255.255`?",
+      "back": "The `224.0.0.0/4` range is used for multicast. `255.255.255.255` is the limited broadcast address.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "crc-append-zero-bits",
+      "front": "Before CRC division, how many zero bits are appended for a generator with $r$ check bits?",
+      "back": "Append $r$ zero bits to the data before division. The resulting $r$-bit remainder becomes the CRC field.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "crc-worked-example",
+      "front": "For data `100101` and generator `101`, what remainder and transmitted CRC code are shown in the worked example?",
+      "back": "The remainder is `100`. Concatenating it with the original data gives the transmitted code:\n\n```text\n100101100\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "even-parity-worked-example",
+      "front": "For the data `100101`, what bit is appended for even parity?",
+      "back": "Append `1`. The data has three `1` bits (odd count), so adding another `1` makes the total even:\n\n```text\n1001011\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "directed-edge-one-way",
+      "front": "In a directed graph, does an edge from node A to node B guarantee connectivity from B to A?",
+      "back": "No. A directed edge is one-way unless a reverse edge is also present.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "graph-f-to-b",
+      "front": "In a directed graph, the only edges reachable from node F are `F → A`, `A → D`, and `A → F`. Can node F successfully ping node B?",
+      "back": "No. Following edge directions, F reaches A, and A reaches D and F. There is no directed path from F to B.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "udp-datagram-socket",
+      "front": "Which Java class is used for a UDP socket in the server code example?",
+      "back": "`DatagramSocket`. A server should bind it to a specific port, for example:\n\n```java\nnew DatagramSocket(8080)\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "udp-datagram-packet",
+      "front": "Which Java class packages UDP data for sending or receiving?",
+      "back": "`DatagramPacket`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "udp-close-socket",
+      "front": "What resource-cleanup step should a UDP server perform after use?",
+      "back": "Close the `DatagramSocket`, for example with `serverSocket.close()`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "runtime-failure-causes",
+      "front": "Why might a program still fail even after known code errors are fixed and the network connection is stable?",
+      "back": "Possible causes include insufficient resources, operating-system incompatibility, missing dependencies, outdated software, unexpected input, and undiscovered bugs.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "tcp-server-socket",
+      "front": "What does Java's `ServerSocket` do?",
+      "back": "It listens on a TCP port and accepts incoming client connections.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "rarp-display-filter-only",
+      "front": "Can `rarp` be used as both a Wireshark display filter **and** a shell command like `arp -a`?",
+      "back": "No. `rarp` is a valid **Wireshark display filter** keyword (it shows Reverse ARP packets), but it is **not** a general-purpose shell command available in a Windows or Linux terminal the way `arp` is.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "crc-xor-modulo2",
+      "front": "What type of arithmetic does CRC binary division use?",
+      "back": "**Modulo-2 (XOR) arithmetic** — each subtraction step is replaced by a bitwise XOR. There are no carries or borrows, so `1 XOR 1 = 0` and `0 XOR 0 = 0`.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "wireshark-ip-src-only",
+      "front": "How does `ip.src == 10.0.0.1` differ from `ip.addr == 10.0.0.1` in Wireshark?",
+      "back": "`ip.src` matches only packets where `10.0.0.1` is the **source** address. `ip.addr` matches packets where that address appears in **either** the source or destination field.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "graph-7node-clusters",
+      "front": "The 7-node directed graph below has the following edges: A→D, A→F, B→C, B→G, F→A, G→B, G→E. How many clusters (strongly connected components) does it have?\n\n```\n    A  B  C  D  E  F  G\nA [ 0  0  0  1  0  1  0 ]\nB [ 0  0  1  0  0  0  1 ]\nC [ 0  0  0  0  0  0  0 ]\nD [ 0  0  0  0  0  0  0 ]\nE [ 0  0  0  0  0  0  0 ]\nF [ 1  0  0  0  0  0  0 ]\nG [ 0  1  0  0  1  0  0 ]\n```",
+      "back": "**5 clusters.** A and F form a mutual cycle (A→F and F→A). B and G form a mutual cycle (B→G and G→B). C, D, and E have no outgoing edges, so each is a singleton cluster.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "java-server-accept",
+      "front": "What does calling `server.accept()` do in Java TCP server code?",
+      "back": "`ServerSocket.accept()` **blocks** the thread until a client connects, then returns a new `Socket` object representing that specific client connection. The server uses this socket to communicate with the client.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "java-writeUTF",
+      "front": "In the Java TCP client example, which method sends a `String` to the server?",
+      "back": "`DataOutputStream.writeUTF(line)` — it writes the string in a UTF-encoded format over the TCP connection's output stream.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "java-readUTF",
+      "front": "In the Java TCP server example, which method reads the incoming string from the client?",
+      "back": "`DataInputStream.readUTF()` — it reads a UTF-encoded string from the TCP connection's input stream.\n\n```java\nDataInputStream in = new DataInputStream(\n    new BufferedInputStream(socket.getInputStream()));\nString line = in.readUTF();\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "udp-server-needs-port",
+      "front": "Why must a UDP server's `DatagramSocket` specify a port number?",
+      "back": "Clients send datagrams to a specific port. Without a bound port, the socket is assigned an **arbitrary ephemeral port** that clients cannot know in advance, so no datagrams will arrive. Example correct server socket:\n\n```java\nnew DatagramSocket(8080)\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "even-parity-zero-case",
+      "front": "The data string `110011` has four `1` bits. What parity bit is appended for **even parity**, and why?",
+      "back": "Append `0`. The data already has an even count of `1` bits (four), so the parity bit must be `0` to keep the total even:\n\n```text\n1100110\n```",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    },
+    {
+      "id": "crc-receiver-check",
+      "front": "How does a receiver verify that a CRC-protected message arrived without errors?",
+      "back": "The receiver divides the entire received code (original data + CRC bits) by the same generator using modulo-2 division. A **zero remainder** means no error was detected; a non-zero remainder indicates corruption.",
+      "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
+    }
+  ]
+}
