@@ -21,7 +21,18 @@ type View = "courses" | "course" | "cards" | "quiz-setup" | "quiz" | "results";
 type QuizResult = { questionId: string; correct: boolean };
 
 function shuffle<T>(items: T[]) {
-  return [...items].sort(() => Math.random() - 0.5);
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled;
+}
+
+function shuffleQuizChoices(questions: QuizItem[]) {
+  return questions.map((question) => question.type === "multiple-choice"
+    ? { ...question, choices: shuffle(question.choices) }
+    : question);
 }
 
 function plural(count: number, singular: string) {
@@ -296,7 +307,7 @@ function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: 
           <p className="eyebrow">Unfinished quiz</p>
           <h1>Continue where you left off?</h1>
           <p>You were on question {resumeInfo.index + 1} of {resumeInfo.questions.length}.</p>
-          <button className="primary-button" onClick={() => { haptics.tap(); onStart(resumeInfo.questions); }}>Continue quiz <ArrowRight size={18} /></button>
+          <button className="primary-button" onClick={() => { haptics.tap(); onStart(shuffleQuizChoices(resumeInfo.questions)); }}>Continue quiz <ArrowRight size={18} /></button>
           <button className="secondary-button" onClick={() => { session.clearQuiz(bundle.course.id); setDiscarded(true); }}>Start new quiz</button>
         </div>
       </section>
@@ -310,12 +321,12 @@ function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: 
         <Illustration scene="results" compact />
         <p className="eyebrow">Practice session</p>
         <h1>How much do you want to review?</h1>
-        <p>The questions are shuffled each time. Short answers let you grade yourself after revealing the expected response.</p>
+        <p>The questions and multiple-choice answers are shuffled each time. Short answers let you grade yourself after revealing the expected response.</p>
         <label className="range-label">
           <span>Questions</span><strong>{count}</strong>
           <input type="range" min="1" max={bundle.quizzes.length} value={count} onChange={(event) => setCount(Number(event.target.value))} />
         </label>
-        <button className="primary-button" onClick={() => { haptics.tap(); session.clearQuiz(bundle.course.id); onStart(shuffle(bundle.quizzes).slice(0, count)); }}>Start quiz <ArrowRight size={18} /></button>
+        <button className="primary-button" onClick={() => { haptics.tap(); session.clearQuiz(bundle.course.id); onStart(shuffleQuizChoices(shuffle(bundle.quizzes).slice(0, count))); }}>Start quiz <ArrowRight size={18} /></button>
       </div>
     </section>
   );
