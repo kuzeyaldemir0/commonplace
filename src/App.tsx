@@ -14,6 +14,7 @@ import { Illustration } from "./components/Illustration";
 import { MarkdownContent } from "./components/MarkdownContent";
 import { api, type CourseBundle, type CourseSummary } from "./lib/api";
 import { haptics } from "./lib/haptics";
+import { session } from "./lib/session";
 import type { Flashcard, QuizItem } from "./lib/schemas";
 
 type View = "courses" | "course" | "cards" | "quiz-setup" | "quiz" | "results";
@@ -213,18 +214,32 @@ function CourseHome({ bundle, onBack, onCards, onQuiz }: { bundle: CourseBundle;
 }
 
 function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle; onBack: () => void; onProgress: (progress: CourseBundle["progress"]) => void }) {
-  const [cards] = useState(() => shuffle(bundle.cards));
-  const [index, setIndex] = useState(0);
+  const [[cards, startIndex]] = useState((): [Flashcard[], number] => {
+    const saved = session.loadFlashcards(bundle.course.id);
+    if (saved?.cardIds.length) {
+      const cardMap = new Map(bundle.cards.map((c) => [c.id, c]));
+      const restored = saved.cardIds.flatMap((id) => { const c = cardMap.get(id); return c ? [c] : []; });
+      if (restored.length > 0) return [restored, Math.min(saved.index, restored.length)];
+    }
+    return [shuffle(bundle.cards), 0];
+  });
+  const [index, setIndex] = useState(startIndex);
   const [revealed, setRevealed] = useState(false);
   const [saving, setSaving] = useState(false);
   const card = cards[index];
 
+  useEffect(() => {
+    if (index < cards.length) {
+      session.saveFlashcards({ courseId: bundle.course.id, cardIds: cards.map((c) => c.id), index });
+    } else {
+      session.clearFlashcards(bundle.course.id);
+    }
+  }, [bundle.course.id, cards, index]);
+
   async function rate(rating: "again" | "got-it") {
     if (saving) return;
-
     setSaving(true);
     rating === "got-it" ? haptics.success() : haptics.error();
-
     try {
       onProgress(await api.recordFlashcard(bundle.course.id, card.id, rating));
       setRevealed(false);
@@ -258,7 +273,36 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
 }
 
 function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: () => void; onStart: (questions: QuizItem[]) => void }) {
+  const [resumeInfo] = useState(() => {
+    const saved = session.loadQuiz(bundle.course.id);
+    if (!saved?.questionIds.length) return null;
+    const questionMap = new Map(bundle.quizzes.map((q) => [q.id, q]));
+    if (!saved.questionIds.every((id) => questionMap.has(id))) {
+      session.clearQuiz(bundle.course.id);
+      return null;
+    }
+    const questions = saved.questionIds.map((id) => questionMap.get(id)!);
+    return { questions, index: saved.index };
+  });
+  const [discarded, setDiscarded] = useState(false);
   const [count, setCount] = useState(bundle.quizzes.length);
+
+  if (resumeInfo && !discarded) {
+    return (
+      <section className="page compact-page">
+        <BackButton onClick={onBack}>Course home</BackButton>
+        <div className="setup-card">
+          <Illustration scene="results" compact />
+          <p className="eyebrow">Unfinished quiz</p>
+          <h1>Continue where you left off?</h1>
+          <p>You were on question {resumeInfo.index + 1} of {resumeInfo.questions.length}.</p>
+          <button className="primary-button" onClick={() => { haptics.tap(); onStart(resumeInfo.questions); }}>Continue quiz <ArrowRight size={18} /></button>
+          <button className="secondary-button" onClick={() => { session.clearQuiz(bundle.course.id); setDiscarded(true); }}>Start new quiz</button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="page compact-page">
       <BackButton onClick={onBack}>Course home</BackButton>
@@ -271,35 +315,45 @@ function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: 
           <span>Questions</span><strong>{count}</strong>
           <input type="range" min="1" max={bundle.quizzes.length} value={count} onChange={(event) => setCount(Number(event.target.value))} />
         </label>
-        <button className="primary-button" onClick={() => { haptics.tap(); onStart(shuffle(bundle.quizzes).slice(0, count)); }}>Start quiz <ArrowRight size={18} /></button>
+        <button className="primary-button" onClick={() => { haptics.tap(); session.clearQuiz(bundle.course.id); onStart(shuffle(bundle.quizzes).slice(0, count)); }}>Start quiz <ArrowRight size={18} /></button>
       </div>
     </section>
   );
 }
 
 function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBundle; questions: QuizItem[]; onBack: () => void; onFinish: (results: QuizResult[]) => void }) {
-  const [index, setIndex] = useState(0);
+  const [[index0, results0, startedAt0]] = useState((): [number, QuizResult[], string] => {
+    const saved = session.loadQuiz(bundle.course.id);
+    const isMatch = saved &&
+      saved.questionIds.length === questions.length &&
+      questions.every((q, i) => q.id === saved.questionIds[i]);
+    if (isMatch && saved) return [saved.index, saved.results, saved.startedAt];
+    return [0, [], new Date().toISOString()];
+  });
+  const [index, setIndex] = useState(index0);
   const [selected, setSelected] = useState<string>();
   const [shortAnswer, setShortAnswer] = useState("");
   const [revealed, setRevealed] = useState(false);
-  const [results, setResults] = useState<QuizResult[]>([]);
-  const [startedAt] = useState(() => new Date().toISOString());
+  const [results, setResults] = useState<QuizResult[]>(results0);
+  const [startedAt] = useState(startedAt0);
   const [saving, setSaving] = useState(false);
   const question = questions[index];
 
   async function advance(correct: boolean) {
     if (saving) return;
-
     setSaving(true);
     const nextResults = [...results, { questionId: question.id, correct }];
     try {
       if (index === questions.length - 1) {
         await api.recordQuiz(bundle.course.id, { id: crypto.randomUUID(), startedAt, completedAt: new Date().toISOString(), results: nextResults });
+        session.clearQuiz(bundle.course.id);
         onFinish(nextResults);
         return;
       }
+      const nextIndex = index + 1;
+      session.saveQuiz({ courseId: bundle.course.id, questionIds: questions.map((q) => q.id), index: nextIndex, results: nextResults, startedAt });
       setResults(nextResults);
-      setIndex((current) => current + 1);
+      setIndex(nextIndex);
       setSelected(undefined);
       setShortAnswer("");
       setRevealed(false);

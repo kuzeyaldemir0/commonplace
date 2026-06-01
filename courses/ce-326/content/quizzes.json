@@ -225,18 +225,19 @@
     },
     {
       "id": "quiz-crc-example",
-      "type": "short-answer",
-      "prompt": "For data `100101` and generator `101`, what CRC remainder is shown in the worked example?",
-      "answer": "100",
-      "explanation": "The modulo-2 division leaves the three-bit remainder `100`.",
+      "type": "multiple-choice",
+      "prompt": "Compute the CRC remainder for data `100101` using generator `101`. What are the check bits?",
+      "choices": ["10", "01", "11", "100"],
+      "answer": "10",
+      "explanation": "Append 2 zeros (degree of generator) to get `10010100`, then XOR-divide by `101` step by step. The 2-bit remainder is `10`.",
       "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
     },
     {
       "id": "quiz-crc-code",
       "type": "short-answer",
-      "prompt": "For data `100101` and CRC remainder `100`, what complete transmitted code is produced?",
-      "answer": "100101100",
-      "explanation": "Concatenate the original data and the three-bit remainder.",
+      "prompt": "For data `100101` and CRC remainder `10`, what complete transmitted code is produced?",
+      "answer": "10010110",
+      "explanation": "Concatenate the original data with the two-bit remainder: `100101` + `10` = `10010110`.",
       "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
     },
     {

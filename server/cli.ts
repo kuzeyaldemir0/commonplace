@@ -60,6 +60,7 @@ async function renderPdf(courseIdArg?: string, filenameArg?: string) {
   console.log(`Rendered temporary previews in ${path.relative(process.cwd(), outDir)}`);
 }
 
+
 function printPrompt(courseIdArg?: string) {
   const courseId = assertCourseId(courseIdArg);
   console.log(`Read AGENTS.md, then refresh the study content for course "${courseId}".

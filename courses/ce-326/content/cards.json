@@ -177,8 +177,8 @@
     },
     {
       "id": "crc-worked-example",
-      "front": "For data `100101` and generator `101`, what remainder and transmitted CRC code are shown in the worked example?",
-      "back": "The remainder is `100`. Concatenating it with the original data gives the transmitted code:\n\n```text\n100101100\n```",
+      "front": "For data `100101` and generator `101`, what are the CRC remainder and the full transmitted code?",
+      "back": "Append 2 zeros → `10010100`, XOR-divide by `101`. The 2-bit remainder is `10`. Transmitted code:\n\n```text\n10010110\n```",
       "sourceFilenames": ["CE 326 EXAMPLE LAB MIDTERM.pdf"]
     },
     {
