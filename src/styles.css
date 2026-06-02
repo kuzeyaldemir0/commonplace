@@ -88,7 +88,7 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .flashcard, .quiz-card, .setup-card, .results-card { border: var(--line); border-radius: 22px; background: rgba(255,252,247,.95); box-shadow: var(--shadow); }
 .flashcard { min-height: 430px; display: flex; flex-direction: column; justify-content: space-between; padding: 38px; }
 .flashcard .markdown { font-family: "Fraunces"; font-size: 2rem; line-height: 1.28; }
-.flashcard.revealed { background: #fefbf4; animation: card-reveal .36s var(--ease-out); }
+.flashcard.revealed { cursor: pointer; background: #fefbf4; animation: card-reveal .36s var(--ease-out); }
 .flashcard-content, .quiz-content { animation: content-rise .3s var(--ease-out) both; }
 .markdown { line-height: 1.65; }
 .markdown p:last-child { margin-bottom: 0; }

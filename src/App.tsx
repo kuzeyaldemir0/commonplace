@@ -260,12 +260,30 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
     }
   }
 
+  function showPrompt() {
+    if (!revealed) return;
+    haptics.tap();
+    setRevealed(false);
+  }
+
   if (!card) return <Completion title="Review complete" copy="You reached the end of this flashcard session." onBack={onBack} />;
   return (
     <section className="page study-page">
       <StudyTopBar title="Flashcards" index={index} total={cards.length} onBack={onBack} />
       <div className="study-stage">
-        <div className={`flashcard ${revealed ? "revealed" : ""}`}>
+        <div
+          className={`flashcard ${revealed ? "revealed" : ""}`}
+          role={revealed ? "button" : undefined}
+          tabIndex={revealed ? 0 : undefined}
+          aria-label={revealed ? "Show question again" : undefined}
+          onClick={showPrompt}
+          onKeyDown={(event) => {
+            if (revealed && (event.key === "Enter" || event.key === " ")) {
+              event.preventDefault();
+              showPrompt();
+            }
+          }}
+        >
           <div className="flashcard-content" key={`${card.id}-${revealed ? "answer" : "prompt"}`}>
             <p className="eyebrow">{revealed ? "Answer" : "Prompt"}</p>
             <MarkdownContent>{revealed ? card.back : card.front}</MarkdownContent>
