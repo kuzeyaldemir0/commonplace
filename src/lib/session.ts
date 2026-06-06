@@ -9,6 +9,13 @@ type SavedQuiz = {
   questionIds: string[];
   index: number;
   results: Array<{ questionId: string; correct: boolean }>;
+  answers?: Array<{
+    questionId: string;
+    selected?: string;
+    shortAnswer?: string;
+    revealed: boolean;
+    correct?: boolean;
+  }>;
   startedAt: string;
 };
 

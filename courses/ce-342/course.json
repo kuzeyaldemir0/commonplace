@@ -1,5 +1,39 @@
 {
   "id": "ce-342",
   "title": "CE 342",
-  "sources": []
+  "subtitle": "Microprocessors — Final Exam Review",
+  "sources": [
+    {
+      "filename": "Revision Fall 2025_2026(1).pdf",
+      "type": "pdf"
+    },
+    {
+      "filename": "CE 342 Week 8 Revision v3(1).pdf",
+      "type": "pdf"
+    },
+    {
+      "filename": "CE 342 Week 9 v2 - BCD and Strings.pdf",
+      "type": "pdf"
+    },
+    {
+      "filename": "CE 342 Lecture Slides Week 10 v4.pdf",
+      "type": "pdf"
+    },
+    {
+      "filename": "CE 342 Week 11 - ISA Bus 8086 Hardware v2.pdf",
+      "type": "pdf"
+    },
+    {
+      "filename": "CE 342 Week 13 v5 - Interrupts(1).pdf",
+      "type": "pdf"
+    },
+    {
+      "filename": "CE 302 Lecture Notes Week 14v3 - Memory(1).pdf",
+      "type": "pdf"
+    },
+    {
+      "filename": "CE 342 Lecture Notes Week 15v2 - IO(1).pdf",
+      "type": "pdf"
+    }
+  ]
 }

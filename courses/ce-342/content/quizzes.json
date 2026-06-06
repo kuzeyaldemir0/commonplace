@@ -1,4 +1,1210 @@
 {
   "version": 1,
-  "quizzes": []
+  "quizzes": [
+    {
+      "id": "quiz-ad-lines-carry",
+      "type": "multiple-choice",
+      "prompt": "On the 8088, what do the pins **AD0–AD7** carry?",
+      "choices": [
+        "Both address and data, multiplexed in time",
+        "Only the upper byte of the address",
+        "Only data, never addresses",
+        "The control signals MEMR and MEMW"
+      ],
+      "answer": "Both address and data, multiplexed in time",
+      "explanation": "\"AD\" means address/data. To save pins, Intel multiplexed these lines so they carry a low-byte address during one clock and data during another.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-ale-high-meaning",
+      "type": "multiple-choice",
+      "prompt": "When the **ALE** signal is high during a bus cycle, what is present on AD0–AD7?",
+      "choices": [
+        "A valid address to be latched",
+        "Valid data from memory",
+        "The interrupt type number",
+        "Nothing — the lines are floating"
+      ],
+      "answer": "A valid address to be latched",
+      "explanation": "ALE (Address Latch Enable) high marks the first clock cycle, when AD0–AD7 hold the address; the 74LS373 latches it so the lines can then carry data.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-latch-chip",
+      "type": "multiple-choice",
+      "prompt": "Which chip is used to demultiplex (latch) the 8088's address/data bus?",
+      "choices": [
+        "74LS373 D latch",
+        "74LS244 buffer",
+        "74LS138 decoder",
+        "8259 PIC"
+      ],
+      "answer": "74LS373 D latch",
+      "explanation": "The 74LS373 octal D latch is enabled by ALE to capture the address from AD0–AD7 and hold it on A0–A7.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-bus-cycle-clocks",
+      "type": "short-answer",
+      "prompt": "How many clock cycles does a normal (no-wait-state) 8088 memory or I/O bus cycle take?",
+      "answer": "4",
+      "explanation": "A bus cycle runs T1–T4: ALE latches the address in T1, the read/write signal is active in T2–T3, and data must be valid by the end of T4. Extra time requires wait states.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-min-mode-pin",
+      "type": "multiple-choice",
+      "prompt": "How is the 8088 placed into **minimum mode** using the MN/MX pin?",
+      "choices": [
+        "Connect MN/MX directly to +5 V",
+        "Ground the MN/MX pin",
+        "Leave MN/MX floating",
+        "Toggle MN/MX with the clock"
+      ],
+      "answer": "Connect MN/MX directly to +5 V",
+      "explanation": "MN/MX = +5 V selects minimum mode; grounding it selects maximum mode (which adds support chips like the 8288).",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-control-signal-set",
+      "type": "multiple-choice",
+      "prompt": "Which set of four control signals is generated for bus operations in an 8088 system?",
+      "choices": [
+        "MEMR, MEMW, IOR, IOW",
+        "ALE, RD, WR, CLK",
+        "CS, OE, WE, RAS",
+        "IR0, IR1, INTR, INTA"
+      ],
+      "answer": "MEMR, MEMW, IOR, IOW",
+      "explanation": "These are derived from IO/M, RD, and WR and tell memory and I/O devices which read/write operation to perform.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+
+    {
+      "id": "quiz-total-interrupts",
+      "type": "short-answer",
+      "prompt": "How many distinct interrupts (types) does the 8088/86 support?",
+      "answer": "256",
+      "explanation": "The 8088/86 supports INT 00 through INT FF, i.e. 256 interrupt types.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-vector-int12",
+      "type": "short-answer",
+      "prompt": "What is the starting **physical address** in the interrupt vector table for **INT 12H**? (Give the hex address.)",
+      "answer": "48H",
+      "explanation": "Vector address = INT# × 4 = 12H × 4 = 48H. Locations 00048H–0004BH hold the CS:IP of the INT 12H service routine.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-vector-int8",
+      "type": "multiple-choice",
+      "prompt": "Which physical addresses in the vector table hold the CS:IP for **INT 8**?",
+      "choices": [
+        "00020H–00023H",
+        "00008H–0000BH",
+        "00032H–00035H",
+        "00080H–00083H"
+      ],
+      "answer": "00020H–00023H",
+      "explanation": "8 × 4 = 32 = 20H, so the 4 bytes at 00020H–00023H hold the CS:IP of the INT 8 ISR.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-bytes-per-vector",
+      "type": "short-answer",
+      "prompt": "How many bytes does each entry in the interrupt vector table occupy?",
+      "answer": "4",
+      "explanation": "Each entry is 4 bytes: 2 for IP and 2 for CS of the interrupt service routine.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-if-masks",
+      "type": "multiple-choice",
+      "prompt": "Which flag, when cleared to 0, causes all hardware interrupt requests on the **INTR** pin to be ignored?",
+      "choices": [
+        "IF (interrupt flag)",
+        "TF (trap flag)",
+        "OF (overflow flag)",
+        "CF (carry flag)"
+      ],
+      "answer": "IF (interrupt flag)",
+      "explanation": "IF = 0 masks INTR interrupts. It has no effect on NMI or software INT nn instructions.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-sti-sets-if",
+      "type": "multiple-choice",
+      "prompt": "Which instruction sets the interrupt flag (IF = 1) so INTR interrupts are allowed?",
+      "choices": [
+        "STI",
+        "CLI",
+        "IRET",
+        "NOP"
+      ],
+      "answer": "STI",
+      "explanation": "STI (Set Interrupt Flag) makes IF = 1. CLI clears it to 0.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-int00-function",
+      "type": "multiple-choice",
+      "prompt": "What predefined function does **INT 00** serve in the 8088/86?",
+      "choices": [
+        "Divide error",
+        "Single step",
+        "Breakpoint",
+        "Non-maskable interrupt"
+      ],
+      "answer": "Divide error",
+      "explanation": "INT 00 = divide error, INT 01 = single step, INT 02 = NMI, INT 03 = breakpoint, INT 04 = signed overflow.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-int04-overflow",
+      "type": "short-answer",
+      "prompt": "Which predefined interrupt number is reserved for **signed-number overflow**?",
+      "answer": "INT 04",
+      "explanation": "INT 04 is the signed-number overflow interrupt (invoked by INTO when OF = 1).",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-nmi-int-number",
+      "type": "multiple-choice",
+      "prompt": "When the NMI pin is activated, which interrupt does the 8088/86 execute?",
+      "choices": [
+        "INT 02",
+        "INT 00",
+        "INT 08",
+        "INT FF"
+      ],
+      "answer": "INT 02",
+      "explanation": "Intel hardwired NMI to INT 02; locations 00008H–0000BH hold its CS:IP.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-maskable-pin",
+      "type": "multiple-choice",
+      "prompt": "Which 8088/86 hardware-interrupt pin is **maskable** (can be disabled by software)?",
+      "choices": [
+        "INTR",
+        "NMI",
+        "RESET",
+        "READY"
+      ],
+      "answer": "INTR",
+      "explanation": "INTR is maskable via CLI/STI (the IF flag). NMI is non-maskable and cannot be disabled by CLI/STI.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-iret-restore",
+      "type": "multiple-choice",
+      "prompt": "What does the **IRET** instruction restore from the stack at the end of an ISR?",
+      "choices": [
+        "IP, CS, and the flag register",
+        "Only IP",
+        "AX, BX, and CX",
+        "SP and BP"
+      ],
+      "answer": "IP, CS, and the flag register",
+      "explanation": "IRET pops IP, CS, and FR, returning the CPU to exactly where it was interrupted.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-interrupt-clears-flags",
+      "type": "multiple-choice",
+      "prompt": "While the 8088/86 begins processing any interrupt, what happens to the IF and TF flags?",
+      "choices": [
+        "Both are cleared (IF = 0, TF = 0)",
+        "Both are set (IF = 1, TF = 1)",
+        "Only IF is set",
+        "They are left unchanged"
+      ],
+      "answer": "Both are cleared (IF = 0, TF = 0)",
+      "explanation": "After pushing the flag register, the CPU clears IF and TF so further INTR interrupts and single-step mode are disabled during the ISR.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+
+    {
+      "id": "quiz-8259-purpose",
+      "type": "multiple-choice",
+      "prompt": "What is the main purpose of the **8259** chip in an x86 system?",
+      "choices": [
+        "Expand the number of hardware interrupts",
+        "Generate the system clock",
+        "Latch the address bus",
+        "Decode memory chip-select signals"
+      ],
+      "answer": "Expand the number of hardware interrupts",
+      "explanation": "The 8259 PIC connects to the single INTR pin and provides 8 inputs (IR0–IR7), expandable to 64 by cascading.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-cascade-max",
+      "type": "short-answer",
+      "prompt": "By cascading 8259 chips, to how many hardware interrupts can the system be expanded?",
+      "answer": "64",
+      "explanation": "Using the CAS lines to cascade a master with up to 8 slaves expands the count to 64 hardware interrupts.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-ir-count",
+      "type": "short-answer",
+      "prompt": "How many interrupt-request inputs (IR lines) does a single 8259 have?",
+      "answer": "8",
+      "explanation": "A single 8259 has IR0 through IR7 — eight interrupt-request inputs.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-a0-icw1",
+      "type": "multiple-choice",
+      "prompt": "For the 8259, what is selected when **CS = 0 and A0 = 0**?",
+      "choices": [
+        "ICW1 (and OCW2/OCW3)",
+        "ICW2, ICW3, ICW4",
+        "OCW1 only",
+        "Nothing — the chip is deselected"
+      ],
+      "answer": "ICW1 (and OCW2/OCW3)",
+      "explanation": "With A0 = 0 the 8259 receives ICW1; ICW2/3/4 (and OCW1) use A0 = 1. CS = 1 deselects the chip.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-isr-reg",
+      "type": "multiple-choice",
+      "prompt": "Which 8259 register holds the interrupts that are **currently being serviced**?",
+      "choices": [
+        "ISR (In-Service Register)",
+        "IRR (Interrupt Request Register)",
+        "IMR (Interrupt Mask Register)",
+        "Priority resolver"
+      ],
+      "answer": "ISR (In-Service Register)",
+      "explanation": "The ISR tracks interrupts being serviced; the IRR holds pending requests; the IMR holds masked lines.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-irr-reg",
+      "type": "multiple-choice",
+      "prompt": "Which 8259 register holds interrupts that are **pending (requested but not yet serviced)**?",
+      "choices": [
+        "IRR (Interrupt Request Register)",
+        "ISR (In-Service Register)",
+        "IMR (Interrupt Mask Register)",
+        "Control word register"
+      ],
+      "answer": "IRR (Interrupt Request Register)",
+      "explanation": "The IRR latches incoming requests on IR0–IR7 that are awaiting service.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-ocw1-mask",
+      "type": "multiple-choice",
+      "prompt": "In the 8259's **OCW1**, what does setting a bit to **1** do to the corresponding IR line?",
+      "choices": [
+        "Masks (disables) that interrupt",
+        "Unmasks (enables) that interrupt",
+        "Gives it highest priority",
+        "Issues an end-of-interrupt for it"
+      ],
+      "answer": "Masks (disables) that interrupt",
+      "explanation": "OCW1 writes the mask register: a 1 masks/disables that IR line, a 0 unmasks/enables it.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-default-priority",
+      "type": "multiple-choice",
+      "prompt": "In the 8259's fully nested default mode, which input has the **highest** priority?",
+      "choices": [
+        "IR0",
+        "IR7",
+        "IR4",
+        "All inputs share equal priority"
+      ],
+      "answer": "IR0",
+      "explanation": "In fully nested default mode IR0 is highest priority and IR7 is lowest.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-cascade-icw",
+      "type": "multiple-choice",
+      "prompt": "Which initialization command word is used **only** when two or more 8259s are cascaded?",
+      "choices": [
+        "ICW3",
+        "ICW1",
+        "ICW2",
+        "OCW1"
+      ],
+      "answer": "ICW3",
+      "explanation": "ICW3 defines master/slave cascade connections and is sent only in cascade mode (SNGL = 0).",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-icw2-increment",
+      "type": "short-answer",
+      "prompt": "If ICW2 assigns **40H** to IR0 of an 8259, what interrupt number is assigned to **IR2**? (hex)",
+      "answer": "42H",
+      "explanation": "ICW2 sets IR0's type; the 8259 auto-increments for the rest, so IR1 = 41H and IR2 = 42H.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-port-calc",
+      "type": "multiple-choice",
+      "prompt": "An 8259's chip select is activated by **A7–A1 = 0010011**. What port address receives **ICW1** (A0 = 0)?",
+      "choices": [
+        "26H",
+        "27H",
+        "13H",
+        "4CH"
+      ],
+      "answer": "26H",
+      "explanation": "With A0 = 0 the address bits A7..A0 = 0010 0110 = 26H (ICW1). With A0 = 1 it is 0010 0111 = 27H for ICW2/3/4.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-icw1-example",
+      "type": "multiple-choice",
+      "prompt": "An 8259 is set for a single device, level-triggered inputs, with ICW4 needed (x86). What is **ICW1**? (D7..D0 with D4 = 1, D2 = 0, D5–D7 = 0)",
+      "choices": [
+        "1BH",
+        "13H",
+        "50H",
+        "09H"
+      ],
+      "answer": "1BH",
+      "explanation": "D0 = 1 (ICW4 needed), D1 = 1 (single), D2 = 0, D3 = 1 (level), D4 = 1, D5–D7 = 0 → 0001 1011 = 1BH.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-ibm-irq0",
+      "type": "multiple-choice",
+      "prompt": "In the IBM PC, what is the 8259's **IRQ0 (INT 08)** dedicated to?",
+      "choices": [
+        "The 8253 timer channel 0, to update the time-of-day clock",
+        "The keyboard",
+        "The floppy disk controller",
+        "The serial port COM1"
+      ],
+      "answer": "The 8253 timer channel 0, to update the time-of-day clock",
+      "explanation": "IRQ0 (INT 08) services the 8253 timer for the TOD clock; IRQ1 (INT 09) is the keyboard.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+
+    {
+      "id": "quiz-mem-range-64k",
+      "type": "multiple-choice",
+      "prompt": "A memory chip is mapped to the address range **90000H–9FFFFH**. What is its size?",
+      "choices": [
+        "64K × 8",
+        "32K × 8",
+        "16K × 8",
+        "128K × 8"
+      ],
+      "answer": "64K × 8",
+      "explanation": "9FFFFH − 90000H = FFFFH; FFFFH + 1 = 10000H = 65,536 = 64K addresses.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-cs-active-level",
+      "type": "multiple-choice",
+      "prompt": "What is the active level of a memory chip's **CS** (chip select) input?",
+      "choices": [
+        "Active-low",
+        "Active-high",
+        "Edge-triggered on rising edge",
+        "Level-independent"
+      ],
+      "answer": "Active-low",
+      "explanation": "CS is active-low; no read/write is possible unless CS is driven low, typically by decoding the upper address bits.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-74ls138-outputs",
+      "type": "short-answer",
+      "prompt": "How many active-low outputs does a single **74LS138** decoder produce?",
+      "answer": "8",
+      "explanation": "Three select inputs A, B, C generate 8 outputs Y0–Y7, with only one active (low) at a time.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-74ls138-enable",
+      "type": "multiple-choice",
+      "prompt": "Which input combination **enables** the 74LS138 decoder?",
+      "choices": [
+        "G2A = 0, G2B = 0, G1 = 1",
+        "G2A = 1, G2B = 1, G1 = 0",
+        "G2A = 1, G2B = 0, G1 = 1",
+        "G2A = 0, G2B = 0, G1 = 0"
+      ],
+      "answer": "G2A = 0, G2B = 0, G1 = 1",
+      "explanation": "The two active-low enables (G2A, G2B) must be 0 and the active-high G1 must be 1 for the decoder to drive an output.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-memr-to-oe",
+      "type": "multiple-choice",
+      "prompt": "In a simple memory interface, the control signal **MEMR** is typically connected to which memory pin?",
+      "choices": [
+        "OE (output enable)",
+        "CS (chip select)",
+        "A0 (lowest address)",
+        "WE/WR (write)"
+      ],
+      "answer": "OE (output enable)",
+      "explanation": "MEMR drives OE (read), and MEMW drives WR (write); the decoded upper-address signal drives CS.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+
+    {
+      "id": "quiz-out-source-reg",
+      "type": "multiple-choice",
+      "prompt": "The **OUT** instruction transfers data to a port from which register(s)?",
+      "choices": [
+        "The accumulator (AL or AX)",
+        "Any general-purpose register",
+        "The DX register only",
+        "A memory operand"
+      ],
+      "answer": "The accumulator (AL or AX)",
+      "explanation": "IN/OUT move data between a port and the accumulator (AL for 8-bit, AX for 16-bit).",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-16bit-port-reg",
+      "type": "multiple-choice",
+      "prompt": "For a **16-bit port address**, which register must hold the port address?",
+      "choices": [
+        "DX",
+        "BX",
+        "SI",
+        "AX"
+      ],
+      "answer": "DX",
+      "explanation": "Only DX can supply a 16-bit (register-indirect) I/O address; AL holds the 8-bit data.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-8bit-port-range",
+      "type": "multiple-choice",
+      "prompt": "What is the address range for an **8-bit** I/O port (immediate addressing)?",
+      "choices": [
+        "00H–FFH (256 ports)",
+        "0000H–FFFFH (65,536 ports)",
+        "00000H–FFFFFH (1,048,576 ports)",
+        "00H–7FH (128 ports)"
+      ],
+      "answer": "00H–FFH (256 ports)",
+      "explanation": "An 8-bit port address ranges 00–FFH, giving 256 input and 256 output ports; no segment register is involved.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-memmapped-instruction",
+      "type": "multiple-choice",
+      "prompt": "Which instruction is used to access a port in **memory-mapped I/O**?",
+      "choices": [
+        "MOV",
+        "IN",
+        "OUT",
+        "INT"
+      ],
+      "answer": "MOV",
+      "explanation": "Memory-mapped I/O treats the port as a memory location, so MOV (with MEMR/MEMW) is used instead of IN/OUT.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-out-ax-ports",
+      "type": "multiple-choice",
+      "prompt": "If AX = 98F6H and you execute `OUT 47H, AX`, where does each byte go?",
+      "choices": [
+        "F6H → port 47H and 98H → port 48H",
+        "98H → port 47H and F6H → port 48H",
+        "Both bytes → port 47H",
+        "F6H → port 47H and 98H → port 46H"
+      ],
+      "answer": "F6H → port 47H and 98H → port 48H",
+      "explanation": "For a word OUT, AL (F6H) goes to the named port 47H and AH (98H) goes to the next port, 48H.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-74ls244-role",
+      "type": "multiple-choice",
+      "prompt": "Which chip is used to build a simple **input port** in I/O design?",
+      "choices": [
+        "74LS244 (three-state buffer/driver)",
+        "74LS373 (D latch)",
+        "74LS138 (decoder)",
+        "8255 control register"
+      ],
+      "answer": "74LS244 (three-state buffer/driver)",
+      "explanation": "The 74LS244 gates input data onto the data bus only when selected (decoder ANDed with IOR). The 74LS373 latch is used for output ports.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-8255-port-count",
+      "type": "short-answer",
+      "prompt": "How many separately programmable I/O ports does the 8255 PPI have?",
+      "answer": "3",
+      "explanation": "The 8255 has three 8-bit ports: A, B, and C.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-8255-a1a0-control",
+      "type": "multiple-choice",
+      "prompt": "On the 8255 (CS = 0), which value of **A1 A0** selects the **control register**?",
+      "choices": [
+        "1 1",
+        "0 0",
+        "0 1",
+        "1 0"
+      ],
+      "answer": "1 1",
+      "explanation": "A1A0 = 00 → Port A, 01 → Port B, 10 → Port C, 11 → control register.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf", "Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "quiz-8255-cw-90h",
+      "type": "multiple-choice",
+      "prompt": "Find the 8255 (Mode 0) control word for: **Port A = input, Port B = output, all of Port C = output**.",
+      "choices": [
+        "90H",
+        "80H",
+        "9BH",
+        "83H"
+      ],
+      "answer": "90H",
+      "explanation": "D7 = 1 (I/O mode), D6D5 = 00 (mode 0), D4 = 1 (A input), D3 = 0 (PCU output), D2 = 0 (mode 0), D1 = 0 (B output), D0 = 0 (PCL output) → 1001 0000 = 90H.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-8255-cw-83h",
+      "type": "multiple-choice",
+      "prompt": "Find the 8255 (Mode 0) control word for: **PA = output, PB = input, PC0–PC3 (PCL) = input, PC4–PC7 (PCU) = output**.",
+      "choices": [
+        "83H",
+        "90H",
+        "8BH",
+        "01H"
+      ],
+      "answer": "83H",
+      "explanation": "D7 = 1, D6D5 = 00, D4 = 0 (PA out), D3 = 0 (PCU out), D2 = 0, D1 = 1 (PB in), D0 = 1 (PCL in) → 1000 0011 = 83H.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "quiz-8255-reset",
+      "type": "multiple-choice",
+      "prompt": "After the 8255's RESET pin is activated, how are its ports configured?",
+      "choices": [
+        "All ports become input ports",
+        "All ports become output ports",
+        "Ports keep their previous configuration",
+        "Port A becomes bidirectional"
+      ],
+      "answer": "All ports become input ports",
+      "explanation": "Active-high RESET clears the control register and initializes all ports as inputs.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+
+    {
+      "id": "quiz-physical-address-calc",
+      "type": "multiple-choice",
+      "prompt": "If CS = 2500H and IP = 95F3H, what is the **physical address** of the instruction?",
+      "choices": [
+        "2E5F3H",
+        "BAF3H",
+        "25F3H",
+        "34FFFH"
+      ],
+      "answer": "2E5F3H",
+      "explanation": "Physical = CS × 10H + IP = 25000H + 95F3H = 2E5F3H.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-segment-range",
+      "type": "multiple-choice",
+      "prompt": "For CS = 2500H, what is the **physical address range** of the code segment (IP from 0000H to FFFFH)?",
+      "choices": [
+        "25000H–34FFFH",
+        "25000H–25FFFH",
+        "2500H–FFFFH",
+        "00000H–2E5F3H"
+      ],
+      "answer": "25000H–34FFFH",
+      "explanation": "Lowest = 25000H + 0000 = 25000H; highest = 25000H + FFFF = 34FFFH (a 64K span).",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-mul-byte-result",
+      "type": "multiple-choice",
+      "prompt": "After an unsigned **byte × byte** MUL (one operand in AL), where is the result?",
+      "choices": [
+        "AX",
+        "AL only",
+        "DX:AX",
+        "BX"
+      ],
+      "answer": "AX",
+      "explanation": "byte × byte places one operand in AL and the 16-bit product in AX. (word × word gives DX:AX.)",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-div-wordword-remainder",
+      "type": "multiple-choice",
+      "prompt": "After an unsigned **word / word** DIV (numerator in AX, DX cleared), where is the remainder?",
+      "choices": [
+        "DX",
+        "AH",
+        "AX",
+        "BX"
+      ],
+      "answer": "DX",
+      "explanation": "word / word: quotient → AX, remainder → DX. (byte / byte puts the remainder in AH.)",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-div-byte-clear-ah",
+      "type": "short-answer",
+      "prompt": "Before performing an unsigned **byte / byte** DIV with the numerator in AL, what value must AH be set to?",
+      "answer": "0",
+      "explanation": "AH must be cleared to 0 so that AX correctly holds the byte numerator before the DIV executes.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-illegal-mov",
+      "type": "multiple-choice",
+      "prompt": "Which of the following MOV instructions is **illegal** on the x86?",
+      "choices": [
+        "MOV ES, DS",
+        "MOV AX, CX",
+        "MOV DS, AX",
+        "MOV BX, ES"
+      ],
+      "answer": "MOV ES, DS",
+      "explanation": "Segment-to-segment moves are not allowed (also MOV CS,AX and mixed-size moves like MOV BL,DX are illegal).",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-shr-calc",
+      "type": "multiple-choice",
+      "prompt": "AL = 9AH. After `SHR AL, 3` (shift right 3 times), what is AL?",
+      "choices": [
+        "13H",
+        "26H",
+        "4DH",
+        "CDH"
+      ],
+      "answer": "13H",
+      "explanation": "9AH = 1001 1010. Shifting right three times (filling MSBs with 0) gives 0001 0011 = 13H.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-conditional-flags-count",
+      "type": "short-answer",
+      "prompt": "How many **conditional** flags does the x86 flag register have?",
+      "answer": "6",
+      "explanation": "The 6 conditional flags are CF, PF, AF, ZF, SF, OF; the 3 control flags are TF, IF, DF.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-push-sp-change",
+      "type": "multiple-choice",
+      "prompt": "When a 16-bit register is PUSHed onto the stack, how does SP change?",
+      "choices": [
+        "Decremented by 2",
+        "Incremented by 2",
+        "Decremented by 1",
+        "Unchanged"
+      ],
+      "answer": "Decremented by 2",
+      "explanation": "Each PUSH of a 16-bit value decrements SP by 2; the stack grows toward lower addresses, with the high byte at the higher address.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-addressing-mode-id",
+      "type": "multiple-choice",
+      "prompt": "Which addressing mode does `MOV CX, [BX]` use?",
+      "choices": [
+        "Register indirect",
+        "Direct",
+        "Base-plus-index",
+        "Immediate"
+      ],
+      "answer": "Register indirect",
+      "explanation": "The operand address is held in a register (BX) and used to point to memory — register indirect addressing.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-flags-after-sub-borrow",
+      "type": "multiple-choice",
+      "prompt": "After a **subtraction**, what does **CF = 1** indicate?",
+      "choices": [
+        "A borrow occurred",
+        "The result is zero",
+        "Even parity",
+        "A signed overflow"
+      ],
+      "answer": "A borrow occurred",
+      "explanation": "After subtraction the carry flags hold borrows: CF = 1 means a borrow, AF = 1 means a half-borrow.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "quiz-bcd-packed-59",
+      "type": "multiple-choice",
+      "prompt": "Which byte represents decimal **59** in **packed BCD**?",
+      "choices": [
+        "59H",
+        "3BH",
+        "05H and 09H in two bytes",
+        "95H"
+      ],
+      "answer": "59H",
+      "explanation": "Packed BCD stores two decimal digits in one byte: the upper nibble is 5 and the lower nibble is 9, giving 59H.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-bcd-unpacked-95-bytes",
+      "type": "short-answer",
+      "prompt": "How many bytes are needed to store decimal **95** as **unpacked BCD**?",
+      "answer": "2",
+      "explanation": "Unpacked BCD stores one decimal digit per byte, so 9 and 5 require two bytes: 09H and 05H.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-ascii-to-bcd-and",
+      "type": "multiple-choice",
+      "prompt": "ASCII `'8'` is 38H. Which operation converts it to unpacked BCD 08H?",
+      "choices": [
+        "AND it with 0FH",
+        "OR it with 30H",
+        "ADD 06H",
+        "Shift it left four times"
+      ],
+      "answer": "AND it with 0FH",
+      "explanation": "ASCII digits have 3 in the upper nibble. ANDing with 0FH clears that tag and leaves the lower BCD digit.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-daa-17-plus-28",
+      "type": "multiple-choice",
+      "prompt": "Packed BCD values **17H** and **28H** are added, giving AL = 3FH before adjustment. What should AL be after **DAA**?",
+      "choices": [
+        "45H",
+        "3FH",
+        "39H",
+        "4FH"
+      ],
+      "answer": "45H",
+      "explanation": "The lower nibble F is not a valid BCD digit, so DAA adds 06H: 3FH + 06H = 45H, representing decimal 45.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-daa-after-inc",
+      "type": "multiple-choice",
+      "prompt": "Which instruction sequence is valid for packed BCD addition correction?",
+      "choices": [
+        "`ADD AL, BL` followed by `DAA`",
+        "`INC AL` followed by `DAA`",
+        "`SUB AL, BL` followed by `DAA`",
+        "`MUL BL` followed by `DAA`"
+      ],
+      "answer": "`ADD AL, BL` followed by `DAA`",
+      "explanation": "DAA works only after ADD or ADC on packed BCD, with AL as the destination. It is not for INC, SUB, or MUL.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-das-after-sub",
+      "type": "multiple-choice",
+      "prompt": "After subtracting packed BCD operands with `SUB` or `SBB`, which instruction corrects AL?",
+      "choices": [
+        "DAS",
+        "DAA",
+        "AAA",
+        "XLAT"
+      ],
+      "answer": "DAS",
+      "explanation": "DAS is Decimal Adjust after Subtraction. It corrects packed BCD subtraction results in AL.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-string-source-destination",
+      "type": "multiple-choice",
+      "prompt": "For 8088/86 string instructions, which pair gives the default source and destination pointers?",
+      "choices": [
+        "DS:SI source, ES:DI destination",
+        "ES:SI source, DS:DI destination",
+        "CS:IP source, SS:SP destination",
+        "DS:BX source, ES:BP destination"
+      ],
+      "answer": "DS:SI source, ES:DI destination",
+      "explanation": "String instructions use SI as the source offset in DS and DI as the destination offset in ES.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-cld-movsb-effect",
+      "type": "multiple-choice",
+      "prompt": "After `CLD` and one execution of `MOVSB`, how do SI and DI change?",
+      "choices": [
+        "Both increment by 1",
+        "Both decrement by 1",
+        "Both increment by 2",
+        "SI increments and DI decrements"
+      ],
+      "answer": "Both increment by 1",
+      "explanation": "CLD clears DF, selecting autoincrement. MOVSB is byte-sized, so SI and DI each increase by 1.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-std-movsw-effect",
+      "type": "multiple-choice",
+      "prompt": "After `STD` and one execution of `MOVSW`, how do SI and DI change?",
+      "choices": [
+        "Both decrement by 2",
+        "Both increment by 2",
+        "Both decrement by 1",
+        "Only SI changes"
+      ],
+      "answer": "Both decrement by 2",
+      "explanation": "STD sets DF, selecting autodecrement. MOVSW is word-sized, so SI and DI each decrease by 2.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-rep-movsw-count",
+      "type": "short-answer",
+      "prompt": "How many bytes are copied by `CLD`, `MOV CX, 10`, `REP MOVSW`?",
+      "answer": "20",
+      "explanation": "MOVSW copies one word, or 2 bytes, per repetition. REP repeats CX times, so 10 words = 20 bytes.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-stosb-destination",
+      "type": "multiple-choice",
+      "prompt": "What does **STOSB** store and where?",
+      "choices": [
+        "AL into ES:DI",
+        "AL into DS:SI",
+        "AX into ES:DI and ES:DI+1",
+        "DS:SI into AL"
+      ],
+      "answer": "AL into ES:DI",
+      "explanation": "STOSB stores the byte in AL at the destination address ES:DI, then updates DI according to DF.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-lods-rep",
+      "type": "multiple-choice",
+      "prompt": "Why is **LODSB/LODSW** normally not used with the plain `REP` prefix?",
+      "choices": [
+        "Each load overwrites AL or AX, so only the last loaded value remains",
+        "LODS cannot read from DS:SI",
+        "REP changes ES instead of CX",
+        "LODS requires the 8255 PPI"
+      ],
+      "answer": "Each load overwrites AL or AX, so only the last loaded value remains",
+      "explanation": "LODS loads into AL or AX. Repeating it without processing each value just overwrites the accumulator repeatedly.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-repe-cmps-stop",
+      "type": "multiple-choice",
+      "prompt": "`REPE CMPSB` compares two byte arrays. When does it stop?",
+      "choices": [
+        "When bytes differ (ZF = 0) or CX becomes zero",
+        "Only when bytes are equal (ZF = 1)",
+        "Only when SI becomes zero",
+        "After exactly one comparison"
+      ],
+      "answer": "When bytes differ (ZF = 0) or CX becomes zero",
+      "explanation": "REPE/REPZ repeats while ZF = 1 and CX is nonzero. It stops on a mismatch or when the count is exhausted.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-xlat-square-table",
+      "type": "multiple-choice",
+      "prompt": "A lookup table at DS:BX contains squares for indexes 0-9. If AL = 5 before **XLAT**, what should AL contain afterward?",
+      "choices": [
+        "The byte at DS:[BX+5], the square of 5 if the table is built that way",
+        "The value 5 unchanged",
+        "The address BX+5",
+        "The value in AH"
+      ],
+      "answer": "The byte at DS:[BX+5], the square of 5 if the table is built that way",
+      "explanation": "XLAT uses AL as an index into the table whose base offset is in BX, then replaces AL with DS:[BX+AL].",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "quiz-int10-screen-corner",
+      "type": "multiple-choice",
+      "prompt": "In normal 80x25 text mode, what are the row,column coordinates of the bottom-right screen position?",
+      "choices": [
+        "24,79",
+        "25,80",
+        "0,79",
+        "79,24"
+      ],
+      "answer": "24,79",
+      "explanation": "Rows are numbered 0-24 and columns 0-79, so the bottom-right position is row 24, column 79.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-int10-cursor-registers",
+      "type": "multiple-choice",
+      "prompt": "For BIOS `INT 10H` function 02H, where are the row and column placed?",
+      "choices": [
+        "DH = row, DL = column",
+        "DL = row, DH = column",
+        "CH = row, CL = column",
+        "BH = row, BL = column"
+      ],
+      "answer": "DH = row, DL = column",
+      "explanation": "Function 02H sets cursor position with AH = 02H, BH = page, DH = row, and DL = column.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-int10-clear-dx",
+      "type": "short-answer",
+      "prompt": "To clear the full 80x25 text screen with `INT 10H` function 06H, what hex value is commonly loaded into DX for the lower-right row/column?",
+      "answer": "184FH",
+      "explanation": "DH = 18H is row 24 decimal and DL = 4FH is column 79 decimal, so DX = 184FH.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-int21-string-terminator",
+      "type": "multiple-choice",
+      "prompt": "DOS `INT 21H` function 09H displays a string. Which character terminates that string?",
+      "choices": [
+        "$",
+        "Carriage return only",
+        "Null byte 00H",
+        "Line feed 0AH"
+      ],
+      "answer": "$",
+      "explanation": "Function 09H displays bytes starting at DS:DX until it reaches a `$` terminator.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-int21-display-dollar",
+      "type": "multiple-choice",
+      "prompt": "Which DOS `INT 21H` function should be used to display a literal `$` character?",
+      "choices": [
+        "AH = 02H with DL = '$'",
+        "AH = 09H with a `$`-terminated string",
+        "AH = 0AH with DX pointing to a buffer",
+        "AH = 07H with AL = '$'"
+      ],
+      "answer": "AH = 02H with DL = '$'",
+      "explanation": "Function 09H treats `$` as the string terminator. Function 02H outputs the single character in DL, so it can print `$`.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-int21-input-echo",
+      "type": "multiple-choice",
+      "prompt": "Which DOS `INT 21H` function inputs one keyboard character **with echo** and returns it in AL?",
+      "choices": [
+        "AH = 01H",
+        "AH = 07H",
+        "AH = 09H",
+        "AH = 0AH"
+      ],
+      "answer": "AH = 01H",
+      "explanation": "Function 01H waits for one character, echoes it, and returns it in AL. Function 07H does not echo.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-int21-buffer-count",
+      "type": "multiple-choice",
+      "prompt": "A DOS `INT 21H` function 0AH buffer receives the input `USA` followed by Enter. What value is stored in the buffer's second byte?",
+      "choices": [
+        "03H",
+        "04H",
+        "0DH",
+        "55H"
+      ],
+      "answer": "03H",
+      "explanation": "The second byte stores the number of typed characters excluding the carriage return. `USA` has 3 characters.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-macro-expansion",
+      "type": "multiple-choice",
+      "prompt": "What happens when an assembly **macro** is invoked?",
+      "choices": [
+        "The assembler expands the macro body inline before machine code is generated",
+        "The CPU jumps to a runtime subroutine and returns with IRET",
+        "The linker loads it from BIOS ROM",
+        "The macro is stored in the stack"
+      ],
+      "answer": "The assembler expands the macro body inline before machine code is generated",
+      "explanation": "A macro is a compile-time construct. Its body is substituted at the invocation point; no runtime CALL/RET is required.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-macro-local-placement",
+      "type": "multiple-choice",
+      "prompt": "Where must the **LOCAL** directive be placed in a macro that uses local labels?",
+      "choices": [
+        "Immediately after the MACRO directive",
+        "After ENDM",
+        "Only in the data segment",
+        "Immediately before INT 21H"
+      ],
+      "answer": "Immediately after the MACRO directive",
+      "explanation": "Macro labels that appear in the label field must be declared LOCAL right after the MACRO directive to avoid duplicate label errors across expansions.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "quiz-memory-org-6116",
+      "type": "multiple-choice",
+      "prompt": "A 6116 SRAM has 11 address inputs and 8 data pins. What is its organization?",
+      "choices": [
+        "2K x 8",
+        "16K x 1",
+        "1K x 16",
+        "64K x 8"
+      ],
+      "answer": "2K x 8",
+      "explanation": "11 address inputs give 2^11 = 2048 = 2K locations; 8 data pins make each location 8 bits wide.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "quiz-memory-capacity-bits",
+      "type": "multiple-choice",
+      "prompt": "Memory IC chip capacity is normally specified in what unit?",
+      "choices": [
+        "Bits",
+        "Bytes only",
+        "Instructions",
+        "Clock cycles"
+      ],
+      "answer": "Bits",
+      "explanation": "A memory IC's capacity is given in bits, while a computer's memory capacity is commonly given in bytes.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "quiz-prom-otp",
+      "type": "multiple-choice",
+      "prompt": "Why is PROM also called **OTP ROM**?",
+      "choices": [
+        "It can be programmed only once because fuses are permanently blown",
+        "It loses contents when power is removed",
+        "It can be erased only by software",
+        "It requires periodic refresh"
+      ],
+      "answer": "It can be programmed only once because fuses are permanently blown",
+      "explanation": "PROM is programmed by blowing fuses. If the data is wrong, the chip cannot be erased and reused, so it is one-time programmable.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "quiz-dram-refresh",
+      "type": "multiple-choice",
+      "prompt": "What is the major disadvantage of **DRAM** compared with SRAM?",
+      "choices": [
+        "It must be refreshed periodically",
+        "It cannot store more than one bit",
+        "It is always nonvolatile",
+        "It has no address pins"
+      ],
+      "answer": "It must be refreshed periodically",
+      "explanation": "DRAM stores data as charge on capacitors, which leaks away, so the cells must be refreshed and cannot be accessed during refresh.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "quiz-dram-ras-cas-pins",
+      "type": "multiple-choice",
+      "prompt": "In multiplexed DRAM addressing, which signals latch the row and column address halves?",
+      "choices": [
+        "RAS latches row, CAS latches column",
+        "CAS latches row, RAS latches column",
+        "ALE latches row, INTA latches column",
+        "BHE latches row, A0 latches column"
+      ],
+      "answer": "RAS latches row, CAS latches column",
+      "explanation": "RAS is Row Address Strobe and CAS is Column Address Strobe; they let DRAM reuse the same pins for row and column address halves.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "quiz-checksum-byte",
+      "type": "short-answer",
+      "prompt": "If the byte sum after dropping carries is **23H**, what checksum byte should be appended so the total becomes 00H after dropping carries?",
+      "answer": "DDH",
+      "explanation": "The checksum is the 2's complement of 23H: invert to DCH and add 1, giving DDH. 23H + DDH = 100H, which becomes 00H after dropping the carry.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "quiz-8086-8088-data-bus",
+      "type": "multiple-choice",
+      "prompt": "Which statement correctly compares the 8086 and 8088 external data buses?",
+      "choices": [
+        "8086 has a 16-bit data bus; 8088 has an 8-bit data bus",
+        "8086 has an 8-bit data bus; 8088 has a 16-bit data bus",
+        "Both have 32-bit external data buses",
+        "Both have no multiplexed pins"
+      ],
+      "answer": "8086 has a 16-bit data bus; 8088 has an 8-bit data bus",
+      "explanation": "The 8086 is a 16-bit microprocessor with a 16-bit data bus; the 8088 has an 8-bit external data bus.",
+      "sourceFilenames": ["CE 342 Week 11 - ISA Bus 8086 Hardware v2.pdf"]
+    },
+    {
+      "id": "quiz-80286-protected-memory",
+      "type": "multiple-choice",
+      "prompt": "How much physical memory can the 80286 address in protected mode?",
+      "choices": [
+        "16 MB",
+        "1 MB",
+        "4 GB",
+        "64 KB"
+      ],
+      "answer": "16 MB",
+      "explanation": "The 80286 has a 24-bit address bus, giving 2^24 bytes = 16 MB in protected mode. In real mode it is limited to 1 MB.",
+      "sourceFilenames": ["CE 342 Week 11 - ISA Bus 8086 Hardware v2.pdf"]
+    },
+    {
+      "id": "quiz-odd-word-cycles",
+      "type": "multiple-choice",
+      "prompt": "On a 16-bit data bus, why does fetching a word from an odd address require two memory cycles?",
+      "choices": [
+        "The word spans the odd and even memory banks in a way that cannot be transferred together",
+        "Odd addresses are illegal",
+        "The CPU must switch to protected mode",
+        "BHE is unavailable on 16-bit systems"
+      ],
+      "answer": "The word spans the odd and even memory banks in a way that cannot be transferred together",
+      "explanation": "An even-addressed word can use both banks in one cycle. An odd-addressed word crosses the bank boundary and must be fetched as two separate byte accesses.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-inta-second-pulse",
+      "type": "multiple-choice",
+      "prompt": "During an 8259 hardware interrupt, what happens on the **second INTA pulse**?",
+      "choices": [
+        "The 8259 places the interrupt vector byte on the data bus",
+        "The CPU clears RAM",
+        "The ISR executes IRET",
+        "The 8259 programs ICW1"
+      ],
+      "answer": "The 8259 places the interrupt vector byte on the data bus",
+      "explanation": "The first INTA lets the 8259 resolve priority/cascade state. On the second INTA, it supplies the vector byte for the CPU.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-8259-ir3-icw2-50",
+      "type": "short-answer",
+      "prompt": "If an 8259 has **ICW2 = 50H**, what interrupt type is generated by **IR3**?",
+      "answer": "53H",
+      "explanation": "ICW2 assigns IR0 to 50H. The 8259 supplies the low three bits from the active IR line, so IR3 becomes 53H.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "quiz-nmi-pc6-pc7",
+      "type": "multiple-choice",
+      "prompt": "In the IBM PC NMI source check, which 8255 Port C bits indicate IOCHK and PCK?",
+      "choices": [
+        "PC6 = IOCHK, PC7 = PCK",
+        "PC6 = PCK, PC7 = IOCHK",
+        "PC0 = IOCHK, PC1 = PCK",
+        "PC3 = PCK, PC4 = IOCHK"
+      ],
+      "answer": "PC6 = IOCHK, PC7 = PCK",
+      "explanation": "The PC checks 8255 Port C: PC6 for I/O channel check and PC7 for parity check. If neither is active, the NMI source is the 8087.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    }
+  ]
 }

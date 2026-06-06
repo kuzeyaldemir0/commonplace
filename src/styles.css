@@ -81,6 +81,8 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .activity-panel-content { display: flex; align-items: center; gap: 10px; }
 .study-topbar { display: grid; grid-template-columns: 180px 1fr 180px; align-items: center; margin-bottom: 26px; }
 .progress-wrap { grid-column: 2; }
+.topbar-actions { display: flex; justify-content: flex-end; }
+.topbar-actions .secondary-button { padding: 10px 14px; font-size: .78rem; box-shadow: none; }
 .progress-meta { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .13em; font-size: .68rem; font-weight: 700; }
 .progress-track { height: 8px; border: 1px solid var(--ink); border-radius: 10px; overflow: hidden; background: var(--surface); }
 .progress-track span { display: block; height: 100%; background: var(--blue); border-right: 1px solid var(--ink); transition: width .42s var(--ease-out); }
@@ -128,6 +130,7 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .feedback-error { color: #a45b50; }
 .self-grade { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .self-grade span { margin-right: auto; color: var(--muted); font-size: .85rem; font-weight: 700; }
+.quiz-navigation { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .score-box { width: 210px; height: 148px; display: grid; place-items: center; align-content: center; margin: 18px auto; border: var(--line); border-radius: 17px; background: #fff; animation: score-enter .5s var(--ease-spring) both; }
 .score-box strong { font-family: "Fraunces"; font-size: 4rem; line-height: .9; }
 .score-box span { margin-top: 9px; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }

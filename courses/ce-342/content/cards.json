@@ -1,4 +1,646 @@
 {
   "version": 1,
-  "cards": []
+  "cards": [
+    {
+      "id": "bus-multiplexed-ad",
+      "front": "Why does the 8088 use the pins **AD0–AD7**, and what does \"AD\" stand for?",
+      "back": "Because of 1970s chip-packaging pin limits, Intel **multiplexed** the address and data buses onto the same pins to save pins. **AD** stands for *address/data* — pins AD0–AD7 carry the low byte of the address at one moment and data at another.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-ale-pin",
+      "front": "What is the purpose of the **ALE** (Address Latch Enable) pin on the 8088?",
+      "back": "ALE signals **whether the information on AD0–AD7 is an address or data**. When ALE is high (during the first clock cycle of a bus cycle), those lines carry a valid address that should be latched; afterward the same lines carry data.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-74ls373-demux",
+      "front": "What role does the **74LS373** play in an 8088-based system?",
+      "back": "It is an 8-bit **D latch** used to *demultiplex* the address/data bus. Driven by **ALE** (connected to its G/enable), it captures the address from AD0–AD7 during the first clock cycle and holds it on A0–A7, so the AD pins are then free to carry data.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-why-latch-address",
+      "front": "Why must all addresses be **latched** in an 8088 system?",
+      "back": "To provide a **stable, high-drive-capability address bus**. The multiplexed address is only valid briefly, so latching holds it steady for the whole bus cycle and supplies enough drive current for the memory and I/O chips.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-address-size",
+      "front": "How wide is the 8088 address bus, and how much memory can it address?",
+      "back": "The address bus is **20 bits** (A0–A19), so the 8088 can address **2²⁰ = 1 MB** of memory. (A8–A19 are dedicated address pins; A0–A7 come from the latched AD0–AD7.)",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-control-signals",
+      "front": "Name the four bus **control signals** generated in an 8088 system and what each does.",
+      "back": "- **MEMR** – memory read\n- **MEMW** – memory write\n- **IOR** – I/O read\n- **IOW** – I/O write\n\nThey are produced by combining **IO/M**, **RD**, and **WR** through logic gates. All four are active-low.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-read-cycle-clocks",
+      "front": "How many clock cycles does a normal 8088 memory or I/O **read/write cycle** take, and what if it needs more?",
+      "back": "A normal bus cycle takes **4 clock cycles** (T1–T4). ALE latches the address in T1, the read/write signal is active in T2–T3, and data must be at the CPU pins by the end of T4. If the operation needs longer, **wait states (WS)** can be inserted/requested from the CPU.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-mn-mx-pin",
+      "front": "How is **minimum mode** versus **maximum mode** selected on the 8088 via the MN/MX pin?",
+      "back": "- **Minimum mode**: connect MN/MX (pin 33) directly to **+5 V**.\n- **Maximum mode**: **ground** the pin.\n\nMaximum mode is used when extra support chips (like the 8288 bus controller) are needed.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bus-8284-clock",
+      "front": "What supplies the clock signal to the 8088, and what is the CLK pin?",
+      "back": "The **8284A clock generator** provides the clock. **CLK** is an input pin on the 8088 connected to the 8284, which generates the processor clock (and also handles Ready and Reset).",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+
+    {
+      "id": "int-definition",
+      "front": "What is an **interrupt** in the 8088/86?",
+      "back": "An interrupt is an **event that informs the CPU a device needs its service**. When it occurs the processor suspends its current program, saves its state, runs a service routine, then resumes where it left off.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-total-count",
+      "front": "How many interrupts does the 8088/86 support, and how are they named?",
+      "back": "There are **256 interrupts**, named **INT 00 through INT FF** (also called **TYPEs**).",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-what-cpu-saves",
+      "front": "When an interrupt occurs, what does the 8088/86 push onto the stack before jumping to the service routine?",
+      "back": "It pushes the **Flag Register (FR)**, then the **CS**, then the **IP** of the next instruction (each push decrements SP by 2). It also **clears IF and TF**. It then fetches the ISR's CS:IP from the interrupt vector table.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-vector-table",
+      "front": "Describe the 8088/86 **interrupt vector table**: where it lives and how big each entry is.",
+      "back": "It occupies the **lowest 1024 bytes** (00000H–03FFH) of memory. Each interrupt has a **4-byte entry**: 2 bytes for the **IP** and 2 bytes for the **CS** of its interrupt service routine.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-vector-address-formula",
+      "front": "How do you compute the **physical address** in the vector table for a given interrupt number?",
+      "back": "Multiply the interrupt number by **4**: physical address = **INT# × 4**. Those 4 bytes hold the CS:IP of the ISR. Example: INT 8 → 8×4 = 20H, so locations 00020H–00023H.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-isr-handler",
+      "front": "What is an **ISR**, and what other name is it known by?",
+      "back": "An **Interrupt Service Routine** is the program executed in response to an interrupt. It is also called the **interrupt handler**. Every interrupt must have an associated ISR.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-hw-vs-sw",
+      "front": "What is the difference between a **hardware** interrupt and a **software** interrupt?",
+      "back": "- **Hardware interrupt**: triggered by an external signal on a CPU pin (**INTR** or **NMI**).\n- **Software interrupt**: triggered by executing an `INT nn` instruction in the program (e.g., DOS `INT 21H`, video `INT 10H`).",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-intr-vs-nmi",
+      "front": "Contrast the **INTR** and **NMI** hardware-interrupt pins.",
+      "back": "- **INTR** (interrupt request): a **maskable** input — can be enabled/disabled with **STI/CLI**. It has no fixed vector; the device supplies the type number.\n- **NMI** (non-maskable interrupt): **cannot** be masked by CLI/STI and is hardwired to **INT 02**.\n\nBoth are activated by putting +5 V on their pin.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-cli-sti",
+      "front": "What do the **CLI** and **STI** instructions do?",
+      "back": "- **CLI** (Clear Interrupt Flag): makes **IF = 0**, so all INTR hardware interrupts are ignored (masked).\n- **STI** (Set Interrupt Flag): makes **IF = 1**, allowing INTR interrupts.\n\nNeither affects NMI or `INT nn` instructions.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-if-flag",
+      "front": "What is the **IF** (interrupt enable flag), and where is it in the flag register?",
+      "back": "**IF** is bit **D9** of the flag register. It masks INTR hardware interrupts: if **IF = 0**, requests on the INTR pin are ignored; **IF = 1** allows them. It does not affect NMI or software `INT nn`.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-tf-flag",
+      "front": "What is the **TF** (trap/single-step flag), and what does it do when set?",
+      "back": "**TF** is bit **D8** of the flag register. When set, it activates **single-step mode**: the CPU generates a debug interrupt (**INT 01**) after *every* instruction, which is used for program debugging.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-predefined-00-04",
+      "front": "List the predefined functions of **INT 00 through INT 04** in the 8088/86.",
+      "back": "- **INT 00** – divide error\n- **INT 01** – single step\n- **INT 02** – non-maskable interrupt (NMI)\n- **INT 03** – breakpoint\n- **INT 04** – signed-number overflow\n\nINT 05–INT FF are available for software or hardware use.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-iret",
+      "front": "What is the last instruction of every ISR, and what does it do?",
+      "back": "**IRET** (Interrupt Return). It **pops IP, CS, and the flag register (FR)** back off the stack, so the CPU resumes execution exactly where it was interrupted.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "int-processing-clears-if-tf",
+      "front": "When the 8088/86 processes any interrupt, what happens to the **IF** and **TF** flags?",
+      "back": "Both are **cleared (IF = 0, TF = 0)** after the flag register is pushed. This disables further INTR interrupts and single-step mode while the ISR runs.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+
+    {
+      "id": "pic-8259-purpose",
+      "front": "Why is the **8259 PIC** used with the 8088/86?",
+      "back": "The x86 has only one maskable hardware-interrupt pin (INTR). The **8259 Programmable Interrupt Controller** connects to INTR to **expand the number of hardware interrupts** — one 8259 gives 8 inputs (IR0–IR7), and cascading several can expand to **64**.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf", "CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "pic-icw-ocw",
+      "front": "What are the two groups of command words used to program the 8259, and when is each used?",
+      "back": "- **ICWs (Initialization Command Words)**, ICW1–ICW4: sent once to **initialize** the chip.\n- **OCWs (Operation Command Words)**, OCW1–OCW3: sent **after** initialization to mask interrupts, change priority, or read internal registers.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-a0-line",
+      "front": "The 8259 has only one address line, **A0**. How does it use A0 (with CS) to receive the command words?",
+      "back": "- **CS = 0, A0 = 0** → **ICW1** (and OCW2/OCW3)\n- **CS = 0, A0 = 1** → **ICW2, ICW3, ICW4** (and OCW1)\n- **CS = 1** → the 8259 is not addressed.\n\nSo two consecutive port addresses (A0 = 0 and A0 = 1) talk to one 8259.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-icw1-bits",
+      "front": "In the 8259 **ICW1**, what do bits **D0**, **D1**, **D3**, and **D4** mean?",
+      "back": "- **D0 (IC4)**: 1 = ICW4 is needed, 0 = not needed\n- **D1 (SNGL)**: 1 = single 8259, 0 = cascade mode\n- **D3 (LTIM)**: 1 = level-triggered, 0 = edge-triggered inputs\n- **D4**: must always be **1**\n\nD2 and D5–D7 are 0 for x86.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-icw2",
+      "front": "What does **ICW2** program in the 8259, and how are the other IR lines numbered?",
+      "back": "ICW2 assigns the **8-bit interrupt (INT type) number to IR0**. The 8259 automatically gives IR1–IR7 the next consecutive numbers. Example: if IR0 = 40H, then IR1 = 41H, IR2 = 42H, … (the upper 5 bits D3–D7 are set by you; the low 3 bits are filled by the 8259 from which IR fired).",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-icw3",
+      "front": "When is **ICW3** used, and what does it specify?",
+      "back": "ICW3 is used **only in cascade mode** (two or more 8259s). It identifies the master/slave connections: in the **master** word a 1 in bit *n* means IR*n* has a slave; in the **slave** word the low 3 bits give the slave's ID. A single master can connect up to 8 slaves.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-icw4",
+      "front": "What do bits **D0 (PM)** and **D1 (AEOI)** of the 8259 **ICW4** do?",
+      "back": "- **D0 (PM, processor mode)**: 1 for **8088/86**, 0 for 8080/8085.\n- **D1 (AEOI, automatic end of interrupt)**: when 1, the 8259 ends the interrupt automatically, eliminating the need for an **EOI** command before IRET.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-three-registers",
+      "front": "Name the three key registers inside the 8259 and what each holds.",
+      "back": "- **IRR** (Interrupt Request Register): interrupts that are **pending** (requested).\n- **ISR** (In-Service Register): interrupts **currently being serviced**.\n- **IMR** (Interrupt Mask Register): which IR lines are **masked** (disabled).",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-ocw1-masking",
+      "front": "What does **OCW1** do in the 8259, and what do logic 1 and 0 mean in it?",
+      "back": "OCW1 **masks (enables/disables) any of IR0–IR7** by writing to the mask register. A bit = **1 masks (disables)** that interrupt; a bit = **0 unmasks (enables)** it.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-ocw2-eoi",
+      "front": "What is **OCW2** used for in the 8259?",
+      "back": "OCW2 handles **end-of-interrupt (EOI) commands** and **priority/rotation** — it can assign a specific priority to the IRs and issue specific/nonspecific EOI or rotation commands (L0–L2 select the IR level acted upon).",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-ocw3-read",
+      "front": "What is **OCW3** used for in the 8259?",
+      "back": "OCW3 lets the program **read the 8259's internal registers — the IRR and the ISR** — so it can see which of IR0–IR7 are pending and which are being serviced (bits D0–D1 select which register).",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-default-priority",
+      "front": "In the 8259's **fully nested (default) priority mode**, which IR has the highest and which the lowest priority?",
+      "back": "**IR0 has the highest priority and IR7 the lowest.** (The 8259 can be reprogrammed to assign the highest priority to any IR, e.g., via rotation modes.)",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "pic-cascade-cas",
+      "front": "How does a master 8259 control its slave 8259s in a cascaded system?",
+      "back": "Through the **CAS0, CAS1, CAS2** cascade lines, which act as a **chip-select/address to the slaves**. When a slave's IR fires, the slave signals the master; the master puts the slave's ID on the CAS lines so the matching slave places its interrupt vector on the data bus.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf", "CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "pic-ibm-pc-ports",
+      "front": "In the IBM PC, what **port addresses** and **initialization words** are used for the (master) 8259?",
+      "back": "Port addresses **20H** (A0 = 0) and **21H** (A0 = 1). The control words are **ICW1 = 13H**, **ICW2 = 08H**, and **ICW4 = 09H** (ICW3 not needed for a single 8259). ICW2 = 08H sets IR0 to INT 08.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "pic-ibm-pc-irq-assignments",
+      "front": "In the IBM PC, the 8259 inputs IR0–IR7 map to which INT types, and what are IRQ0 and IRQ1 dedicated to?",
+      "back": "IR0–IR7 (IRQ0–IRQ7) map to **INT 08–INT 0F**. **IRQ0 (INT 08)** drives the 8253 timer channel 0 to update the time-of-day clock; **IRQ1 (INT 09)** is dedicated to the **keyboard**. IRQ2–IRQ7 are available through expansion slots.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "pic-init-sequence",
+      "front": "What is the required **order** for sending the 8259 initialization command words?",
+      "back": "Always **ICW1 first, then ICW2**, then ICW3 and ICW4 if needed — no jumping ahead. **ICW1 and ICW2 are compulsory**; **ICW3** is sent only in cascade mode (SNGL = 0) and **ICW4** only if IC4 = 1 in ICW1.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+
+    {
+      "id": "mem-decode-low-high-bits",
+      "front": "In memory address decoding, how are the lower and upper address bits used?",
+      "back": "The **lower address bits go directly to the memory chip's address pins** (to select a location inside the chip). The **upper address bits are decoded to activate the chip's CS** (chip select), choosing which chip/block responds.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "mem-cs-active-low",
+      "front": "What is the role and active level of the memory chip's **CS** pin?",
+      "back": "**CS (chip select)** enables the chip: no data can be read from or written to the chip unless CS is active. CS is **active-low** and is typically driven by decoding the upper address bits with simple gates (NAND + inverters) or a decoder.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "mem-nand-decoder",
+      "front": "How is a **simple NAND-gate address decoder** used for memory?",
+      "back": "The upper address lines (with inverters as needed) feed a **NAND gate** whose active-low output drives the chip's **CS**. **One NAND gate is needed per memory block.** The control signals **MEMR** and **MEMW** connect to the chip's **OE** and **WR** pins.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "mem-74ls138-outputs",
+      "front": "Describe the inputs and outputs of the **74LS138** decoder.",
+      "back": "Three select inputs **A, B, C** generate **eight active-low outputs Y0–Y7** (only one low at a time, chosen by the binary value of CBA). Each Y output can drive the **CS of one memory chip**, so one 74LS138 controls **8 memory blocks**.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "mem-74ls138-enable",
+      "front": "What input conditions enable the **74LS138** decoder?",
+      "back": "**G2A = 0, G2B = 0, and G1 = 1.** (G2A and G2B are active-low enables that are grounded; G1 = 1 selects this 74LS138.) These enable pins can also be used for address or control-signal selection.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "mem-74ls138-benefit",
+      "front": "What advantage does using a **74LS138** give over a plain NAND-gate decoder?",
+      "back": "It **eliminates the need for separate NAND gates and inverters**. A single 74LS138 decodes the upper address bits and produces 8 chip-select outputs, controlling 8 memory blocks at once.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "mem-address-range-calc",
+      "front": "How do you find the **size** covered by an address range such as 90000H–9FFFFH?",
+      "back": "Subtract the low address from the high and add 1: 9FFFFH − 90000H = FFFFH, then **+ 1 = 10000H = 65,536 = 64K**. So a chip mapped to 90000H–9FFFFH is a **64K × 8** chip.",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf"]
+    },
+
+    {
+      "id": "io-two-types",
+      "front": "What are the two types of I/O in the x86, and how do they differ?",
+      "back": "- **Isolated (ported) I/O**: uses dedicated **IN/OUT** instructions and a **separate address space** for ports.\n- **Memory-mapped I/O**: I/O devices are treated as memory locations and accessed with ordinary memory instructions (**MOV**), sharing the memory address space.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "io-isolated",
+      "front": "Describe **isolated I/O** in the 8088.",
+      "back": "It uses dedicated **IN** and **OUT** instructions to move data between a port and the accumulator (**AL** or **AX**). It has a **separate address map** for I/O (freeing all of memory for the program). Control signals **IOR/IOW** are used.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "io-memory-mapped",
+      "front": "Describe **memory-mapped I/O** and one advantage it has.",
+      "back": "A memory location is assigned as an I/O port; the **full 20-bit address (A0–A19) must be decoded** and the **MOV** instruction (with **MEMR/MEMW**) is used instead of IN/OUT. Advantage: arithmetic and logic operations can be performed **directly on the I/O data** without first moving it into the accumulator.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "io-8bit-port",
+      "front": "For an **8-bit port address** in isolated I/O, what addressing is used and what is the range?",
+      "back": "**Immediate addressing** is used (e.g., `OUT 43H, AL`). The range is **00–FFH** → **256 input ports and 256 output ports**. **No segment register** is involved in computing an I/O address.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "io-16bit-port",
+      "front": "For a **16-bit port address**, which register holds the address, and what is the range?",
+      "back": "The **DX** register holds the address (register-indirect), e.g. `MOV DX,300H` then `OUT DX,AL`. The range is **0000–FFFFH** → 65,536 input and 65,536 output ports. **Only DX** can be used for 16-bit I/O addresses; **AL** holds 8-bit data.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "io-decode-control",
+      "front": "How does **I/O address decoding** work, and which control signals and chips are involved?",
+      "back": "The concept matches memory decoding but uses **IOR** and **IOW** with the decoder. An **8-bit port decodes A0–A7**; a **16-bit port decodes A0–A15**. For an **output port** use a **74LS373** latch; for an **input port** use a **74LS244** buffer/driver.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "io-74ls373-output",
+      "front": "How is a **74LS373** used to build an output port?",
+      "back": "The 74LS373 is a **latch** that holds output data (e.g., to LEDs). The address decoder output is **ANDed with IOW** to clock/latch the data; the chip's **OC** (output control) pin is **grounded** so the outputs are always enabled.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "io-74ls244-input",
+      "front": "How is a **74LS244** used to build an input port, and why must both enables be active?",
+      "back": "The 74LS244 is a **three-state buffer/driver** that gates input data onto the data bus only when selected (the decoder output is ANDed with **IOR**). Since **1G and 2G each control only 4 of its 8 buffers**, both must be activated for a full **8-bit** input.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "ppi-8255-overview",
+      "front": "What is the **8255 PPI**, and what programmable ports does it have?",
+      "back": "The **8255 Programmable Peripheral Interface** is a 40-pin I/O chip with **three separately programmable 8-bit ports: A (PA0–PA7), B (PB0–PB7), and C (PC0–PC7)**. Each port can be programmed as input or output, and can be changed dynamically.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "ppi-8255-port-select",
+      "front": "In the 8255, how do **CS, A1, A0** select which port or register is accessed?",
+      "back": "With CS = 0:\n- **A1 A0 = 00** → Port A\n- **A1 A0 = 01** → Port B\n- **A1 A0 = 10** → Port C\n- **A1 A0 = 11** → Control register\n\nWith **CS = 1** the 8255 is not selected. (CS selects the whole chip; A0/A1 pick the port within it.)",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf", "Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "ppi-8255-modes",
+      "front": "What are the three operating **modes** of the 8255?",
+      "back": "- **Mode 0**: simple input/output (most widely used).\n- **Mode 1**: input/output **with handshaking** (Port C carries the handshake signals).\n- **Mode 2**: **bidirectional** I/O with handshaking (Port A bidirectional, Port C for handshaking).",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "ppi-8255-control-word",
+      "front": "Describe the **8255 control word** (I/O mode) bit layout.",
+      "back": "- **D7 = 1** selects I/O mode (0 = BSR mode).\n- **D6 D5**: Group A mode (00 = Mode 0, 01 = Mode 1, 1x = Mode 2)\n- **D4**: Port A direction (1 = input, 0 = output)\n- **D3**: Port C upper (PC7–PC4) direction\n- **D2**: Group B mode (0 = Mode 0, 1 = Mode 1)\n- **D1**: Port B direction\n- **D0**: Port C lower (PC3–PC0) direction\n\n(1 = input, 0 = output for direction bits.)",
+      "sourceFilenames": ["Revision Fall 2025_2026(1).pdf", "CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "ppi-8255-reset",
+      "front": "What happens to the 8255 ports when its **RESET** pin is activated?",
+      "back": "RESET is **active-high** and clears the control register; **all ports are initialized as input ports**.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+    {
+      "id": "ppi-8255-portc-split",
+      "front": "What is special about **Port C** of the 8255 in Mode 0?",
+      "back": "Port C can be split into two independently programmable nibbles: **CL (C-Lower, PC0–PC3)** and **CU (C-Upper, PC4–PC7)**. Each half can be set as input or output separately.",
+      "sourceFilenames": ["CE 342 Lecture Notes Week 15v2 - IO(1).pdf"]
+    },
+
+    {
+      "id": "pre-addressing-modes",
+      "front": "List the x86 data **addressing modes**.",
+      "back": "- **Register** (`MOV AX,BX`)\n- **Immediate** (`MOV CH,3AH`)\n- **Direct** (`MOV [1234H],AX`)\n- **Register indirect** (`MOV [BX],CL`)\n- **Base-plus-index** (`MOV [BX+SI],BP`)\n- **Register relative** (`MOV CL,[BX+4]`)\n- **Base relative-plus-index** (`MOV ARRAY[BX+SI],DX`)\n- **Scaled index** (`MOV [EBX+2*ESI],AX`)",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-physical-address",
+      "front": "How is a **physical (20-bit) address** formed from a segment and an offset?",
+      "back": "**Physical address = (segment × 10H) + offset** — i.e., shift the segment left one hex digit and add the offset. For code, **physical = (CS × 10H) + IP**.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-segment-range",
+      "front": "Given a code segment value CS, what is the **logical address range** the segment can reach?",
+      "back": "Since IP ranges from 0000H to FFFFH, the segment spans **64K**: from physical (CS×10H + 0000) to (CS×10H + FFFF). Example: CS = 2500H → 25000H to 34FFFH.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-mov-restrictions",
+      "front": "Name three **MOV** restrictions in the x86.",
+      "back": "- **No segment-to-segment** moves (`MOV ES,DS` is illegal).\n- **No mixed-size** operands (`MOV BL,DX` is illegal).\n- **CS cannot be the destination** (`MOV CS,AX` is illegal).\n\nAlso, memory-to-memory MOV is not allowed (only string instructions do that).",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-flag-register",
+      "front": "How many flags are in the x86 flag register, and how are they categorized?",
+      "back": "There are **9 used flags**: **6 conditional flags** — **CF, PF, AF, ZF, SF, OF** (set by results of operations) — and **3 control flags** — **TF, IF, DF** (control instruction operation *before* execution).",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-flags-after-sub",
+      "front": "After a **subtraction**, how do the carry flags behave?",
+      "back": "Both carry flags hold **borrows** rather than carries: **CF = 1** indicates a borrow and **AF = 1** indicates a half-borrow. (After addition, they hold carries instead.)",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-stack-push",
+      "front": "What happens to **SP** and memory when a 16-bit register is **PUSH**ed onto the stack?",
+      "back": "**SP is decremented by 2** and the register's contents are stored on the stack, with the **high byte at the higher address** and the low byte at the lower address. (The stack grows downward toward lower addresses.)",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-lea-vs-offset",
+      "front": "How do **LEA** and the **OFFSET** directive compare?",
+      "back": "Both load the offset address of a memory location (`LEA BX,LIST` = `MOV BX,OFFSET LIST`). **OFFSET works only with simple operands** (not `[DI]`, `LIST[SI]`, etc.) and is **faster** for those, but **LEA can compute addresses for complex operands**.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-mul-rules",
+      "front": "Where do the operands and result go for unsigned **MUL** (byte×byte and word×word)?",
+      "back": "- **byte × byte**: one operand in **AL**, result in **AX**.\n- **word × word**: one operand in **AX**, 32-bit result in **DX:AX** (high word in DX, low word in AX).\n- **word × byte**: byte in AL (AH = 0), result in **DX:AX**.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-div-rules",
+      "front": "For unsigned **DIV**, where do the numerator, quotient, and remainder go (byte/byte and word/word)?",
+      "back": "- **byte / byte**: numerator in **AL** with **AH cleared (=0)**; **quotient → AL**, **remainder → AH**.\n- **word / word**: numerator in **AX** with **DX cleared**; **quotient → AX**, **remainder → DX**.\n\nThe denominator cannot be immediate (use a register or memory).",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-divide-error",
+      "front": "What two conditions cause a **divide error** (exception) interrupt during DIV?",
+      "back": "1. The **denominator is zero** (dividing by 00).\n2. The **quotient is too large** for the assigned result register.\n\nThis triggers INT 00 and the PC shows a *Divide Error* message.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-shift-shr-shl",
+      "front": "How do **SHR** and **SHL** move bits, including the carry flag?",
+      "back": "- **SHR** (shift right): each bit moves right; the **LSB falls into CF**, and the **MSB is filled with 0**.\n- **SHL** (shift left): each bit moves left; the **MSB falls into CF**, and the **LSB is filled with 0**.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "pre-overflow-flag-rule",
+      "front": "When is the **overflow flag (OF)** set in an 8-bit signed addition?",
+      "back": "OF = 1 when there is a carry **from D6 into D7 OR a carry out of D7, but not both**. If there is a carry both into D7 and out of D7 (or neither), OF = 0. (For 16-bit operations the same rule applies to D14/D15.) OF flags an invalid signed result.",
+      "sourceFilenames": ["CE 342 Week 8 Revision v3(1).pdf"]
+    },
+    {
+      "id": "bcd-unpacked-vs-packed",
+      "front": "Compare **unpacked BCD** and **packed BCD** storage.",
+      "back": "**Unpacked BCD** stores one decimal digit per byte: the lower 4 bits hold 0-9 and the upper 4 bits are 0000. **Packed BCD** stores two decimal digits per byte: one digit in the upper nibble and one in the lower nibble, so it is twice as memory-efficient.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf", "Revision Fall 2025_2026(1).pdf"]
+    },
+    {
+      "id": "bcd-ascii-digit-conversion",
+      "front": "How do you convert an ASCII digit such as `'7'` to unpacked BCD, and why does it work?",
+      "back": "ASCII digits have upper bits `0011` (for example `'7'` = 37H). AND the byte with **0FH** to remove the upper tag: `37H AND 0FH = 07H`, which is unpacked BCD 7.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "bcd-packed-to-ascii",
+      "front": "What are the steps to convert **packed BCD** to ASCII digits?",
+      "back": "First split the packed byte into two unpacked BCD digits. Then add/tag each digit with **30H** (`0011 0000B`) to make ASCII. Example: packed BCD 59H becomes unpacked 05H and 09H, then ASCII 35H (`'5'`) and 39H (`'9'`).",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "bcd-daa-purpose",
+      "front": "What does **DAA** do, and when must it be used?",
+      "back": "**DAA** (Decimal Adjust after Addition) corrects AL after adding packed BCD operands. Use it only after **ADD** or **ADC**, with the BCD addition result in **AL**. It adds 6 to a nibble when that nibble is invalid for BCD or when AF/CF indicates an adjustment is needed.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "bcd-das-purpose",
+      "front": "What does **DAS** do after packed BCD subtraction?",
+      "back": "**DAS** (Decimal Adjust after Subtraction) corrects AL after **SUB** or **SBB** on packed BCD values. If a nibble is invalid or AF/CF requires correction, DAS subtracts 6 from the corresponding nibble so AL becomes a valid packed BCD result.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "bcd-aaa-aas",
+      "front": "What are **AAA** and **AAS** used for?",
+      "back": "**AAA** corrects ASCII or unpacked BCD addition, and **AAS** corrects ASCII or unpacked BCD subtraction. Both work on **AL** and adjust the result into unpacked BCD form; AAA can pass a carry by incrementing AH.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "string-si-di-segments",
+      "front": "In 8088/86 string instructions, which registers and segments hold the source and destination?",
+      "back": "**DS:SI** points to the source operand and **ES:DI** points to the destination operand. The ES register must be initialized before destination-based string instructions such as MOVS, STOS, CMPS, or SCAS are used.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "string-df-cld-std",
+      "front": "How does the **direction flag (DF)** affect string instructions, and what do **CLD** and **STD** do?",
+      "back": "DF controls automatic pointer movement. **CLD** clears DF to 0, so SI/DI increment after each string operation. **STD** sets DF to 1, so SI/DI decrement. Byte string operations move pointers by 1; word string operations move them by 2.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "string-rep-cx",
+      "front": "What does the **REP** prefix do with string instructions?",
+      "back": "**REP** repeats a string instruction while **CX is not zero**. CX holds the repetition count and is decremented after each operation. For example, with CLD and `CX = 12`, `REP MOVSB` copies 12 bytes from DS:SI to ES:DI.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "string-movsb-vs-movsw",
+      "front": "Compare **MOVSB** and **MOVSW**.",
+      "back": "**MOVSB** copies one byte from DS:SI to ES:DI and changes SI/DI by 1. **MOVSW** copies one word (2 bytes) and changes SI/DI by 2. With REP, CX counts bytes for MOVSB but words for MOVSW.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "string-stos-lods",
+      "front": "What do **STOSB/STOSW** and **LODSB/LODSW** do?",
+      "back": "**STOSB** stores AL to ES:DI; **STOSW** stores AX to ES:DI and ES:DI+1. **LODSB** loads DS:SI into AL; **LODSW** loads DS:SI into AX. STOS is commonly used with REP; LODS is normally not used with REP because AL/AX would just be overwritten repeatedly.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "string-repe-repne-cmps-scas",
+      "front": "How do **REPE/REPZ** and **REPNE/REPNZ** work with **CMPS** or **SCAS**?",
+      "back": "**REPE/REPZ** repeats while ZF = 1 and CX is not zero; **REPNE/REPNZ** repeats while ZF = 0 and CX is not zero. CMPS compares DS:SI with ES:DI; SCAS compares AL/AX with ES:DI.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "string-xlat",
+      "front": "What does the **XLAT** instruction do?",
+      "back": "**XLAT** translates AL through a lookup table. BX holds the table offset, AL holds the table index before execution, and after execution AL becomes the byte at **DS:[BX + AL]**. It is useful for code conversion, such as key code to ASCII.",
+      "sourceFilenames": ["CE 342 Week 9 v2 - BCD and Strings.pdf"]
+    },
+    {
+      "id": "bios-int10-text-screen",
+      "front": "What are the normal text-mode screen coordinates used by BIOS **INT 10H**?",
+      "back": "The text screen is **80 columns by 25 rows**. Rows are numbered 0-24 and columns 0-79. The top-left corner is row 0, column 0; the bottom-right corner is row 24, column 79.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "bios-int10-cursor",
+      "front": "Which registers set the cursor position using BIOS **INT 10H function 02H**?",
+      "back": "Set **AH = 02H**, **BH = page number** (usually 00), and **DX = cursor position**, where **DH = row** and **DL = column**. Then execute `INT 10H`.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "bios-int10-clear-screen",
+      "front": "How is BIOS **INT 10H function 06H** commonly used to clear the screen?",
+      "back": "Function 06H scrolls a window upward. To clear the full 80x25 screen, use **AH = 06H**, **AL = 00H**, **BH = attribute**, **CX = 0000H** for upper-left row/column, and **DX = 184FH** for lower-right row/column, then execute `INT 10H`.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "dos-int21-output",
+      "front": "Compare DOS **INT 21H functions 09H and 02H** for output.",
+      "back": "**AH = 09H** displays a string whose offset is in **DX** and whose data in DS ends with **`$`**. **AH = 02H** displays a single character from **DL**, and can display `$` because it is not using `$` as a terminator.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "dos-int21-input-char",
+      "front": "Compare DOS **INT 21H functions 01H and 07H** for keyboard input.",
+      "back": "**AH = 01H** waits for one character, echoes it to the screen, and returns it in **AL**. **AH = 07H** also waits for one character and returns it in **AL**, but does **not** echo the character.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "dos-int21-buffer-0ah",
+      "front": "Describe the buffer format for DOS **INT 21H function 0AH** keyboard string input.",
+      "back": "The buffer is in DS. Byte 0 is the maximum buffer size, byte 1 receives the actual character count **excluding carriage return**, and the typed characters start at byte 2. DOS stores the carriage return byte **0DH** after the typed characters.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "macro-definition-parts",
+      "front": "What are the required parts of an assembly **macro definition**?",
+      "back": "A macro needs a unique name followed by the **MACRO** directive, a body of instructions, and the **ENDM** directive. Dummy parameters can be named in the macro header and replaced with actual arguments when the macro is invoked.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "macro-local-labels",
+      "front": "Why is the **LOCAL** directive needed inside some macros?",
+      "back": "If a macro body contains labels and the macro is expanded more than once, repeated labels would cause assembler redefinition errors. Declaring those labels **LOCAL** immediately after the MACRO directive gives each expansion its own private label names.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "macro-vs-proc",
+      "front": "What is the core difference between a **MACRO** and a **PROC**?",
+      "back": "A **MACRO** is expanded inline by the assembler at compile time, so no CALL/RET jump occurs. A **PROC** is runtime code: execution jumps to it with CALL and returns with RET. Macros can be faster for short repeated patterns; procedures reduce binary size for larger reusable blocks.",
+      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
+    },
+    {
+      "id": "mem-chip-organization",
+      "front": "How do address pins and data pins determine a memory chip's organization?",
+      "back": "If a chip has **x address pins** and **y data pins**, it contains **2^x locations**, each **y bits** wide. Its organization is written as **2^x x y**. Example: 11 address pins and 8 data pins give **2K x 8**.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "mem-rom-types",
+      "front": "Contrast **PROM**, **EPROM**, **Flash ROM**, and **mask ROM**.",
+      "back": "**PROM** is user-programmed once by blowing fuses. **EPROM** can be erased with UV light and reprogrammed. **Flash ROM** is electrically erasable, usually by block, much faster than UV erasure. **Mask ROM** is programmed by the manufacturer and is cheap only at high volume when contents will not change.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "mem-sram-vs-dram",
+      "front": "Compare **SRAM** and **DRAM**.",
+      "back": "**SRAM** stores bits in flip-flops, needs no refresh, is fast, but uses more transistors per bit. **DRAM** stores bits as capacitor charge, is denser and cheaper per bit, but must be refreshed periodically and cannot be accessed during refresh.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "mem-dram-ras-cas",
+      "front": "Why do DRAM chips use **RAS** and **CAS**?",
+      "back": "DRAM often multiplexes its address pins to reduce package pin count. The row half of the address is latched with **RAS** (Row Address Strobe), then the column half is latched with **CAS** (Column Address Strobe).",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "mem-checksum-method",
+      "front": "How does the **checksum byte** method detect ROM data corruption?",
+      "back": "Add all data bytes while dropping carries, take the 2's complement of the sum, and append it as the checksum byte. Later, add all bytes including the checksum; after dropping carries, a correct block sums to **00H**. A nonzero result indicates corruption.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "bus-8086-vs-8088",
+      "front": "What are the main bus differences between the **8086** and **8088**?",
+      "back": "Both are 16-bit processors with 20-bit address spaces, but the **8086 has a 16-bit external data bus** and multiplexes AD0-AD15, while the **8088 has an 8-bit external data bus** and multiplexes AD0-AD7.",
+      "sourceFilenames": ["CE 342 Week 11 - ISA Bus 8086 Hardware v2.pdf"]
+    },
+    {
+      "id": "bus-80286-memory",
+      "front": "How much memory can the **80286** address in real mode and protected mode?",
+      "back": "In **real mode**, the 80286 can access **1 MB** like the 8086/8088. In **protected mode**, its 24-bit address bus allows **16 MB** of physical memory.",
+      "sourceFilenames": ["CE 342 Week 11 - ISA Bus 8086 Hardware v2.pdf"]
+    },
+    {
+      "id": "bus-bhe-a0",
+      "front": "In a 16-bit bus system, what do **BHE** and **A0** select?",
+      "back": "**BHE** (Bus High Enable) is active-low and indicates transfer on D8-D15. Together, **BHE and A0** select the low byte bank, high byte bank, or both banks for a word transfer.",
+      "sourceFilenames": ["CE 342 Week 11 - ISA Bus 8086 Hardware v2.pdf", "CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "bus-odd-word-penalty",
+      "front": "Why is a word stored at an **odd address** slower on a 16-bit data bus?",
+      "back": "A 16-bit word starting at an even address can be fetched in one bus cycle from even and odd banks together. A word starting at an odd address crosses the bank boundary, so it requires **two memory cycles**: one for the low byte and one for the high byte.",
+      "sourceFilenames": ["CE 302 Lecture Notes Week 14v3 - Memory(1).pdf"]
+    },
+    {
+      "id": "pic-interrupt-ack-flow",
+      "front": "What happens during the two **INTA** pulses in an 8259 interrupt?",
+      "back": "After an IR line is activated, the 8259 raises INTR. On the **first INTA**, it resolves priority and cascade housekeeping. On the **second INTA**, it places the interrupt vector byte on the data bus; the CPU then multiplies that type by 4 to locate the ISR vector.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    },
+    {
+      "id": "pic-nmi-sources-pc",
+      "front": "What are the IBM PC sources of **NMI**, and how are PCK/IOCHK distinguished?",
+      "back": "NMI can come from the 8087 numeric processor interrupt request, memory read/write parity check (**PCK**), or I/O channel check (**IOCHK**). The PC checks 8255 Port C: **PC7** indicates PCK and **PC6** indicates IOCHK; if neither is active, the source is the 8087.",
+      "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
+    }
+  ]
 }

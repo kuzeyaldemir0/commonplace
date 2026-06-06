@@ -19,6 +19,13 @@ import type { Flashcard, QuizItem } from "./lib/schemas";
 
 type View = "courses" | "course" | "cards" | "quiz-setup" | "quiz" | "results";
 type QuizResult = { questionId: string; correct: boolean };
+type QuizAnswerState = {
+  questionId: string;
+  selected?: string;
+  shortAnswer?: string;
+  revealed: boolean;
+  correct?: boolean;
+};
 
 function shuffle<T>(items: T[]) {
   const shuffled = [...items];
@@ -235,26 +242,41 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
     return [shuffle(bundle.cards), 0];
   });
   const [index, setIndex] = useState(startIndex);
+  const [completedCount, setCompletedCount] = useState(startIndex);
   const [revealed, setRevealed] = useState(false);
   const [saving, setSaving] = useState(false);
   const card = cards[index];
+  const hasPrevious = index > 0;
+  const isReviewed = index < completedCount;
 
   useEffect(() => {
-    if (index < cards.length) {
+    if (completedCount < cards.length) {
       session.saveFlashcards({ courseId: bundle.course.id, cardIds: cards.map((c) => c.id), index });
     } else {
       session.clearFlashcards(bundle.course.id);
     }
-  }, [bundle.course.id, cards, index]);
+  }, [bundle.course.id, cards, completedCount, index]);
+
+  function goToCard(nextIndex: number) {
+    if (nextIndex < 0 || nextIndex > Math.min(completedCount, cards.length)) return;
+    haptics.tap();
+    setIndex(nextIndex);
+    setRevealed(nextIndex < completedCount);
+  }
 
   async function rate(rating: "again" | "got-it") {
     if (saving) return;
+    if (isReviewed) {
+      goToCard(index + 1);
+      return;
+    }
     setSaving(true);
     rating === "got-it" ? haptics.success() : haptics.error();
     try {
       onProgress(await api.recordFlashcard(bundle.course.id, card.id, rating));
       setRevealed(false);
-      setIndex((current) => current + 1);
+      setCompletedCount((current) => Math.max(current, index + 1));
+      setIndex(index + 1);
     } finally {
       setSaving(false);
     }
@@ -265,10 +287,25 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
     setRevealed((current) => !current);
   }
 
-  if (!card) return <Completion title="Review complete" copy="You reached the end of this flashcard session." onBack={onBack} />;
+  if (!card) {
+    return (
+      <section className="page compact-page">
+        <div className="setup-card">
+          <Illustration scene="results" compact />
+          <p className="eyebrow">Nice work</p>
+          <h1>Review complete</h1>
+          <p>You reached the end of this flashcard session.</p>
+          <div className="button-row">
+            <button className="secondary-button" onClick={() => goToCard(cards.length - 1)}><ArrowLeft size={18} />Review last card</button>
+            <button className="primary-button" onClick={onBack}>Course home</button>
+          </div>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="page study-page">
-      <StudyTopBar title="Flashcards" index={index} total={cards.length} onBack={onBack} />
+      <StudyTopBar title="Flashcards" index={index} total={cards.length} onBack={onBack} onPrevious={hasPrevious ? () => goToCard(index - 1) : undefined} />
       <div className="study-stage">
         <div
           className={`flashcard ${revealed ? "revealed" : ""}`}
@@ -289,7 +326,13 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
           </div>
           {!revealed && <button className="primary-button" onClick={(event) => { event.stopPropagation(); haptics.tap(); setRevealed(true); }}>Reveal answer</button>}
         </div>
-        {revealed && (
+        {revealed && isReviewed && (
+          <div className="review-controls">
+            <button className="secondary-button" disabled={!hasPrevious} onClick={() => goToCard(index - 1)}><ArrowLeft size={18} />Previous card</button>
+            <button className="primary-button" disabled={index >= completedCount} onClick={() => goToCard(index + 1)}>Next card <ArrowRight size={18} /></button>
+          </div>
+        )}
+        {revealed && !isReviewed && (
           <div className="review-controls">
             <button className="choice-button choice-coral" disabled={saving} onClick={() => void rate("again")}><RotateCcw size={18} />Again</button>
             <button className="choice-button choice-green" disabled={saving} onClick={() => void rate("got-it")}><Check size={18} />Got it</button>
@@ -350,27 +393,69 @@ function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: 
 }
 
 function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBundle; questions: QuizItem[]; onBack: () => void; onFinish: (results: QuizResult[]) => void }) {
-  const [[index0, results0, startedAt0]] = useState((): [number, QuizResult[], string] => {
+  const [[index0, results0, answerStates0, startedAt0]] = useState((): [number, QuizResult[], QuizAnswerState[], string] => {
     const saved = session.loadQuiz(bundle.course.id);
     const isMatch = saved &&
       saved.questionIds.length === questions.length &&
       questions.every((q, i) => q.id === saved.questionIds[i]);
-    if (isMatch && saved) return [saved.index, saved.results, saved.startedAt];
-    return [0, [], new Date().toISOString()];
+    const emptyAnswers = questions.map((question) => ({ questionId: question.id, revealed: false }));
+    if (isMatch && saved) {
+      const savedAnswerMap = new Map(saved.answers?.map((answer) => [answer.questionId, answer]));
+      const resultMap = new Map(saved.results.map((result) => [result.questionId, result]));
+      const answers = questions.map((question) => {
+        const savedAnswer = savedAnswerMap.get(question.id);
+        if (savedAnswer) return savedAnswer;
+        const result = resultMap.get(question.id);
+        return result ? { questionId: question.id, revealed: true, correct: result.correct } : { questionId: question.id, revealed: false };
+      });
+      return [saved.index, saved.results, answers, saved.startedAt];
+    }
+    return [0, [], emptyAnswers, new Date().toISOString()];
   });
   const [index, setIndex] = useState(index0);
-  const [selected, setSelected] = useState<string>();
-  const [shortAnswer, setShortAnswer] = useState("");
-  const [revealed, setRevealed] = useState(false);
+  const [answerStates, setAnswerStates] = useState<QuizAnswerState[]>(answerStates0);
   const [results, setResults] = useState<QuizResult[]>(results0);
   const [startedAt] = useState(startedAt0);
   const [saving, setSaving] = useState(false);
   const question = questions[index];
+  const answerState = answerStates[index] ?? { questionId: question.id, revealed: false };
+  const selected = answerState.selected;
+  const shortAnswer = answerState.shortAnswer ?? "";
+  const revealed = answerState.revealed;
+  const isAnswered = results.some((result) => result.questionId === question.id);
+  const displayedCorrect = answerState.correct ?? selected === question.answer;
+
+  function saveQuizSession(nextIndex: number, nextResults: QuizResult[], nextAnswerStates: QuizAnswerState[]) {
+    session.saveQuiz({
+      courseId: bundle.course.id,
+      questionIds: questions.map((q) => q.id),
+      index: nextIndex,
+      results: nextResults,
+      answers: nextAnswerStates,
+      startedAt
+    });
+  }
+
+  function updateAnswerState(nextAnswerState: Partial<QuizAnswerState>) {
+    setAnswerStates((current) => current.map((state, stateIndex) => stateIndex === index ? { ...state, ...nextAnswerState } : state));
+  }
+
+  function goToQuestion(nextIndex: number) {
+    if (nextIndex < 0 || nextIndex >= questions.length || nextIndex > results.length) return;
+    haptics.tap();
+    setIndex(nextIndex);
+    saveQuizSession(nextIndex, results, answerStates);
+  }
 
   async function advance(correct: boolean) {
     if (saving) return;
+    if (isAnswered) {
+      goToQuestion(index + 1);
+      return;
+    }
     setSaving(true);
     const nextResults = [...results, { questionId: question.id, correct }];
+    const nextAnswerStates = answerStates.map((state, stateIndex) => stateIndex === index ? { ...state, revealed: true, correct } : state);
     try {
       if (index === questions.length - 1) {
         await api.recordQuiz(bundle.course.id, { id: crypto.randomUUID(), startedAt, completedAt: new Date().toISOString(), results: nextResults });
@@ -379,12 +464,10 @@ function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBu
         return;
       }
       const nextIndex = index + 1;
-      session.saveQuiz({ courseId: bundle.course.id, questionIds: questions.map((q) => q.id), index: nextIndex, results: nextResults, startedAt });
+      saveQuizSession(nextIndex, nextResults, nextAnswerStates);
       setResults(nextResults);
+      setAnswerStates(nextAnswerStates);
       setIndex(nextIndex);
-      setSelected(undefined);
-      setShortAnswer("");
-      setRevealed(false);
     } finally {
       setSaving(false);
     }
@@ -392,7 +475,7 @@ function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBu
 
   return (
     <section className="page study-page">
-      <StudyTopBar title="Quiz" index={index} total={questions.length} onBack={onBack} />
+      <StudyTopBar title="Quiz" index={index} total={questions.length} onBack={onBack} onPrevious={index > 0 ? () => goToQuestion(index - 1) : undefined} />
       <div className="quiz-card">
         <div className="quiz-content" key={question.id}>
           <p className="eyebrow">{question.type === "multiple-choice" ? "Choose one answer" : "Write your answer"}</p>
@@ -402,28 +485,34 @@ function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBu
               {question.choices.map((choice) => {
                 const isAnswer = choice === question.answer;
                 const status = revealed ? (isAnswer ? "correct" : selected === choice ? "wrong" : "") : selected === choice ? "selected" : "";
-                return <button className={`answer-option ${status}`} key={choice} onClick={() => { if (!revealed) { haptics.selection(); setSelected(choice); } }}>{choice}{revealed && isAnswer && <Check size={18} />}{revealed && selected === choice && !isAnswer && <X size={18} />}</button>;
+                return <button className={`answer-option ${status}`} key={choice} onClick={() => { if (!revealed) { haptics.selection(); updateAnswerState({ selected: choice }); } }}>{choice}{revealed && isAnswer && <Check size={18} />}{revealed && selected === choice && !isAnswer && <X size={18} />}</button>;
               })}
             </div>
           ) : (
-            <textarea className="short-answer" placeholder="Type what you remember..." value={shortAnswer} disabled={revealed} onChange={(event) => setShortAnswer(event.target.value)} />
+            <textarea className="short-answer" placeholder="Type what you remember..." value={shortAnswer} disabled={revealed} onChange={(event) => updateAnswerState({ shortAnswer: event.target.value })} />
           )}
         </div>
         {revealed && (
           <div className="answer-explanation">
             {question.type === "multiple-choice" && (
-              <div className={`feedback-label ${selected === question.answer ? "feedback-success" : "feedback-error"}`} role="status" aria-live="polite">
-                {selected === question.answer ? <Check size={17} /> : <X size={17} />}
-                {selected === question.answer ? "Correct" : "Not quite"}
+              <div className={`feedback-label ${displayedCorrect ? "feedback-success" : "feedback-error"}`} role="status" aria-live="polite">
+                {displayedCorrect ? <Check size={17} /> : <X size={17} />}
+                {displayedCorrect ? "Correct" : "Not quite"}
               </div>
             )}
             {question.type === "short-answer" && <><span className="eyebrow">Expected answer</span><strong>{question.answer}</strong></>}
             <MarkdownContent>{question.explanation}</MarkdownContent>
           </div>
         )}
-        {!revealed && <button className="primary-button" disabled={question.type === "multiple-choice" ? !selected : !shortAnswer.trim()} onClick={() => { if (question.type === "multiple-choice") { selected === question.answer ? haptics.success() : haptics.error(); } else { haptics.tap(); } setRevealed(true); }}>Check answer</button>}
-        {revealed && question.type === "multiple-choice" && <button className="primary-button" disabled={saving} onClick={() => void advance(selected === question.answer)}>Next question <ArrowRight size={18} /></button>}
-        {revealed && question.type === "short-answer" && <div className="self-grade"><span>Did you get it right?</span><button className="choice-button choice-coral" disabled={saving} onClick={() => { haptics.error(); void advance(false); }}><X size={17} />Not yet</button><button className="choice-button choice-green" disabled={saving} onClick={() => { haptics.success(); void advance(true); }}><Check size={17} />Yes</button></div>}
+        {!revealed && <button className="primary-button" disabled={question.type === "multiple-choice" ? !selected : !shortAnswer.trim()} onClick={() => { if (question.type === "multiple-choice") { selected === question.answer ? haptics.success() : haptics.error(); updateAnswerState({ revealed: true }); } else { haptics.tap(); updateAnswerState({ revealed: true }); } }}>Check answer</button>}
+        {revealed && isAnswered && (
+          <div className="quiz-navigation">
+            <button className="secondary-button" disabled={index === 0} onClick={() => goToQuestion(index - 1)}><ArrowLeft size={18} />Previous question</button>
+            <button className="primary-button" disabled={index >= results.length || index === questions.length - 1} onClick={() => goToQuestion(index + 1)}>Next question <ArrowRight size={18} /></button>
+          </div>
+        )}
+        {revealed && !isAnswered && question.type === "multiple-choice" && <button className="primary-button" disabled={saving} onClick={() => void advance(selected === question.answer)}>Next question <ArrowRight size={18} /></button>}
+        {revealed && !isAnswered && question.type === "short-answer" && <div className="self-grade"><span>Did you get it right?</span><button className="choice-button choice-coral" disabled={saving} onClick={() => { haptics.error(); void advance(false); }}><X size={17} />Not yet</button><button className="choice-button choice-green" disabled={saving} onClick={() => { haptics.success(); void advance(true); }}><Check size={17} />Yes</button></div>}
       </div>
     </section>
   );
@@ -458,6 +547,17 @@ function BackButton({ onClick, children }: { onClick: () => void; children: Reac
   return <button className="back-button" onClick={onClick}><ArrowLeft size={17} />{children}</button>;
 }
 
-function StudyTopBar({ title, index, total, onBack }: { title: string; index: number; total: number; onBack: () => void }) {
-  return <div className="study-topbar"><BackButton onClick={onBack}>Exit {title.toLowerCase()}</BackButton><div className="progress-wrap"><div className="progress-meta"><span>{title}</span><span>{index + 1}/{total}</span></div><div className="progress-track"><span style={{ width: `${((index + 1) / total) * 100}%` }} /></div></div></div>;
+function StudyTopBar({ title, index, total, onBack, onPrevious }: { title: string; index: number; total: number; onBack: () => void; onPrevious?: () => void }) {
+  return (
+    <div className="study-topbar">
+      <BackButton onClick={onBack}>Exit {title.toLowerCase()}</BackButton>
+      <div className="progress-wrap">
+        <div className="progress-meta"><span>{title}</span><span>{index + 1}/{total}</span></div>
+        <div className="progress-track"><span style={{ width: `${((index + 1) / total) * 100}%` }} /></div>
+      </div>
+      <div className="topbar-actions">
+        <button className="secondary-button" disabled={!onPrevious} onClick={onPrevious}><ArrowLeft size={17} />Previous</button>
+      </div>
+    </div>
+  );
 }
