@@ -1,10 +1,7 @@
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { coursesRoot, validateCourses } from "./store";
 
-const execFileAsync = promisify(execFile);
 const [, , command, ...args] = process.argv;
 
 function assertCourseId(courseId: string | undefined) {
@@ -50,22 +47,10 @@ async function addSource(courseIdArg?: string, sourcePathArg?: string) {
   console.log(`Added ${filename} to ${courseId}`);
 }
 
-async function renderPdf(courseIdArg?: string, filenameArg?: string) {
-  const courseId = assertCourseId(courseIdArg);
-  if (!filenameArg) throw new Error("Provide the registered PDF filename.");
-  const pdfPath = path.join(coursesRoot, courseId, "sources", filenameArg);
-  const outDir = path.join(process.cwd(), ".tmp", "pdf-renders", courseId, path.parse(filenameArg).name);
-  await fs.mkdir(outDir, { recursive: true });
-  await execFileAsync("pdftoppm", ["-jpeg", "-r", "150", pdfPath, path.join(outDir, "page")]);
-  console.log(`Rendered temporary previews in ${path.relative(process.cwd(), outDir)}`);
-}
-
-
 function printPrompt(courseIdArg?: string) {
   const courseId = assertCourseId(courseIdArg);
   console.log(`Read AGENTS.md, then refresh the study content for course "${courseId}".
-Inspect every registered source in courses/${courseId}/sources. For scanned PDFs, use:
-  npm run cli -- render-pdf ${courseId} "<filename>"
+Inspect every registered source in courses/${courseId}/sources using your built-in document and PDF tools.
 Update both content/cards.json and content/quizzes.json. Preserve useful existing items, add sourceFilenames to every item, and run:
   npm run cli -- validate ${courseId}`);
 }
@@ -77,9 +62,6 @@ async function main() {
       break;
     case "add-source":
       await addSource(args[0], args[1]);
-      break;
-    case "render-pdf":
-      await renderPdf(args[0], args.slice(1).join(" "));
       break;
     case "prompt":
       printPrompt(args[0]);
@@ -95,7 +77,6 @@ async function main() {
 Commands:
   scaffold <course-id> <title>
   add-source <course-id> <path>
-  render-pdf <course-id> <registered filename>
   prompt <course-id>
   validate [course-id]`);
   }

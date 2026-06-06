@@ -5,18 +5,12 @@ Commonplace is a local learning app. The source files in each course are the sou
 ## Refresh A Course
 
 1. Read `courses/<course-id>/course.json`.
-2. Inspect every registered file under `courses/<course-id>/sources/`.
+2. Inspect every registered file under `courses/<course-id>/sources/` using your built-in document and PDF tools.
    - Inspect every relevant PDF page at readable resolution. A contact sheet is useful for orientation but is not sufficient for final authoring.
-3. For a scanned PDF without a usable text layer, run:
-
-   ```sh
-   npm run cli -- render-pdf <course-id> "<registered PDF filename>"
-   ```
-
-4. Update both `content/cards.json` and `content/quizzes.json`.
-5. Preserve existing useful items and stable IDs when revising content.
-6. Add every originating source filename to `sourceFilenames`.
-7. Validate before finishing:
+3. Update both `content/cards.json` and `content/quizzes.json`.
+4. Preserve existing useful items and stable IDs when revising content.
+5. Add every originating source filename to `sourceFilenames`.
+6. Validate before finishing:
 
    ```sh
    npm run cli -- validate <course-id>
@@ -39,4 +33,3 @@ Commonplace is a local learning app. The source files in each course are the sou
 - Make multiple-choice distractors plausible but unambiguous.
 - Explain why the answer is correct.
 - Never edit `progress.json` while authoring content.
-- Never store temporary PDF page images outside `.tmp/`.

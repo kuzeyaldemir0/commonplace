@@ -37,7 +37,6 @@ npm run cli -- validate
 | `scaffold <id> "<title>"` | Create a new course skeleton |
 | `add-source <id> "<file>"` | Register a source file |
 | `prompt <id>` | Print the agent authoring prompt |
-| `render-pdf <id> "<file>"` | Render PDF pages to `.tmp/` for scanned docs |
 | `validate [id]` | Validate all courses (or one) |
 
 All commands run via `npm run cli -- <command>`.
