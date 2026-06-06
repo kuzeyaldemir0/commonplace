@@ -260,10 +260,9 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
     }
   }
 
-  function showPrompt() {
-    if (!revealed) return;
+  function flipCard() {
     haptics.tap();
-    setRevealed(false);
+    setRevealed((current) => !current);
   }
 
   if (!card) return <Completion title="Review complete" copy="You reached the end of this flashcard session." onBack={onBack} />;
@@ -273,14 +272,14 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
       <div className="study-stage">
         <div
           className={`flashcard ${revealed ? "revealed" : ""}`}
-          role={revealed ? "button" : undefined}
-          tabIndex={revealed ? 0 : undefined}
-          aria-label={revealed ? "Show question again" : undefined}
-          onClick={showPrompt}
+          role="button"
+          tabIndex={0}
+          aria-label={revealed ? "Show question again" : "Reveal answer"}
+          onClick={flipCard}
           onKeyDown={(event) => {
-            if (revealed && (event.key === "Enter" || event.key === " ")) {
+            if (event.key === "Enter" || event.key === " ") {
               event.preventDefault();
-              showPrompt();
+              flipCard();
             }
           }}
         >
@@ -288,7 +287,7 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
             <p className="eyebrow">{revealed ? "Answer" : "Prompt"}</p>
             <MarkdownContent>{revealed ? card.back : card.front}</MarkdownContent>
           </div>
-          {!revealed && <button className="primary-button" onClick={() => { haptics.tap(); setRevealed(true); }}>Reveal answer</button>}
+          {!revealed && <button className="primary-button" onClick={(event) => { event.stopPropagation(); haptics.tap(); setRevealed(true); }}>Reveal answer</button>}
         </div>
         {revealed && (
           <div className="review-controls">
@@ -442,7 +441,7 @@ function Results({ bundle, results, onBack, onRetry }: { bundle: CourseBundle; r
         <div className="result-list">
           {results.map((result, index) => {
             const question = bundle.quizzes.find((quiz) => quiz.id === result.questionId);
-            return <div className="result-row" key={result.questionId} style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}>{result.correct ? <Check size={17} /> : <X size={17} />}<span>{question?.prompt}</span></div>;
+            return <div className="result-row" key={result.questionId} style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}>{result.correct ? <Check size={17} /> : <X size={17} />}<MarkdownContent>{question?.prompt ?? "Question unavailable"}</MarkdownContent></div>;
           })}
         </div>
         <div className="button-row"><button className="secondary-button" onClick={onBack}>Course home</button><button className="primary-button" onClick={onRetry}>Try another quiz</button></div>

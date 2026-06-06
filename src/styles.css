@@ -86,9 +86,9 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .progress-track span { display: block; height: 100%; background: var(--blue); border-right: 1px solid var(--ink); transition: width .42s var(--ease-out); }
 .study-stage, .quiz-card { max-width: 820px; margin: 0 auto; }
 .flashcard, .quiz-card, .setup-card, .results-card { border: var(--line); border-radius: 22px; background: rgba(255,252,247,.95); box-shadow: var(--shadow); }
-.flashcard { min-height: 430px; display: flex; flex-direction: column; justify-content: space-between; padding: 38px; }
+.flashcard { min-height: 430px; display: flex; flex-direction: column; justify-content: space-between; padding: 38px; cursor: pointer; }
 .flashcard .markdown { font-family: "Fraunces"; font-size: 2rem; line-height: 1.28; }
-.flashcard.revealed { cursor: pointer; background: #fefbf4; animation: card-reveal .36s var(--ease-out); }
+.flashcard.revealed { background: #fefbf4; animation: card-reveal .36s var(--ease-out); }
 .flashcard-content, .quiz-content { animation: content-rise .3s var(--ease-out) both; }
 .markdown { line-height: 1.65; }
 .markdown p:last-child { margin-bottom: 0; }
@@ -135,6 +135,8 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .result-row { display: grid; grid-template-columns: 18px 1fr; gap: 9px; align-items: start; padding: 10px; border-radius: 9px; background: rgba(23,22,20,.045); font-size: .83rem; line-height: 1.4; animation: content-rise .3s var(--ease-out) both; }
 .result-row svg { margin-top: 1px; }
 .result-row svg:first-child { color: #73944b; }
+.result-row .markdown { line-height: 1.4; }
+.result-row .markdown p { margin: 0; }
 .button-row { display: flex; justify-content: center; gap: 10px; margin-top: 23px; }
 .empty-panel { text-align: center; padding: 35px; }
 .empty-panel .illustration { margin: 0 auto; }
