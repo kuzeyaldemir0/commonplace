@@ -79,6 +79,9 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .paper-panel { border: 1px solid rgba(23,22,20,.2); background: rgba(255,252,247,.5); border-radius: 19px; padding: 22px; }
 .paper-panel p:last-child { color: var(--muted); line-height: 1.6; margin-bottom: 0; font-size: .9rem; }
 .activity-panel-content { display: flex; align-items: center; gap: 10px; }
+.archive-panel { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px 18px; }
+.archive-panel .eyebrow, .archive-panel h3, .archive-panel p { grid-column: 1; }
+.archive-panel .panel-button { grid-column: 2; grid-row: 1 / span 3; align-self: center; white-space: nowrap; }
 .study-topbar { display: grid; grid-template-columns: 180px 1fr 180px; align-items: center; margin-bottom: 26px; }
 .progress-wrap { grid-column: 2; }
 .topbar-actions { display: flex; justify-content: flex-end; }
@@ -102,6 +105,7 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .primary-button { background: var(--blue); }
 .secondary-button { background: var(--surface); }
 .primary-button:disabled, .choice-button:disabled { opacity: .45; }
+.archive-button { background: #f7ead4; }
 .review-controls { display: flex; justify-content: center; gap: 12px; margin-top: 18px; animation: controls-enter .28s var(--ease-out) both; }
 .choice-coral { background: var(--coral); } .choice-green { background: var(--green); }
 .compact-page { display: grid; place-items: center; min-height: calc(100vh - 93px); padding-top: 20px; }

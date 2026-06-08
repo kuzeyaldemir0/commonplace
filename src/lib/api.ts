@@ -3,6 +3,8 @@ import type { Course, Flashcard, Progress, QuizItem } from "./schemas";
 export type CourseSummary = Course & {
   cardCount: number;
   quizCount: number;
+  archivedCardCount: number;
+  archivedQuizCount: number;
   reviewCount: number;
   sessionCount: number;
 };
@@ -38,5 +40,15 @@ export const api = {
     request<Progress>(`/api/courses/${courseId}/progress/quizzes`, {
       method: "POST",
       body: JSON.stringify(session)
+    }),
+  setArchive: (courseId: string, type: "flashcard" | "quiz", itemId: string, archived: boolean) =>
+    request<Progress>(`/api/courses/${courseId}/progress/archive`, {
+      method: "POST",
+      body: JSON.stringify({ type, itemId, archived })
+    }),
+  restoreArchive: (courseId: string, type?: "flashcard" | "quiz") =>
+    request<Progress>(`/api/courses/${courseId}/progress/archive/restore`, {
+      method: "POST",
+      body: JSON.stringify({ type })
     })
 };

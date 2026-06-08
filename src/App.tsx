@@ -1,5 +1,7 @@
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import {
+  Archive,
+  ArchiveRestore,
   ArrowLeft,
   ArrowRight,
   Check,
@@ -27,6 +29,8 @@ type QuizAnswerState = {
   correct?: boolean;
 };
 
+type ArchiveItemType = "flashcard" | "quiz";
+
 function shuffle<T>(items: T[]) {
   const shuffled = [...items];
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
@@ -44,6 +48,20 @@ function shuffleQuizChoices(questions: QuizItem[]) {
 
 function plural(count: number, singular: string) {
   return `${count} ${singular}${count === 1 ? "" : "s"}`;
+}
+
+function archivedIds(bundle: CourseBundle, type: ArchiveItemType) {
+  return new Set(bundle.progress.archivedItems.filter((item) => item.type === type).map((item) => item.itemId));
+}
+
+function activeCards(bundle: CourseBundle) {
+  const ids = archivedIds(bundle, "flashcard");
+  return bundle.cards.filter((card) => !ids.has(card.id));
+}
+
+function activeQuizzes(bundle: CourseBundle) {
+  const ids = archivedIds(bundle, "quiz");
+  return bundle.quizzes.filter((quiz) => !ids.has(quiz.id));
 }
 
 export function App() {
@@ -102,6 +120,11 @@ export function App() {
     setBundle(undefined);
   }
 
+  function updateProgress(progress: CourseBundle["progress"]) {
+    setBundle((current) => current ? { ...current, progress } : current);
+    void loadCourses();
+  }
+
   return (
     <main className="app-shell">
       <div className="paper-grain" />
@@ -131,11 +154,12 @@ export function App() {
             haptics.tap();
             setView("quiz-setup");
           }}
+          onProgress={updateProgress}
         />
       )}
-      {bundle && view === "cards" && <FlashcardSession bundle={bundle} onBack={() => setView("course")} onProgress={(progress) => setBundle({ ...bundle, progress })} />}
+      {bundle && view === "cards" && <FlashcardSession bundle={bundle} onBack={() => setView("course")} onProgress={updateProgress} />}
       {bundle && view === "quiz-setup" && <QuizSetup bundle={bundle} onBack={() => setView("course")} onStart={(questions) => { setActiveQuiz(questions); setView("quiz"); }} />}
-      {bundle && view === "quiz" && activeQuiz && <QuizSession bundle={bundle} questions={activeQuiz} onBack={() => setView("quiz-setup")} onFinish={(results) => { setQuizResults(results); setView("results"); }} />}
+      {bundle && view === "quiz" && activeQuiz && <QuizSession bundle={bundle} questions={activeQuiz} onBack={() => setView("quiz-setup")} onProgress={updateProgress} onFinish={(results) => { setQuizResults(results); setView("results"); }} />}
       {bundle && view === "results" && quizResults && <Results bundle={bundle} results={quizResults} onBack={() => setView("course")} onRetry={() => setView("quiz-setup")} />}
     </main>
   );
@@ -184,9 +208,22 @@ function CoursesHome({ courses, onOpen }: { courses: CourseSummary[]; onOpen: (c
   );
 }
 
-function CourseHome({ bundle, onBack, onCards, onQuiz }: { bundle: CourseBundle; onBack: () => void; onCards: () => void; onQuiz: () => void }) {
+function CourseHome({ bundle, onBack, onCards, onQuiz, onProgress }: { bundle: CourseBundle; onBack: () => void; onCards: () => void; onQuiz: () => void; onProgress: (progress: CourseBundle["progress"]) => void }) {
   const latest = bundle.progress.quizSessions.at(-1);
   const score = latest ? latest.results.filter((item) => item.correct).length : 0;
+  const availableCards = activeCards(bundle);
+  const availableQuizzes = activeQuizzes(bundle);
+  const archivedCardCount = bundle.progress.archivedItems.filter((item) => item.type === "flashcard").length;
+  const archivedQuizCount = bundle.progress.archivedItems.filter((item) => item.type === "quiz").length;
+  const archivedTotal = archivedCardCount + archivedQuizCount;
+
+  async function restoreAllArchived() {
+    haptics.tap();
+    onProgress(await api.restoreArchive(bundle.course.id));
+    session.clearFlashcards(bundle.course.id);
+    session.clearQuiz(bundle.course.id);
+  }
+
   return (
     <section className="page course-page">
       <BackButton onClick={onBack}>All courses</BackButton>
@@ -199,14 +236,14 @@ function CourseHome({ bundle, onBack, onCards, onQuiz }: { bundle: CourseBundle;
         <Illustration scene="books" compact />
       </div>
       <div className="study-actions">
-        <button className="study-action action-blue" disabled={bundle.cards.length === 0} onClick={onCards}>
+        <button className="study-action action-blue" disabled={availableCards.length === 0} onClick={onCards}>
           <span className="action-icon"><Layers3 /></span>
-          <span><small>Review</small><strong>Flashcards</strong><em>{plural(bundle.cards.length, "card")}</em></span>
+          <span><small>Review</small><strong>Flashcards</strong><em>{plural(availableCards.length, "active card")}</em></span>
           <ArrowRight />
         </button>
-        <button className="study-action action-green" disabled={bundle.quizzes.length === 0} onClick={onQuiz}>
+        <button className="study-action action-green" disabled={availableQuizzes.length === 0} onClick={onQuiz}>
           <span className="action-icon"><FileQuestion /></span>
-          <span><small>Practice</small><strong>Quiz yourself</strong><em>{plural(bundle.quizzes.length, "question")}</em></span>
+          <span><small>Practice</small><strong>Quiz yourself</strong><em>{plural(availableQuizzes.length, "active question")}</em></span>
           <ArrowRight />
         </button>
       </div>
@@ -226,21 +263,29 @@ function CourseHome({ bundle, onBack, onCards, onQuiz }: { bundle: CourseBundle;
           <h3>{latest ? `${score}/${latest.results.length} correct` : "No attempts yet"}</h3>
           <p>{latest ? "Keep revisiting the questions that need another pass." : "Your first result will appear here after a quiz."}</p>
         </div>
+        <div className="paper-panel archive-panel">
+          <p className="eyebrow">Archived</p>
+          <h3>{archivedTotal === 0 ? "Nothing hidden" : `${archivedTotal} hidden`}</h3>
+          <p>{archivedTotal === 0 ? "Archive cards or questions during a session when they are not useful." : `${plural(archivedCardCount, "card")} and ${plural(archivedQuizCount, "question")} are excluded from future sessions.`}</p>
+          {archivedTotal > 0 && <button className="secondary-button panel-button" onClick={() => void restoreAllArchived()}><ArchiveRestore size={17} />Restore all</button>}
+        </div>
       </div>
     </section>
   );
 }
 
 function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle; onBack: () => void; onProgress: (progress: CourseBundle["progress"]) => void }) {
-  const [[cards, startIndex]] = useState((): [Flashcard[], number] => {
+  const [[initialCards, startIndex]] = useState((): [Flashcard[], number] => {
+    const availableCards = activeCards(bundle);
     const saved = session.loadFlashcards(bundle.course.id);
     if (saved?.cardIds.length) {
-      const cardMap = new Map(bundle.cards.map((c) => [c.id, c]));
+      const cardMap = new Map(availableCards.map((c) => [c.id, c]));
       const restored = saved.cardIds.flatMap((id) => { const c = cardMap.get(id); return c ? [c] : []; });
       if (restored.length > 0) return [restored, Math.min(saved.index, restored.length)];
     }
-    return [shuffle(bundle.cards), 0];
+    return [shuffle(availableCards), 0];
   });
+  const [cards, setCards] = useState(initialCards);
   const [index, setIndex] = useState(startIndex);
   const [completedCount, setCompletedCount] = useState(startIndex);
   const [revealed, setRevealed] = useState(false);
@@ -277,6 +322,28 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
       setRevealed(false);
       setCompletedCount((current) => Math.max(current, index + 1));
       setIndex(index + 1);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function archiveCurrentCard() {
+    if (saving || !card) return;
+    setSaving(true);
+    haptics.tap();
+    try {
+      onProgress(await api.setArchive(bundle.course.id, "flashcard", card.id, true));
+      const nextCards = cards.filter((item) => item.id !== card.id);
+      const nextIndex = Math.min(index, Math.max(nextCards.length - 1, 0));
+      setCards(nextCards);
+      setIndex(nextIndex);
+      setCompletedCount((current) => Math.min(current, nextCards.length));
+      setRevealed(false);
+      if (nextCards.length === 0) {
+        session.clearFlashcards(bundle.course.id);
+      } else {
+        session.saveFlashcards({ courseId: bundle.course.id, cardIds: nextCards.map((item) => item.id), index: nextIndex });
+      }
     } finally {
       setSaving(false);
     }
@@ -329,12 +396,14 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
         {revealed && isReviewed && (
           <div className="review-controls">
             <button className="secondary-button" disabled={!hasPrevious} onClick={() => goToCard(index - 1)}><ArrowLeft size={18} />Previous card</button>
+            <button className="secondary-button archive-button" disabled={saving} onClick={() => void archiveCurrentCard()}><Archive size={18} />Archive</button>
             <button className="primary-button" disabled={index >= completedCount} onClick={() => goToCard(index + 1)}>Next card <ArrowRight size={18} /></button>
           </div>
         )}
         {revealed && !isReviewed && (
           <div className="review-controls">
             <button className="choice-button choice-coral" disabled={saving} onClick={() => void rate("again")}><RotateCcw size={18} />Again</button>
+            <button className="secondary-button archive-button" disabled={saving} onClick={() => void archiveCurrentCard()}><Archive size={18} />Archive</button>
             <button className="choice-button choice-green" disabled={saving} onClick={() => void rate("got-it")}><Check size={18} />Got it</button>
           </div>
         )}
@@ -345,9 +414,10 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
 
 function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: () => void; onStart: (questions: QuizItem[]) => void }) {
   const [resumeInfo] = useState(() => {
+    const availableQuizzes = activeQuizzes(bundle);
     const saved = session.loadQuiz(bundle.course.id);
     if (!saved?.questionIds.length) return null;
-    const questionMap = new Map(bundle.quizzes.map((q) => [q.id, q]));
+    const questionMap = new Map(availableQuizzes.map((q) => [q.id, q]));
     if (!saved.questionIds.every((id) => questionMap.has(id))) {
       session.clearQuiz(bundle.course.id);
       return null;
@@ -356,7 +426,8 @@ function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: 
     return { questions, index: saved.index };
   });
   const [discarded, setDiscarded] = useState(false);
-  const [count, setCount] = useState(bundle.quizzes.length);
+  const availableQuizzes = activeQuizzes(bundle);
+  const [count, setCount] = useState(availableQuizzes.length);
 
   if (resumeInfo && !discarded) {
     return (
@@ -384,15 +455,16 @@ function QuizSetup({ bundle, onBack, onStart }: { bundle: CourseBundle; onBack: 
         <p>The questions and multiple-choice answers are shuffled each time. Short answers let you grade yourself after revealing the expected response.</p>
         <label className="range-label">
           <span>Questions</span><strong>{count}</strong>
-          <input type="range" min="1" max={bundle.quizzes.length} value={count} onChange={(event) => setCount(Number(event.target.value))} />
+          <input type="range" min="1" max={availableQuizzes.length} value={count} onChange={(event) => setCount(Number(event.target.value))} />
         </label>
-        <button className="primary-button" onClick={() => { haptics.tap(); session.clearQuiz(bundle.course.id); onStart(shuffleQuizChoices(shuffle(bundle.quizzes).slice(0, count))); }}>Start quiz <ArrowRight size={18} /></button>
+        <button className="primary-button" onClick={() => { haptics.tap(); session.clearQuiz(bundle.course.id); onStart(shuffleQuizChoices(shuffle(availableQuizzes).slice(0, count))); }}>Start quiz <ArrowRight size={18} /></button>
       </div>
     </section>
   );
 }
 
-function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBundle; questions: QuizItem[]; onBack: () => void; onFinish: (results: QuizResult[]) => void }) {
+function QuizSession({ bundle, questions: initialQuestions, onBack, onProgress, onFinish }: { bundle: CourseBundle; questions: QuizItem[]; onBack: () => void; onProgress: (progress: CourseBundle["progress"]) => void; onFinish: (results: QuizResult[]) => void }) {
+  const [questions, setQuestions] = useState(initialQuestions);
   const [[index0, results0, answerStates0, startedAt0]] = useState((): [number, QuizResult[], QuizAnswerState[], string] => {
     const saved = session.loadQuiz(bundle.course.id);
     const isMatch = saved &&
@@ -418,6 +490,9 @@ function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBu
   const [startedAt] = useState(startedAt0);
   const [saving, setSaving] = useState(false);
   const question = questions[index];
+  if (!question) {
+    return <Completion title="No active questions left" copy="The remaining questions in this quiz session were archived." onBack={onBack} />;
+  }
   const answerState = answerStates[index] ?? { questionId: question.id, revealed: false };
   const selected = answerState.selected;
   const shortAnswer = answerState.shortAnswer ?? "";
@@ -473,6 +548,37 @@ function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBu
     }
   }
 
+  async function archiveCurrentQuestion() {
+    if (saving || !question) return;
+    setSaving(true);
+    haptics.tap();
+    try {
+      onProgress(await api.setArchive(bundle.course.id, "quiz", question.id, true));
+      const nextQuestions = questions.filter((item) => item.id !== question.id);
+      const nextAnswerStates = answerStates.filter((_, stateIndex) => stateIndex !== index);
+      const nextResults = results.filter((result) => result.questionId !== question.id);
+      const nextIndex = Math.min(index, Math.max(nextQuestions.length - 1, 0));
+      setQuestions(nextQuestions);
+      setAnswerStates(nextAnswerStates);
+      setResults(nextResults);
+      setIndex(nextIndex);
+      if (nextQuestions.length === 0) {
+        session.clearQuiz(bundle.course.id);
+      } else {
+        session.saveQuiz({
+          courseId: bundle.course.id,
+          questionIds: nextQuestions.map((item) => item.id),
+          index: nextIndex,
+          results: nextResults,
+          answers: nextAnswerStates,
+          startedAt
+        });
+      }
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
     <section className="page study-page">
       <StudyTopBar title="Quiz" index={index} total={questions.length} onBack={onBack} onPrevious={index > 0 ? () => goToQuestion(index - 1) : undefined} />
@@ -504,15 +610,16 @@ function QuizSession({ bundle, questions, onBack, onFinish }: { bundle: CourseBu
             <MarkdownContent>{question.explanation}</MarkdownContent>
           </div>
         )}
-        {!revealed && <button className="primary-button" disabled={question.type === "multiple-choice" ? !selected : !shortAnswer.trim()} onClick={() => { if (question.type === "multiple-choice") { selected === question.answer ? haptics.success() : haptics.error(); updateAnswerState({ revealed: true }); } else { haptics.tap(); updateAnswerState({ revealed: true }); } }}>Check answer</button>}
+        {!revealed && <div className="quiz-navigation"><button className="secondary-button archive-button" disabled={saving} onClick={() => void archiveCurrentQuestion()}><Archive size={18} />Archive question</button><button className="primary-button" disabled={question.type === "multiple-choice" ? !selected : !shortAnswer.trim()} onClick={() => { if (question.type === "multiple-choice") { selected === question.answer ? haptics.success() : haptics.error(); updateAnswerState({ revealed: true }); } else { haptics.tap(); updateAnswerState({ revealed: true }); } }}>Check answer</button></div>}
         {revealed && isAnswered && (
           <div className="quiz-navigation">
             <button className="secondary-button" disabled={index === 0} onClick={() => goToQuestion(index - 1)}><ArrowLeft size={18} />Previous question</button>
+            <button className="secondary-button archive-button" disabled={saving} onClick={() => void archiveCurrentQuestion()}><Archive size={18} />Archive question</button>
             <button className="primary-button" disabled={index >= results.length || index === questions.length - 1} onClick={() => goToQuestion(index + 1)}>Next question <ArrowRight size={18} /></button>
           </div>
         )}
-        {revealed && !isAnswered && question.type === "multiple-choice" && <button className="primary-button" disabled={saving} onClick={() => void advance(selected === question.answer)}>Next question <ArrowRight size={18} /></button>}
-        {revealed && !isAnswered && question.type === "short-answer" && <div className="self-grade"><span>Did you get it right?</span><button className="choice-button choice-coral" disabled={saving} onClick={() => { haptics.error(); void advance(false); }}><X size={17} />Not yet</button><button className="choice-button choice-green" disabled={saving} onClick={() => { haptics.success(); void advance(true); }}><Check size={17} />Yes</button></div>}
+        {revealed && !isAnswered && question.type === "multiple-choice" && <div className="quiz-navigation"><button className="secondary-button archive-button" disabled={saving} onClick={() => void archiveCurrentQuestion()}><Archive size={18} />Archive question</button><button className="primary-button" disabled={saving} onClick={() => void advance(selected === question.answer)}>Next question <ArrowRight size={18} /></button></div>}
+        {revealed && !isAnswered && question.type === "short-answer" && <div className="self-grade"><span>Did you get it right?</span><button className="secondary-button archive-button" disabled={saving} onClick={() => void archiveCurrentQuestion()}><Archive size={17} />Archive</button><button className="choice-button choice-coral" disabled={saving} onClick={() => { haptics.error(); void advance(false); }}><X size={17} />Not yet</button><button className="choice-button choice-green" disabled={saving} onClick={() => { haptics.success(); void advance(true); }}><Check size={17} />Yes</button></div>}
       </div>
     </section>
   );

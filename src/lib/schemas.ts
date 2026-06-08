@@ -59,6 +59,13 @@ export const quizzesFileSchema = z.object({
 
 export const progressSchema = z.object({
   version: z.literal(1),
+  archivedItems: z.array(
+    z.object({
+      type: z.enum(["flashcard", "quiz"]),
+      itemId: z.string().min(1),
+      archivedAt: z.string().datetime()
+    })
+  ).default([]),
   flashcardReviews: z.array(
     z.object({
       cardId: z.string().min(1),

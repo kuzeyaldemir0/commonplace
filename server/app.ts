@@ -1,6 +1,6 @@
 import express from "express";
 import { z } from "zod";
-import { listCourses, loadCourse, recordFlashcardReview, recordQuizSession } from "./store";
+import { listCourses, loadCourse, recordFlashcardReview, recordQuizSession, restoreArchivedItems, setArchivedItem } from "./store";
 
 const flashcardReviewBody = z.object({
   cardId: z.string().min(1),
@@ -12,6 +12,16 @@ const quizSessionBody = z.object({
   startedAt: z.string().datetime(),
   completedAt: z.string().datetime(),
   results: z.array(z.object({ questionId: z.string().min(1), correct: z.boolean() }))
+});
+
+const archiveItemBody = z.object({
+  type: z.enum(["flashcard", "quiz"]),
+  itemId: z.string().min(1),
+  archived: z.boolean()
+});
+
+const restoreArchiveBody = z.object({
+  type: z.enum(["flashcard", "quiz"]).optional()
 });
 
 export const clients = new Set<express.Response>();
@@ -54,6 +64,24 @@ export function createApp() {
     try {
       const body = quizSessionBody.parse(req.body);
       res.json(await recordQuizSession(req.params.courseId, body));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/courses/:courseId/progress/archive", async (req, res, next) => {
+    try {
+      const body = archiveItemBody.parse(req.body);
+      res.json(await setArchivedItem(req.params.courseId, body.type, body.itemId, body.archived));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/courses/:courseId/progress/archive/restore", async (req, res, next) => {
+    try {
+      const body = restoreArchiveBody.parse(req.body);
+      res.json(await restoreArchivedItems(req.params.courseId, body.type));
     } catch (error) {
       next(error);
     }

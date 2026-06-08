@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "quizzes": [
+    {
+      "id": "quiz-functional-foundation",
+      "type": "multiple-choice",
+      "prompt": "Which statement best contrasts functional and imperative language design?",
+      "choices": [
+        "Functional languages are based on mathematical functions; imperative languages are based more directly on the von Neumann architecture.",
+        "Functional languages are based on manual memory addresses; imperative languages are based on mathematical functions.",
+        "Functional languages require mutable variables; imperative languages forbid mutable variables.",
+        "Functional languages are defined mainly by graphical user interfaces; imperative languages are defined mainly by databases."
+      ],
+      "answer": "Functional languages are based on mathematical functions; imperative languages are based more directly on the von Neumann architecture.",
+      "explanation": "Chapter 15 frames functional languages around mathematical function evaluation and imperative languages around operations over stored state in a von Neumann-style model.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-lambda-evaluate",
+      "type": "short-answer",
+      "prompt": "A lambda expression represents the function $\\lambda(x)\\ x * x * x$. What is the result of applying it to `2`?",
+      "answer": "8",
+      "explanation": "The function cubes its argument, so `2 * 2 * 2 = 8`.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-higher-order",
+      "type": "multiple-choice",
+      "prompt": "A function takes another function as a parameter and returns a new function. What kind of function is it?",
+      "choices": [
+        "Higher-order function",
+        "Imperative variable",
+        "Closed-world assumption",
+        "Atomic proposition"
+      ],
+      "answer": "Higher-order function",
+      "explanation": "Higher-order functions either receive functions as arguments, return functions, or both.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-composition-order",
+      "type": "multiple-choice",
+      "prompt": "If $h = f \\circ g$, and $f(x) = x + 2$, $g(x) = 3x$, what is $h(x)$?",
+      "choices": [
+        "3x + 2",
+        "3x + 6",
+        "x + 5",
+        "6x"
+      ],
+      "answer": "3x + 2",
+      "explanation": "Composition applies `g` first and then `f`: `f(g(x)) = f(3x) = 3x + 2`.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-map-result",
+      "type": "multiple-choice",
+      "prompt": "An apply-to-all operation applies $h(x)=x*x$ to the list `(2, 3, 4)`. What list should it return?",
+      "choices": [
+        "(4, 9, 16)",
+        "(2, 6, 12)",
+        "(8, 27, 64)",
+        "(2, 3, 4)"
+      ],
+      "answer": "(4, 9, 16)",
+      "explanation": "Apply-to-all maps the function over each element independently: `2^2`, `3^2`, and `4^2`.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-referential-transparency",
+      "type": "short-answer",
+      "prompt": "In functional programming, what property says that a function always produces the same result for the same parameters?",
+      "answer": "Referential transparency",
+      "explanation": "Referential transparency means the result depends only on the arguments, not on hidden state changes or side effects.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-lisp-data",
+      "type": "multiple-choice",
+      "prompt": "Which pair best describes Lisp's original data object types?",
+      "choices": [
+        "Atoms and lists",
+        "Classes and objects",
+        "Packets and sockets",
+        "Facts and goals"
+      ],
+      "answer": "Atoms and lists",
+      "explanation": "The chapter states that Lisp originally used atoms and lists as its primary data object types.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-lisp-list-function-data",
+      "type": "multiple-choice",
+      "prompt": "In Lisp, why does the form `(A B C)` need interpretation context?",
+      "choices": [
+        "It can be read either as data or as a function application.",
+        "It is always a syntax error.",
+        "It can only mean a Boolean expression.",
+        "It must be a Prolog goal."
+      ],
+      "answer": "It can be read either as data or as a function application.",
+      "explanation": "The same list form can represent a literal list or a call applying function `A` to arguments `B` and `C`.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-scheme-origin",
+      "type": "multiple-choice",
+      "prompt": "Which statement about Scheme is correct?",
+      "choices": [
+        "Scheme is a dialect derived from Lisp.",
+        "Scheme is the original name for Prolog.",
+        "Scheme is a purely imperative language with no functions.",
+        "Scheme is a hardware architecture, not a programming language."
+      ],
+      "answer": "Scheme is a dialect derived from Lisp.",
+      "explanation": "The chapter describes Scheme as a cleaner, simpler mid-1970s dialect of Lisp.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-scheme-first-class",
+      "type": "short-answer",
+      "prompt": "In Scheme, functions can be assigned, passed as parameters, returned from functions, and stored in lists. What term describes this status of functions?",
+      "answer": "First-class entities",
+      "explanation": "First-class functions can be manipulated as values in those ways.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-quote-purpose",
+      "type": "multiple-choice",
+      "prompt": "Why would Scheme use `QUOTE` or the apostrophe prefix before a list?",
+      "choices": [
+        "To prevent the list from being evaluated as a function application",
+        "To force arithmetic division",
+        "To make a Prolog variable uppercase",
+        "To convert a functional program into an imperative program"
+      ],
+      "answer": "To prevent the list from being evaluated as a function application",
+      "explanation": "Scheme's evaluator normally evaluates expressions; `QUOTE` keeps a symbol or list as data.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-define-special",
+      "type": "multiple-choice",
+      "prompt": "Why is Scheme's `DEFINE` called a special form?",
+      "choices": [
+        "Its first parameter is not evaluated; it is used as the name to bind.",
+        "It can only be used for numeric division.",
+        "It always performs pointer comparison.",
+        "It is a Prolog fact statement."
+      ],
+      "answer": "Its first parameter is not evaluated; it is used as the name to bind.",
+      "explanation": "Special forms have evaluation rules that differ from ordinary function calls. `DEFINE` binds a name rather than evaluating that name first.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-eq-eqv",
+      "type": "multiple-choice",
+      "prompt": "Which Scheme predicate is better described as value comparison for symbolic and numeric atoms, rather than pointer comparison?",
+      "choices": [
+        "EQV?",
+        "EQ?",
+        "CDR",
+        "CONS"
+      ],
+      "answer": "EQV?",
+      "explanation": "`EQV?` compares symbolic and numeric atoms by value; `EQ?` is generally pointer/same-object oriented.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-tail-recursion",
+      "type": "short-answer",
+      "prompt": "A recursive function's recursive call is the last operation performed by the function. What kind of recursion is this?",
+      "answer": "Tail recursion",
+      "explanation": "Tail recursion occurs when no additional work remains after the recursive call returns.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-common-lisp",
+      "type": "multiple-choice",
+      "prompt": "Which statement best compares Common Lisp and Scheme?",
+      "choices": [
+        "Common Lisp is large and feature-rich, while Scheme is smaller and simpler.",
+        "Common Lisp is a logic language, while Scheme is a database query language.",
+        "Common Lisp has no lists, while Scheme only has arrays.",
+        "Common Lisp is purely functional, while Scheme is only object-oriented."
+      ],
+      "answer": "Common Lisp is large and feature-rich, while Scheme is smaller and simpler.",
+      "explanation": "The chapter explicitly contrasts Common Lisp's large, complex feature set with Scheme's cleaner and simpler design.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-ml-type-inference",
+      "type": "multiple-choice",
+      "prompt": "ML uses type declarations but can also determine undeclared types automatically. What is this called?",
+      "choices": [
+        "Type inference",
+        "Backtracking",
+        "Closed-world assumption",
+        "Reader macro expansion"
+      ],
+      "answer": "Type inference",
+      "explanation": "Type inference lets ML determine types even when the programmer does not explicitly declare them.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-ml-pattern",
+      "type": "multiple-choice",
+      "prompt": "In ML, separate cases such as `fact(0) = 1` and `fact(n) = n * fact(n - 1)` illustrate which feature?",
+      "choices": [
+        "Pattern matching",
+        "Closed-world assumption",
+        "Physical concurrency",
+        "Reader macros"
+      ],
+      "answer": "Pattern matching",
+      "explanation": "Pattern matching selects a function case based on the parameter value or structure.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-currying",
+      "type": "short-answer",
+      "prompt": "What is the term for replacing a multi-parameter function with a one-parameter function that returns another function for the remaining parameters?",
+      "answer": "Currying",
+      "explanation": "Currying decomposes multi-argument function application into a sequence of one-argument function applications.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-partial-evaluation",
+      "type": "multiple-choice",
+      "prompt": "A curried function `add a b = a + b` is given its first argument `5`, producing a new function that adds 5 to its input. What concept is this?",
+      "choices": [
+        "Partial evaluation",
+        "Negation as failure",
+        "Pointer comparison",
+        "Universal quantification"
+      ],
+      "answer": "Partial evaluation",
+      "explanation": "Partial evaluation supplies some arguments and returns a new function waiting for the rest.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-haskell-pure",
+      "type": "multiple-choice",
+      "prompt": "Which statement about Haskell is correct?",
+      "choices": [
+        "Haskell is purely functional, with no assignment statements or side effects in the pure model.",
+        "Haskell is the parent language of Prolog.",
+        "Haskell is an imperative language based on mutable global variables.",
+        "Haskell forbids type inference and pattern matching."
+      ],
+      "answer": "Haskell is purely functional, with no assignment statements or side effects in the pure model.",
+      "explanation": "The chapter presents Haskell as similar to ML in some ways but purely functional, unlike most functional languages.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-lazy-evaluation",
+      "type": "multiple-choice",
+      "prompt": "A language computes list elements only when a program actually needs them, allowing expressions such as infinite lists. What evaluation strategy is this?",
+      "choices": [
+        "Lazy evaluation",
+        "Eager mutation",
+        "Forward-only assignment",
+        "Pointer equality"
+      ],
+      "answer": "Lazy evaluation",
+      "explanation": "Lazy evaluation computes only necessary values and supports nonstrict behavior such as infinite lists.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-fsharp",
+      "type": "multiple-choice",
+      "prompt": "Why is F# described as interesting in the chapter?",
+      "choices": [
+        "It combines functional foundations with imperative/OOP support and .NET interoperability.",
+        "It is the first logic language and the parent of Prolog.",
+        "It removes all libraries and IDE support.",
+        "It is a version of Scheme that uses only dynamic scoping."
+      ],
+      "answer": "It combines functional foundations with imperative/OOP support and .NET interoperability.",
+      "explanation": "F# builds on functional languages while supporting widely used methodologies and interoperability with other .NET languages.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "quiz-functional-concurrency",
+      "type": "multiple-choice",
+      "prompt": "According to the chapter comparison, which statement about concurrency is most accurate?",
+      "choices": [
+        "Imperative programs usually require programmer-designed concurrency, while functional programs can be made concurrent more automatically.",
+        "Functional languages cannot express concurrent computation.",
+        "Imperative languages automatically make all programs concurrent.",
+        "Concurrency is unrelated to programming-language design."
+      ],
+      "answer": "Imperative programs usually require programmer-designed concurrency, while functional programs can be made concurrent more automatically.",
+      "explanation": "The comparison slide lists programmer-designed concurrency for imperative languages and automatic concurrency potential for functional languages.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-logic-declarative",
+      "type": "multiple-choice",
+      "prompt": "Which statement best describes logic programming languages?",
+      "choices": [
+        "They express programs as symbolic logic and use inferencing to produce results.",
+        "They require detailed step-by-step procedures for every result.",
+        "They are defined by mutable arrays and pointer arithmetic.",
+        "They are only used to write graphical interfaces."
+      ],
+      "answer": "They express programs as symbolic logic and use inferencing to produce results.",
+      "explanation": "Chapter 16 introduces logic languages as symbolic-logic based and declarative rather than procedural.",
+      "sourceFilenames": [
+        "Ch16.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-prolog-parent",
+      "type": "multiple-choice",
+      "prompt": "Which language is identified by the sample final/chapter material as the major logic programming language?",
+      "choices": [
+        "Prolog",
+        "Haskell",
+        "Scheme",
+        "Common Lisp"
+      ],
+      "answer": "Prolog",
+      "explanation": "The course material centers logic programming language discussion on Prolog.",
+      "sourceFilenames": [
+        "Ch16.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-prolog-not-imperative",
+      "type": "short-answer",
+      "prompt": "Prolog is declarative rather than imperative. In one sentence, what does that mean?",
+      "answer": "It states facts, rules, and desired relationships/results rather than detailed step-by-step commands for how to compute them.",
+      "explanation": "Declarative semantics focus on what should be true, while imperative programs specify procedures and state changes.",
+      "sourceFilenames": [
+        "Ch16.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-proposition",
+      "type": "multiple-choice",
+      "prompt": "In logic programming, what is a proposition?",
+      "choices": [
+        "A logical statement that may or may not be true",
+        "A mutable memory cell",
+        "A Scheme list constructor",
+        "A physical processor core"
+      ],
+      "answer": "A logical statement that may or may not be true",
+      "explanation": "A proposition expresses objects and relationships, and it has a truth status.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-compound-term-parts",
+      "type": "multiple-choice",
+      "prompt": "In the compound term `like(jim, linux)`, what is `like`?",
+      "choices": [
+        "The functor naming the relationship",
+        "An anonymous variable",
+        "The consequent of every rule",
+        "A universal quantifier"
+      ],
+      "answer": "The functor naming the relationship",
+      "explanation": "A compound term has a functor plus an ordered list of parameters.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-fact-query",
+      "type": "multiple-choice",
+      "prompt": "Which option correctly distinguishes a fact from a query in logic programming?",
+      "choices": [
+        "A fact is assumed true; a query asks whether a proposition can be proved true.",
+        "A fact is always false; a query is always true.",
+        "A fact is a mutable variable; a query is an assignment statement.",
+        "A fact belongs only to Scheme; a query belongs only to ML."
+      ],
+      "answer": "A fact is assumed true; a query asks whether a proposition can be proved true.",
+      "explanation": "Facts are database hypotheses; queries/goals ask the inference engine to establish truth.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-quantifier-universal",
+      "type": "short-answer",
+      "prompt": "What does the universal quantifier mean in predicate calculus?",
+      "answer": "For all values, the proposition is true.",
+      "explanation": "Universal quantification states that a predicate holds over every value in its scope.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-horn-clause-fact",
+      "type": "multiple-choice",
+      "prompt": "In theorem proving for logic programming, a headless Horn clause is used to state what?",
+      "choices": [
+        "A fact",
+        "A lambda expression",
+        "A pointer comparison",
+        "A Haskell list comprehension"
+      ],
+      "answer": "A fact",
+      "explanation": "The chapter says Horn clauses can be headed or headless; headless Horn clauses state facts.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-unification",
+      "type": "multiple-choice",
+      "prompt": "What is unification in Prolog-style theorem proving?",
+      "choices": [
+        "Finding variable values that allow propositions to match",
+        "Making all functions imperative",
+        "Converting a list into a dotted pair",
+        "Compiling Scheme macros"
+      ],
+      "answer": "Finding variable values that allow propositions to match",
+      "explanation": "Unification is the matching process that may instantiate variables temporarily so resolution can proceed.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-backtracking",
+      "type": "multiple-choice",
+      "prompt": "A Prolog proof path fails, so the interpreter returns to a previous subgoal and tries a different possible match. What is this called?",
+      "choices": [
+        "Backtracking",
+        "Currying",
+        "Lazy evaluation",
+        "Referential transparency"
+      ],
+      "answer": "Backtracking",
+      "explanation": "Backtracking revisits earlier choice points to search for another proof path.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-prolog-naming",
+      "type": "multiple-choice",
+      "prompt": "In Edinburgh-style Prolog syntax, which naming rule is correct?",
+      "choices": [
+        "Variables begin with an uppercase letter or underscore; atoms usually begin with lowercase.",
+        "Variables begin with lowercase; atoms must begin with uppercase.",
+        "All variables and atoms must be numeric.",
+        "Atoms and variables are distinguished only by parentheses."
+      ],
+      "answer": "Variables begin with an uppercase letter or underscore; atoms usually begin with lowercase.",
+      "explanation": "The chapter distinguishes atoms and variables by these naming conventions.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-rule-antecedent-consequent",
+      "type": "multiple-choice",
+      "prompt": "In a Prolog rule, how should the right and left sides be understood?",
+      "choices": [
+        "The right side is the antecedent/if part; the left side is the consequent/then part.",
+        "The right side is always a comment; the left side is always a list.",
+        "The right side is a mutable assignment target; the left side is an arithmetic expression.",
+        "Both sides must be empty."
+      ],
+      "answer": "The right side is the antecedent/if part; the left side is the consequent/then part.",
+      "explanation": "A rule states that the consequent is true if the antecedent conditions are satisfied.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-chaining",
+      "type": "multiple-choice",
+      "prompt": "Which resolution approach does Prolog use?",
+      "choices": [
+        "Backward chaining",
+        "Forward chaining only",
+        "No inferencing",
+        "Macro expansion only"
+      ],
+      "answer": "Backward chaining",
+      "explanation": "Prolog begins with a goal and works backward toward facts and rules that can prove it.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-depth-first",
+      "type": "multiple-choice",
+      "prompt": "When a Prolog goal has multiple subgoals, which search strategy does Prolog use?",
+      "choices": [
+        "Depth-first search",
+        "Breadth-first search",
+        "Randomized parallel search",
+        "No search strategy"
+      ],
+      "answer": "Depth-first search",
+      "explanation": "The chapter says Prolog uses depth-first search because it requires fewer computer resources than breadth-first search.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-is-operator",
+      "type": "multiple-choice",
+      "prompt": "Why is `Sum is Sum + Number` illegal as ordinary accumulation in Prolog?",
+      "choices": [
+        "`is` is not an imperative assignment operator that updates an existing variable.",
+        "`is` can only compare two strings.",
+        "Prolog does not support any arithmetic expressions.",
+        "The right operand of `is` must always be a list."
+      ],
+      "answer": "`is` is not an imperative assignment operator that updates an existing variable.",
+      "explanation": "`is` evaluates the right-side arithmetic expression and binds the result for a goal; it does not mutate a stored variable in place.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-trace-events",
+      "type": "short-answer",
+      "prompt": "List the four Prolog trace events described in the chapter.",
+      "answer": "Call, Exit, Redo, and Fail",
+      "explanation": "These events mark the attempt to satisfy a goal, success, backtracking, and failure.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-list-head-tail",
+      "type": "multiple-choice",
+      "prompt": "In Prolog, what does `[Head | Tail]` mean?",
+      "choices": [
+        "A nonempty list split into first element and remaining list",
+        "A pointer to a Scheme macro",
+        "A universal quantifier over all atoms",
+        "A mutable assignment to `Head`"
+      ],
+      "answer": "A nonempty list split into first element and remaining list",
+      "explanation": "The vertical-bar notation separates a list's head from its tail.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-anonymous-variable",
+      "type": "multiple-choice",
+      "prompt": "What does the anonymous variable `_` mean in Prolog?",
+      "choices": [
+        "A value may be unified there, but the program does not care what it is.",
+        "The proposition is universally false.",
+        "The rule has no antecedent.",
+        "The variable must be printed in the final answer."
+      ],
+      "answer": "A value may be unified there, but the program does not care what it is.",
+      "explanation": "The underscore is used when the identity of the matched value is irrelevant.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-closed-world",
+      "type": "multiple-choice",
+      "prompt": "What does the closed-world assumption mean?",
+      "choices": [
+        "Only knowledge in the database is available; what cannot be derived is treated as false.",
+        "Every possible proposition is assumed true.",
+        "The program must run on a single physical processor.",
+        "All variables must be mutable global variables."
+      ],
+      "answer": "Only knowledge in the database is available; what cannot be derived is treated as false.",
+      "explanation": "This assumption creates the related negation problem: unstated knowledge is treated as false.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quiz-final-outcomes",
+      "type": "multiple-choice",
+      "prompt": "According to the CE 316 syllabus, which learning outcomes are marked for the final exam?",
+      "choices": [
+        "LO3 concurrency, LO4 scripting, LO5 functional programming, and LO6 logic programming",
+        "Only LO1 imperative C programming and LO2 object-oriented design",
+        "Only LO7 project teamwork",
+        "Only LO5 functional programming"
+      ],
+      "answer": "LO3 concurrency, LO4 scripting, LO5 functional programming, and LO6 logic programming",
+      "explanation": "The final exam row in the syllabus is checked under LO3, LO4, LO5, and LO6.",
+      "sourceFilenames": [
+        "CE316_Syllabus.pdf"
+      ]
+    },
+    {
+      "id": "quiz-critical-section",
+      "type": "multiple-choice",
+      "prompt": "A global counter is incremented by several threads. Which part is the critical section?",
+      "choices": [
+        "The read/modify/write operation on the shared counter",
+        "Only the line that prints the final result",
+        "Only the declaration of the thread variable",
+        "Only the command that starts the program"
+      ],
+      "answer": "The read/modify/write operation on the shared counter",
+      "explanation": "The shared counter update can interleave between threads and lose updates, so that access must be protected.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "CE316_Syllabus.pdf"
+      ]
+    },
+    {
+      "id": "quiz-mutex-role",
+      "type": "multiple-choice",
+      "prompt": "What is the main role of a mutex in a concurrent program?",
+      "choices": [
+        "To allow only one thread at a time into a protected critical section",
+        "To create a new process for every thread",
+        "To guarantee that a program uses multiple CPU cores",
+        "To convert a Python script into a C program"
+      ],
+      "answer": "To allow only one thread at a time into a protected critical section",
+      "explanation": "A mutex is a mutual-exclusion lock used to protect shared state from conflicting simultaneous access.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-producer-consumer-empty-full",
+      "type": "multiple-choice",
+      "prompt": "In a producer-consumer problem with a bounded buffer, which condition should make a consumer wait?",
+      "choices": [
+        "The buffer is empty",
+        "The buffer has at least one item",
+        "The producer has just released the mutex",
+        "The item value is an integer"
+      ],
+      "answer": "The buffer is empty",
+      "explanation": "A consumer cannot remove an item when no item exists; it should wait until a producer adds one.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-producer-wait-full",
+      "type": "multiple-choice",
+      "prompt": "In a bounded-buffer producer-consumer problem, which condition should make a producer wait?",
+      "choices": [
+        "The buffer is full",
+        "The buffer is empty",
+        "There is at least one free slot",
+        "A consumer has just consumed an item"
+      ],
+      "answer": "The buffer is full",
+      "explanation": "A producer must not overwrite or exceed the bounded buffer capacity, so it waits when no free slot is available.",
+      "sourceFilenames": [
+        "LAB6(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-condition-variable",
+      "type": "short-answer",
+      "prompt": "In thread synchronization, why is a condition variable useful?",
+      "answer": "It lets a thread sleep until a shared-state condition becomes true, while releasing and later reacquiring the associated mutex.",
+      "explanation": "Condition variables are used for cases such as waiting for a nonempty buffer or waiting for available space.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-semaphore-vs-mutex",
+      "type": "multiple-choice",
+      "prompt": "Which statement best distinguishes a semaphore from a simple mutex?",
+      "choices": [
+        "A semaphore can count available permits/resources, while a mutex mainly enforces one-at-a-time ownership.",
+        "A semaphore is only for Python strings, while a mutex is only for Prolog facts.",
+        "A semaphore prevents all waiting, while a mutex creates waiting.",
+        "A semaphore is a kind of Haskell lambda expression."
+      ],
+      "answer": "A semaphore can count available permits/resources, while a mutex mainly enforces one-at-a-time ownership.",
+      "explanation": "The lab source introduces semaphores as synchronization structures with an integer value manipulated by wait/post.",
+      "sourceFilenames": [
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-readers-writers",
+      "type": "multiple-choice",
+      "prompt": "In the readers-writers problem, which access pattern is allowed?",
+      "choices": [
+        "Multiple readers may read together, but a writer needs exclusive access.",
+        "Multiple writers may write together if no reader exists.",
+        "Readers must always be exclusive, but writers may overlap.",
+        "Readers and writers can always access shared data at the same time."
+      ],
+      "answer": "Multiple readers may read together, but a writer needs exclusive access.",
+      "explanation": "Readers do not modify the data, so several can read concurrently; writers modify the data, so they must exclude all other access.",
+      "sourceFilenames": [
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-starvation",
+      "type": "short-answer",
+      "prompt": "What is starvation in a concurrent program?",
+      "answer": "Starvation occurs when a thread is repeatedly denied access or progress indefinitely while other threads continue to run.",
+      "explanation": "The lab notes mention starvation risks in producer-consumer timing and readers-writers designs.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-logical-physical-concurrency-mc",
+      "type": "multiple-choice",
+      "prompt": "Which statement best distinguishes logical concurrency from physical concurrency?",
+      "choices": [
+        "Logical concurrency is about program structure; physical concurrency is about simultaneous execution on hardware.",
+        "Logical concurrency requires multiple processors; physical concurrency never uses hardware.",
+        "Logical concurrency means no threads exist; physical concurrency means only one activity exists.",
+        "They are exactly the same concept."
+      ],
+      "answer": "Logical concurrency is about program structure; physical concurrency is about simultaneous execution on hardware.",
+      "explanation": "This is the more exam-worthy version of the sample-final topic: it tests the distinction, not just a memorized true/false wording.",
+      "sourceFilenames": [
+        "previous_final.jpeg",
+        "CE316_Syllabus.pdf"
+      ]
+    },
+    {
+      "id": "quiz-lo4-scripting-scope",
+      "type": "multiple-choice",
+      "prompt": "Based on the syllabus and Python source, which topic best belongs to LO4?",
+      "choices": [
+        "Solving problems with scripting-language features such as string processing, file I/O, objects, and arrays",
+        "Only Prolog backward chaining",
+        "Only Haskell lazy evaluation",
+        "Only mutex locks and semaphores"
+      ],
+      "answer": "Solving problems with scripting-language features such as string processing, file I/O, objects, and arrays",
+      "explanation": "LO4 is scripting languages, and the Python lab source centers on those scripting-language features.",
+      "sourceFilenames": [
+        "CE316_Syllabus.pdf",
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "quiz-default-parameter",
+      "type": "multiple-choice",
+      "prompt": "In Python, what is the purpose of a default parameter such as `max_length=30`?",
+      "choices": [
+        "It supplies a value when the caller does not provide that argument.",
+        "It makes the function recursive.",
+        "It prevents strings from being passed.",
+        "It turns a class into a Prolog rule."
+      ],
+      "answer": "It supplies a value when the caller does not provide that argument.",
+      "explanation": "Default parameters make a function configurable while still allowing shorter calls.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "quiz-slug-abbreviation",
+      "type": "multiple-choice",
+      "prompt": "Which statement best compares the slug and abbreviation tasks in the Python scripting source?",
+      "choices": [
+        "A slug normalizes a title into lowercase dash-separated words; an abbreviation extracts shortened pieces of each word and joins them with a chosen separator.",
+        "A slug creates a thread; an abbreviation locks a mutex.",
+        "A slug proves a Prolog goal; an abbreviation performs unification.",
+        "A slug is a Haskell infinite list; an abbreviation is lazy evaluation."
+      ],
+      "answer": "A slug normalizes a title into lowercase dash-separated words; an abbreviation extracts shortened pieces of each word and joins them with a chosen separator.",
+      "explanation": "This tests the conceptual string-processing difference without asking for implementation code.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "quiz-file-append-mode",
+      "type": "multiple-choice",
+      "prompt": "In the student-record scripting example, why use append mode when adding a new student to the file?",
+      "choices": [
+        "To add the new record without overwriting the existing records",
+        "To delete all previous student records first",
+        "To sort the file automatically",
+        "To make the file a NumPy matrix"
+      ],
+      "answer": "To add the new record without overwriting the existing records",
+      "explanation": "Append mode is appropriate when the task is to add a new record while preserving old ones.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "quiz-student-eos-grade",
+      "type": "short-answer",
+      "prompt": "In the student-record source, the end-of-semester grade is calculated as `midterm * 0.4 + final * 0.6`. If a student has midterm `70` and final `90`, what is the end-of-semester grade?",
+      "answer": "82",
+      "explanation": "`70 * 0.4 = 28` and `90 * 0.6 = 54`; the total is `82`.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "quiz-numpy-reason",
+      "type": "multiple-choice",
+      "prompt": "Why does the Python source recommend NumPy for large-scale mathematical calculations?",
+      "choices": [
+        "NumPy arrays and matrices are designed for efficient numeric computation, unlike ordinary Python lists.",
+        "NumPy makes Python variables uppercase like Prolog variables.",
+        "NumPy is required to create mutex locks.",
+        "NumPy prevents all file I/O."
+      ],
+      "answer": "NumPy arrays and matrices are designed for efficient numeric computation, unlike ordinary Python lists.",
+      "explanation": "The source notes that ordinary Python lists can hold arbitrary objects and are difficult to use for large mathematical operations.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "quiz-logical-physical-concurrency",
+      "type": "short-answer",
+      "prompt": "Briefly distinguish **logical concurrency** from **physical concurrency**.",
+      "answer": "Logical concurrency means a program is structured as multiple activities that can make progress conceptually at the same time; physical concurrency means multiple activities actually execute at the same time on separate hardware resources such as multiple processors or cores.",
+      "explanation": "The sample final emphasizes this distinction: logical concurrency is about the program model, while physical concurrency is about simultaneous execution by hardware.",
+      "sourceFilenames": [
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "quiz-language-family-match",
+      "type": "multiple-choice",
+      "prompt": "Which language-family match is correct?",
+      "choices": [
+        "Scheme derives from Lisp; Prolog is a logic programming language; Haskell is purely functional.",
+        "Prolog derives from Haskell; Lisp is a logic programming language; Scheme is a processor architecture.",
+        "Haskell derives from Prolog; Scheme is imperative only; Lisp is a database system.",
+        "Scheme, Prolog, and Haskell are all C lab frameworks."
+      ],
+      "answer": "Scheme derives from Lisp; Prolog is a logic programming language; Haskell is purely functional.",
+      "explanation": "This combines the sample final's main classification facts with the chapter descriptions.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "Ch16.pdf",
+        "previous_final.jpeg"
+      ]
+    }
+  ]
+}

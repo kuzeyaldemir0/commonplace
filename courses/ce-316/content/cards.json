@@ -1,0 +1,607 @@
+{
+  "version": 1,
+  "cards": [
+    {
+      "id": "functional-vs-imperative-foundation",
+      "front": "What is the main design foundation of **functional languages** compared with **imperative languages**?",
+      "back": "Functional languages are based on **mathematical functions**. Imperative languages are based more directly on the **von Neumann architecture**, where computation is described as operations that update stored variables.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "mathematical-function-domain-range",
+      "front": "In mathematical-function terminology, what are the **domain** and **range**?",
+      "back": "The **domain** is the set of possible input values. The **range** is the set of possible output values that inputs map to.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "lambda-expression-purpose",
+      "front": "What does a **lambda expression** describe?",
+      "back": "A lambda expression describes a **nameless function** by specifying its parameters and the mapping from inputs to result.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "higher-order-function",
+      "front": "What makes a function **higher-order**?",
+      "back": "A higher-order function takes one or more functions as parameters, returns a function as its result, or both.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "function-composition",
+      "front": "What does function composition mean if $h = f \\circ g$?",
+      "back": "It means $h(x) = f(g(x))$: apply `g` to the input first, then apply `f` to that result.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "apply-to-all-map",
+      "front": "What is the **apply-to-all** functional form?",
+      "back": "It takes a function and a list, applies the function to each list element, and returns the list of results. In many languages this idea appears as `map`.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "referential-transparency",
+      "front": "What is **referential transparency** in functional programming?",
+      "back": "A function is referentially transparent when the same arguments always produce the same result, with no hidden state changes affecting the outcome.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "functional-variable-management",
+      "front": "Why do functional languages reduce the importance of variable management?",
+      "back": "They model computation as function evaluation rather than step-by-step updates to mutable variables, so the programmer spends less effort tracking changing storage state.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "lisp-original-data-types",
+      "front": "What were the original basic data object types in Lisp?",
+      "back": "Originally, Lisp used mainly **atoms** and **lists**. Lists are parenthesized collections of atoms and/or sublists.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "lisp-list-interpretation",
+      "front": "Why can the Lisp form `(A B C)` be ambiguous without context?",
+      "back": "The same list shape can be interpreted as **data** containing `A`, `B`, and `C`, or as a **function application** where function `A` is applied to arguments `B` and `C`.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "scheme-origin",
+      "front": "What is **Scheme** in relation to Lisp?",
+      "back": "Scheme is a mid-1970s **dialect of Lisp**, designed as a cleaner, simpler, more modern Lisp variant.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "scheme-static-scoping",
+      "front": "What scoping rule does Scheme use?",
+      "back": "Scheme uses **static scoping** exclusively.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "first-class-functions",
+      "front": "What does it mean that functions are **first-class entities** in Scheme?",
+      "back": "Functions can be values: they can be assigned to names, placed in lists, passed as parameters, returned from other functions, and produced by expressions.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "scheme-repl",
+      "front": "What is a Scheme interpreter's **REPL**?",
+      "back": "It is a read-evaluate-print loop: the interpreter reads an expression, evaluates it, prints the result, and repeats.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "scheme-define",
+      "front": "What are the two main uses of Scheme's `DEFINE` special form?",
+      "back": "`DEFINE` can bind a symbol to an expression, or bind a function name to a lambda expression. The first parameter is not evaluated; it becomes the name being bound.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "scheme-quote",
+      "front": "Why is `QUOTE` needed in Scheme?",
+      "back": "`QUOTE` prevents evaluation. It lets a list or symbol be treated as data instead of being interpreted as a function call or name to evaluate.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "scheme-car-cdr-cons",
+      "front": "What do `CAR`, `CDR`, and `CONS` do conceptually in Lisp/Scheme lists?",
+      "back": "`CAR` returns the first element, `CDR` returns the rest of the list, and `CONS` constructs a new pair/list by placing a first element in front of another list-like structure.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "scheme-eq-eqv",
+      "front": "How do Scheme predicates `EQ?` and `EQV?` differ?",
+      "back": "`EQ?` is usually a pointer/same-object comparison, especially for atoms. `EQV?` compares symbolic and numeric atoms by value, so it is more appropriate for numeric equality.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "tail-recursion",
+      "front": "What is **tail recursion**, and why is it important in Scheme?",
+      "back": "A function is tail recursive when the recursive call is the final operation. Scheme systems are required to convert tail-recursive calls into iteration-like execution, avoiding unnecessary stack growth.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "common-lisp-vs-scheme",
+      "front": "How does **Common Lisp** differ from **Scheme** in overall design?",
+      "back": "Scheme is small and simple; Common Lisp is large and complex, combining many Lisp dialect features such as records, arrays, strings, packages, strong I/O, macros, and iterative control.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "common-lisp-macros",
+      "front": "What are the two steps in evaluating a Common Lisp macro?",
+      "back": "First the macro is **expanded** into code; then the expanded code is **evaluated**.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "ml-characteristics",
+      "front": "Name the central characteristics of **ML** as a functional language.",
+      "back": "ML is statically scoped, strongly typed, uses type inference, has no type coercions, avoids imperative-style variables, supports pattern matching, and includes lists, exceptions, and modules.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "ml-pattern-matching",
+      "front": "What is **pattern matching** used for in ML?",
+      "back": "Pattern matching lets a function choose behavior based on the shape or value of its parameters, such as separate cases for an empty list and a head-tail list.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "currying",
+      "front": "What is **currying**?",
+      "back": "Currying transforms a function that conceptually takes multiple parameters into a chain of one-parameter functions, each returning the next function until all arguments are supplied.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "partial-evaluation",
+      "front": "What is **partial evaluation** of a curried function?",
+      "back": "It means supplying some leftmost arguments now to produce a new function that waits for the remaining arguments later.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "haskell-pure-functional",
+      "front": "Why is **Haskell** described as a purely functional language?",
+      "back": "Haskell has no assignment statements, no imperative-style variables, and no side effects in the pure functional model.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "haskell-lazy-evaluation",
+      "front": "What is **lazy evaluation**?",
+      "back": "Lazy evaluation computes only the values that are actually needed. This supports capabilities such as working with infinite lists in a controlled way.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "strict-vs-nonstrict",
+      "front": "How do **strict** and **nonstrict** languages differ?",
+      "back": "A strict language requires actual parameters to be fully evaluated before function application. A nonstrict language does not require full evaluation unless the values are needed.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "fsharp-position",
+      "front": "What is the role of **F#** among functional languages?",
+      "back": "F# is a .NET language based on OCaml, with functional foundations plus imperative and object-oriented features, designed for interoperability with other .NET languages.",
+      "sourceFilenames": [
+        "Ch15.pdf"
+      ]
+    },
+    {
+      "id": "functional-imperative-comparison",
+      "front": "What broad tradeoff does the chapter give between functional and imperative languages?",
+      "back": "Imperative languages tend to emphasize efficient execution but have more complex syntax/semantics and programmer-managed concurrency. Functional languages tend to have simpler semantics and syntax and can support automatic concurrency, but may execute less efficiently.",
+      "sourceFilenames": [
+        "Ch15.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "logic-language-core-idea",
+      "front": "What is the core idea of a **logic programming language**?",
+      "back": "A logic program states facts and rules in symbolic logic, then uses logical inferencing to answer goals or queries.",
+      "sourceFilenames": [
+        "Ch16.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "declarative-vs-procedural",
+      "front": "What does it mean that logic programming is **declarative** rather than **procedural**?",
+      "back": "The program specifies **what result or relationship should hold**, not a detailed step-by-step procedure for how to compute it.",
+      "sourceFilenames": [
+        "Ch16.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "proposition",
+      "front": "What is a **proposition** in logic programming?",
+      "back": "A proposition is a logical statement that may be true or false. It consists of objects and relationships among those objects.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "predicate-calculus-purpose",
+      "front": "Why is **predicate calculus** important for logic programming?",
+      "back": "It is the form of symbolic logic used to express propositions, relate propositions, and infer new propositions from existing ones.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "constant-vs-variable-logic",
+      "front": "In predicate calculus, how does a **constant** differ from a **variable**?",
+      "back": "A constant names a specific object. A variable can represent different objects at different times and is not the same as an imperative-language storage variable.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "compound-term",
+      "front": "What are the parts of a **compound term** such as `like(jim, linux)`?",
+      "back": "It has a **functor**, which names the relationship (`like`), and an ordered parameter list or tuple (`jim`, `linux`).",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "fact-query-rule",
+      "front": "How do **facts**, **queries/goals**, and **rules** differ in Prolog-style logic programming?",
+      "back": "A **fact** is assumed true. A **query/goal** asks whether a proposition can be proved. A **rule** states that a consequent is true if its antecedent conditions are true.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "logical-operators",
+      "front": "What do conjunction, disjunction, implication, equivalence, and negation mean in symbolic logic?",
+      "back": "Conjunction means **and**, disjunction means **or**, implication means **implies**, equivalence means **has the same truth value as**, and negation means **not**.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "quantifiers",
+      "front": "What do the **universal** and **existential** quantifiers mean?",
+      "back": "Universal quantification means a statement holds **for all** values. Existential quantification means **there exists** at least one value for which the statement holds.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "horn-clause",
+      "front": "What is a **Horn clause** in logic programming?",
+      "back": "It is a restricted clause form used for theorem proving. A headed Horn clause has a single atomic proposition as its head; a headless Horn clause is used to state a fact.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "resolution-unification-instantiation",
+      "front": "How are **resolution**, **unification**, and **instantiation** related?",
+      "back": "Resolution is the inference process for proving goals. Unification finds variable values that make propositions match. Instantiation temporarily binds variables to those values during the proof attempt.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "backtracking",
+      "front": "What is **backtracking** in Prolog?",
+      "back": "When a proof path fails, Prolog returns to a previous choice point and tries another possible instantiation or rule/fact match.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "prolog-origin",
+      "front": "Where did **Prolog** originate, and what ideas influenced it?",
+      "back": "Prolog originated from work at the University of Aix-Marseille on natural language processing and the University of Edinburgh on automated theorem proving.",
+      "sourceFilenames": [
+        "Ch16.pdf",
+        "previous_final.jpeg"
+      ]
+    },
+    {
+      "id": "prolog-term-types",
+      "front": "What are the main kinds of Prolog **terms**?",
+      "back": "A Prolog term can be a **constant**, **variable**, or **structure**. Constants include atoms and integers; structures represent atomic propositions with a functor and parameters.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "prolog-variable-naming",
+      "front": "How are Prolog atoms and variables typically distinguished in Edinburgh syntax?",
+      "back": "Atoms commonly begin with a **lowercase** letter, while variables begin with an **uppercase** letter or underscore.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "forward-vs-backward-chaining",
+      "front": "How do **forward chaining** and **backward chaining** differ?",
+      "back": "Forward chaining starts from known facts/rules and tries to reach a goal. Backward chaining starts from the goal and works backward to facts that would prove it. Prolog uses backward chaining.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "depth-vs-breadth-prolog",
+      "front": "What search strategy does Prolog use for subgoals?",
+      "back": "Prolog uses **depth-first search**, trying to complete a proof for one subgoal path before moving to alternatives.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "prolog-is-not-assignment",
+      "front": "Why is Prolog's `is` operator not the same as imperative assignment?",
+      "back": "`is` evaluates an arithmetic expression on the right and binds the result to the variable on the left for the current goal. It does not update a stored variable like `Sum = Sum + Number`; that style is illegal.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "prolog-trace-events",
+      "front": "What are the four events in Prolog's tracing model?",
+      "back": "**Call** begins an attempt to satisfy a goal, **Exit** means a goal succeeded, **Redo** means backtracking is trying another possibility, and **Fail** means a goal could not be satisfied on that path.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "prolog-lists",
+      "front": "What does the Prolog list pattern `[Head | Tail]` represent?",
+      "back": "It decomposes a nonempty list into its first element, `Head`, and the remaining list, `Tail`.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "anonymous-variable",
+      "front": "What does the underscore `_` mean in Prolog?",
+      "back": "It is an anonymous variable: it can unify with a value, but the program deliberately ignores what that value is.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "prolog-deficiencies",
+      "front": "Name major deficiencies or limitations of Prolog described in the chapter.",
+      "back": "Prolog has issues with resolution order control, the closed-world assumption, the negation problem, and intrinsic limits where some processes are easy to state logically but difficult to execute efficiently.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "closed-world-assumption",
+      "front": "What is the **closed-world assumption**?",
+      "back": "It assumes the only knowledge available is what appears in the database. If something is not derivable from that database, it is treated as false.",
+      "sourceFilenames": [
+        "Ch16.pdf"
+      ]
+    },
+    {
+      "id": "final-outcome-focus",
+      "front": "According to the CE 316 syllabus, which learning outcomes are marked for the **final exam**?",
+      "back": "The final exam is marked for **LO3**, **LO4**, **LO5**, and **LO6**: concurrent programming, scripting languages, functional programming languages, and logic programming languages.",
+      "sourceFilenames": [
+        "CE316_Syllabus.pdf"
+      ]
+    },
+    {
+      "id": "lo3-concurrent-programming",
+      "front": "What is the main idea of **LO3** in the CE 316 syllabus?",
+      "back": "LO3 is about using **threads** to create concurrent programs that share common resources. For theory study, the key issue is how shared resources are coordinated safely.",
+      "sourceFilenames": [
+        "CE316_Syllabus.pdf",
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "logical-vs-physical-concurrency-card",
+      "front": "How do **logical concurrency** and **physical concurrency** differ?",
+      "back": "**Logical concurrency** means a program is structured as multiple activities that can progress conceptually at the same time. **Physical concurrency** means multiple activities actually execute simultaneously on separate hardware resources such as multiple cores or processors.",
+      "sourceFilenames": [
+        "previous_final.jpeg",
+        "CE316_Syllabus.pdf"
+      ]
+    },
+    {
+      "id": "thread-shared-resource-risk",
+      "front": "Why are shared resources risky in concurrent programs?",
+      "back": "If multiple threads read or modify shared data without coordination, their operations can interleave unpredictably. This can create race conditions and incorrect final results.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "critical-section",
+      "front": "What is a **critical section**?",
+      "back": "A critical section is a part of a program that accesses shared data or a shared resource and therefore must not be executed by conflicting threads at the same time.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "mutex-purpose",
+      "front": "What is the purpose of a **mutex lock**?",
+      "back": "A mutex enforces mutual exclusion: a thread locks it before entering a critical section and unlocks it when leaving, so only one thread at a time can execute that protected section.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "race-counter-example",
+      "front": "Why can incrementing a shared counter require synchronization?",
+      "back": "An increment is not conceptually just one indivisible action: a thread reads the value, computes a new value, and writes it back. If threads interleave these steps, updates can be lost unless the counter update is protected.",
+      "sourceFilenames": [
+        "LAB6(1).pdf"
+      ]
+    },
+    {
+      "id": "producer-consumer-core",
+      "front": "What is the main synchronization issue in the **producer-consumer** problem?",
+      "back": "Producers must not add items when the buffer/resource is full, consumers must not remove items when it is empty, and updates to shared counts or buffer positions must be protected.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "bounded-buffer-in-out",
+      "front": "In a circular bounded buffer, what do the `in` and `out` positions represent?",
+      "back": "`in` is the position where the next produced item will be placed. `out` is the position from which the next item will be consumed. Together they preserve circular order.",
+      "sourceFilenames": [
+        "LAB6(1).pdf"
+      ]
+    },
+    {
+      "id": "condition-variable-purpose",
+      "front": "What is the purpose of a **condition variable** in thread synchronization?",
+      "back": "A condition variable lets a thread wait until some condition becomes true, such as a nonempty buffer or available space. Waiting releases the associated mutex and later reacquires it before continuing.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "semaphore-purpose",
+      "front": "What does a **semaphore** provide beyond a basic mutex?",
+      "back": "A semaphore maintains a count of available permits/resources. `wait` consumes a permit or blocks if none is available; `post` releases a permit and may wake a waiting thread.",
+      "sourceFilenames": [
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "semaphore-vs-condition",
+      "front": "How does a semaphore differ conceptually from a condition variable?",
+      "back": "A semaphore has its own counter representing available permits. A condition variable is mainly a waiting/signaling mechanism tied to a predicate protected by a mutex; the condition itself is represented in shared state.",
+      "sourceFilenames": [
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "readers-writers-rule",
+      "front": "What is the key access rule in the **readers-writers** problem?",
+      "back": "Multiple readers may read shared data at the same time because they do not modify it, but a writer must have exclusive access because it changes the shared data.",
+      "sourceFilenames": [
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "starvation",
+      "front": "What is **starvation** in a synchronization problem?",
+      "back": "Starvation happens when a thread is repeatedly prevented from entering the critical section or making progress, even though the program as a whole continues running.",
+      "sourceFilenames": [
+        "LAB6(1).pdf",
+        "LAB7(1).pdf"
+      ]
+    },
+    {
+      "id": "lo4-scripting",
+      "front": "What is the main idea of **LO4** in the CE 316 syllabus?",
+      "back": "LO4 is about solving computing problems using **scripting languages**. In the available sources, this is represented by Python string processing, file I/O, classes/objects, and NumPy-style array work.",
+      "sourceFilenames": [
+        "CE316_Syllabus.pdf",
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "python-default-parameters",
+      "front": "What does a default parameter such as `separator=\".\"` or `max_length=30` provide in Python?",
+      "back": "It supplies a value used when the caller omits that argument, making the function configurable without requiring every call to pass every option.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "slug-vs-abbreviation",
+      "front": "Conceptually, how does a **slug generator** differ from an **abbreviation generator** in the Python scripting source?",
+      "back": "An abbreviation generator extracts shortened pieces from each word and joins them with a chosen separator. A slug generator normalizes a title into lowercase, removes special characters, joins words with dashes, and respects a maximum length without ending on a cut word.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "file-append-vs-read",
+      "front": "In the student-record scripting example, how do append and read operations differ conceptually?",
+      "back": "Append mode adds a new record to the existing file without replacing previous records. Read mode loads existing records so they can be converted into `Student` objects and summarized.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "student-class-purpose",
+      "front": "Why use a `Student` class in the Python student-record example?",
+      "back": "A class groups related data, such as first name, last name, midterm, final, and end-of-semester grade, into one object and lets computed data belong to that object.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    },
+    {
+      "id": "numpy-array-reason",
+      "front": "Why does the Python source suggest NumPy arrays for mathematical operations instead of ordinary Python lists?",
+      "back": "Ordinary Python lists can hold mixed objects and are not designed for efficient large-scale numeric operations. NumPy arrays and matrices are better suited for vectorized mathematical computation.",
+      "sourceFilenames": [
+        "LAB8(2).pdf"
+      ]
+    }
+  ]
+}

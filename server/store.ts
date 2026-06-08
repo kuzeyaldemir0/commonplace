@@ -38,6 +38,16 @@ export type CourseBundle = {
   progress: Progress;
 };
 
+export type ArchiveItemType = "flashcard" | "quiz";
+
+function archivedItemKey(type: ArchiveItemType, itemId: string) {
+  return `${type}:${itemId}`;
+}
+
+function activeItems<T extends { id: string }>(items: T[], archivedIds: Set<string>) {
+  return items.filter((item) => !archivedIds.has(item.id));
+}
+
 export async function loadCourse(courseId: string): Promise<CourseBundle> {
   const dir = courseDir(courseId);
   const [course, cards, quizzes, progress] = await Promise.all([
@@ -63,10 +73,22 @@ export async function listCourses() {
       .filter((entry) => entry.isDirectory())
       .map(async (entry) => {
         const bundle = await loadCourse(entry.name);
+        const archivedCardIds = new Set(
+          bundle.progress.archivedItems
+            .filter((item) => item.type === "flashcard")
+            .map((item) => item.itemId)
+        );
+        const archivedQuizIds = new Set(
+          bundle.progress.archivedItems
+            .filter((item) => item.type === "quiz")
+            .map((item) => item.itemId)
+        );
         return {
           ...bundle.course,
-          cardCount: bundle.cards.length,
-          quizCount: bundle.quizzes.length,
+          cardCount: activeItems(bundle.cards, archivedCardIds).length,
+          quizCount: activeItems(bundle.quizzes, archivedQuizIds).length,
+          archivedCardCount: archivedCardIds.size,
+          archivedQuizCount: archivedQuizIds.size,
           reviewCount: bundle.progress.flashcardReviews.length,
           sessionCount: bundle.progress.quizSessions.length
         };
@@ -103,6 +125,38 @@ export async function recordQuizSession(
     throw new Error("Quiz result contains an unknown question.");
   }
   bundle.progress.quizSessions.push(session);
+  await writeJson(path.join(courseDir(courseId), "progress.json"), bundle.progress);
+  return bundle.progress;
+}
+
+export async function setArchivedItem(
+  courseId: string,
+  type: ArchiveItemType,
+  itemId: string,
+  archived: boolean
+) {
+  const bundle = await loadCourse(courseId);
+  const exists = type === "flashcard"
+    ? bundle.cards.some((card) => card.id === itemId)
+    : bundle.quizzes.some((quiz) => quiz.id === itemId);
+  if (!exists) {
+    throw new Error(type === "flashcard" ? "Unknown flashcard." : "Unknown quiz question.");
+  }
+
+  const key = archivedItemKey(type, itemId);
+  const archivedItems = bundle.progress.archivedItems.filter((item) => archivedItemKey(item.type, item.itemId) !== key);
+  bundle.progress.archivedItems = archived
+    ? [...archivedItems, { type, itemId, archivedAt: new Date().toISOString() }]
+    : archivedItems;
+  await writeJson(path.join(courseDir(courseId), "progress.json"), bundle.progress);
+  return bundle.progress;
+}
+
+export async function restoreArchivedItems(courseId: string, type?: ArchiveItemType) {
+  const bundle = await loadCourse(courseId);
+  bundle.progress.archivedItems = type
+    ? bundle.progress.archivedItems.filter((item) => item.type !== type)
+    : [];
   await writeJson(path.join(courseDir(courseId), "progress.json"), bundle.progress);
   return bundle.progress;
 }
