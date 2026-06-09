@@ -36,6 +36,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ cardId, rating })
     }),
+  saveFlashcardAnswer: (courseId: string, cardId: string, answer: string) =>
+    request<Progress>(`/api/courses/${courseId}/progress/flashcard-answers`, {
+      method: "POST",
+      body: JSON.stringify({ cardId, answer })
+    }),
   recordQuiz: (courseId: string, session: Progress["quizSessions"][number]) =>
     request<Progress>(`/api/courses/${courseId}/progress/quizzes`, {
       method: "POST",

@@ -1,10 +1,15 @@
 import express from "express";
 import { z } from "zod";
-import { listCourses, loadCourse, recordFlashcardReview, recordQuizSession, restoreArchivedItems, setArchivedItem } from "./store";
+import { listCourses, loadCourse, recordFlashcardAnswer, recordFlashcardReview, recordQuizSession, restoreArchivedItems, setArchivedItem } from "./store";
 
 const flashcardReviewBody = z.object({
   cardId: z.string().min(1),
   rating: z.enum(["again", "got-it"])
+});
+
+const flashcardAnswerBody = z.object({
+  cardId: z.string().min(1),
+  answer: z.string()
 });
 
 const quizSessionBody = z.object({
@@ -55,6 +60,15 @@ export function createApp() {
     try {
       const body = flashcardReviewBody.parse(req.body);
       res.json(await recordFlashcardReview(req.params.courseId, body.cardId, body.rating));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/api/courses/:courseId/progress/flashcard-answers", async (req, res, next) => {
+    try {
+      const body = flashcardAnswerBody.parse(req.body);
+      res.json(await recordFlashcardAnswer(req.params.courseId, body.cardId, body.answer));
     } catch (error) {
       next(error);
     }

@@ -290,6 +290,9 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
   const [completedCount, setCompletedCount] = useState(startIndex);
   const [revealed, setRevealed] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, string>>(() =>
+    Object.fromEntries(bundle.progress.flashcardAnswers.map((entry) => [entry.cardId, entry.answer]))
+  );
   const card = cards[index];
   const hasPrevious = index > 0;
   const isReviewed = index < completedCount;
@@ -354,6 +357,17 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
     setRevealed((current) => !current);
   }
 
+  async function persistAnswer(cardId: string) {
+    const text = answers[cardId] ?? "";
+    const saved = bundle.progress.flashcardAnswers.find((entry) => entry.cardId === cardId)?.answer ?? "";
+    if (text.trim() === saved) return;
+    try {
+      onProgress(await api.saveFlashcardAnswer(bundle.course.id, cardId, text));
+    } catch {
+      // Keep the typed answer in memory even if the save fails.
+    }
+  }
+
   if (!card) {
     return (
       <section className="page compact-page">
@@ -392,6 +406,17 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
             <MarkdownContent>{revealed ? card.back : card.front}</MarkdownContent>
           </div>
           {!revealed && <button className="primary-button" onClick={(event) => { event.stopPropagation(); haptics.tap(); setRevealed(true); }}>Reveal answer</button>}
+        </div>
+        <div className="answer-pad">
+          <label className="eyebrow" htmlFor={`answer-${card.id}`}>Your answer</label>
+          <textarea
+            id={`answer-${card.id}`}
+            className="answer-input"
+            placeholder="Write your answer before revealing — it stays here so you can compare."
+            value={answers[card.id] ?? ""}
+            onChange={(event) => setAnswers((current) => ({ ...current, [card.id]: event.target.value }))}
+            onBlur={() => void persistAnswer(card.id)}
+          />
         </div>
         {revealed && isReviewed && (
           <div className="review-controls">

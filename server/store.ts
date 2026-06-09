@@ -115,6 +115,24 @@ export async function recordFlashcardReview(
   return bundle.progress;
 }
 
+export async function recordFlashcardAnswer(
+  courseId: string,
+  cardId: string,
+  answer: string
+) {
+  const bundle = await loadCourse(courseId);
+  if (!bundle.cards.some((card) => card.id === cardId)) {
+    throw new Error("Unknown flashcard.");
+  }
+  const others = bundle.progress.flashcardAnswers.filter((entry) => entry.cardId !== cardId);
+  const trimmed = answer.trim();
+  bundle.progress.flashcardAnswers = trimmed
+    ? [...others, { cardId, answer: trimmed, updatedAt: new Date().toISOString() }]
+    : others;
+  await writeJson(path.join(courseDir(courseId), "progress.json"), bundle.progress);
+  return bundle.progress;
+}
+
 export async function recordQuizSession(
   courseId: string,
   session: Progress["quizSessions"][number]

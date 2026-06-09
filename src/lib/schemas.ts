@@ -73,6 +73,13 @@ export const progressSchema = z.object({
       reviewedAt: z.string().datetime()
     })
   ),
+  flashcardAnswers: z.array(
+    z.object({
+      cardId: z.string().min(1),
+      answer: z.string().min(1),
+      updatedAt: z.string().datetime()
+    })
+  ).default([]),
   quizSessions: z.array(
     z.object({
       id: z.string().min(1),

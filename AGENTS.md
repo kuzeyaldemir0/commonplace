@@ -16,6 +16,17 @@ Commonplace is a local learning app. The source files in each course are the sou
    npm run cli -- validate <course-id>
    ```
 
+## Review Learner Answers
+
+Learners can write their own answer to a flashcard before flipping it. Each answer is saved to `courses/<course-id>/progress.json` under `flashcardAnswers`, an array of `{ cardId, answer, updatedAt }` entries (one per card, holding the latest answer). When asked to give feedback on a learner's answers:
+
+1. Read `courses/<course-id>/progress.json` and take the `flashcardAnswers` array. This file is **read-only** for feedback — never modify it.
+2. For each entry, look up the matching card in `content/cards.json` by `cardId`. Use the card's `front` as the question and `back` as the reference answer.
+3. Compare the learner's `answer` against the card's `back`. Judge whether the idea is correct, not whether the wording matches — credit a right concept phrased differently, and flag genuine misconceptions, gaps, or reversed relationships.
+4. Write feedback that names what they got right, what is missing or wrong, and a short corrected explanation grounded in the card and its source material. Keep it specific to their wording.
+5. Skip cards with no entry in `flashcardAnswers` — the learner did not write an answer for those.
+6. Do not change `cards.json`, `quizzes.json`, or `progress.json` during a feedback task. Deliver feedback as your response unless the user asks for it written elsewhere.
+
 ## Content Rules
 
 - Write concise prompts that test one idea at a time.
