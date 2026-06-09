@@ -82,9 +82,9 @@ h3 { font-size: 1.7rem; margin-bottom: 10px; }
 .archive-panel { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px 18px; }
 .archive-panel .eyebrow, .archive-panel h3, .archive-panel p { grid-column: 1; }
 .archive-panel .panel-button { grid-column: 2; grid-row: 1 / span 3; align-self: center; white-space: nowrap; }
-.study-topbar { display: grid; grid-template-columns: 180px 1fr 180px; align-items: center; margin-bottom: 26px; }
+.study-topbar { display: grid; grid-template-columns: 180px 1fr 240px; align-items: center; margin-bottom: 26px; }
 .progress-wrap { grid-column: 2; }
-.topbar-actions { display: flex; justify-content: flex-end; }
+.topbar-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .topbar-actions .secondary-button { padding: 10px 14px; font-size: .78rem; box-shadow: none; }
 .progress-meta { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .13em; font-size: .68rem; font-weight: 700; }
 .progress-track { height: 8px; border: 1px solid var(--ink); border-radius: 10px; overflow: hidden; background: var(--surface); }

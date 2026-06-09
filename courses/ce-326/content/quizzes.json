@@ -2,1093 +2,482 @@
   "version": 1,
   "quizzes": [
     {
-      "id": "quiz-filter-ip",
+      "id": "quiz-http-layer",
       "type": "multiple-choice",
-      "prompt": "Which Wireshark filter shows traffic where `192.168.1.100` is either the source or destination?",
+      "prompt": "Which layer does HTTP belong to?",
       "choices": [
-        "ip.addr == 192.168.1.100",
-        "tcp.port == 192.168.1.100",
-        "http.request.method == \"GET\"",
-        "ip.src == 22"
+        "Application layer",
+        "Transport layer",
+        "Network layer",
+        "Link layer"
       ],
-      "answer": "ip.addr == 192.168.1.100",
-      "explanation": "`ip.addr` matches either direction for the specified IP address.",
+      "answer": "Application layer",
+      "explanation": "HTTP is a web application protocol.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-filter-http",
-      "type": "multiple-choice",
-      "prompt": "Which Wireshark filter narrows the visible packets to HTTP GET requests?",
-      "choices": [
-        "http.request.method == \"GET\"",
-        "tcp.port == 22",
-        "ip.addr == \"GET\"",
-        "http.response == 200"
-      ],
-      "answer": "http.request.method == \"GET\"",
-      "explanation": "The filter inspects the HTTP request method field and matches GET requests.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-arp-name",
-      "type": "multiple-choice",
-      "prompt": "ARP maps an IP address to which type of address?",
-      "choices": [
-        "MAC (physical) address",
-        "DNS hostname",
-        "Port number",
-        "Subnet mask"
-      ],
-      "answer": "MAC (physical) address",
-      "explanation": "ARP (Address Resolution Protocol) resolves an IP address to the hardware MAC address of the device on the local network.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-arp-type",
-      "type": "multiple-choice",
-      "prompt": "Which ARP-cache entry type is normally discovered from the network and may expire after inactivity?",
-      "choices": [
-        "Dynamic",
-        "Static",
-        "Broadcast",
-        "Multicast"
-      ],
-      "answer": "Dynamic",
-      "explanation": "Dynamic mappings are learned and may be removed if they are not used for a while.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-even-parity",
+      "id": "quiz-http-stateless",
       "type": "short-answer",
-      "prompt": "A bit string contains an odd number of `1` bits. What parity bit must be appended to produce even parity?",
-      "answer": "1",
-      "explanation": "Appending `1` changes the total number of set bits from odd to even.",
+      "prompt": "What does it mean that HTTP is stateless?",
+      "answer": "Each request is handled independently; HTTP itself does not remember previous requests.",
+      "explanation": "State like login is handled by cookies/sessions/tokens, not HTTP itself.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-component",
+      "id": "quiz-tcp-sequence-number",
       "type": "multiple-choice",
-      "prompt": "In a graph, what is the term for a maximal set of vertices that can all reach each other (ignoring edge directions)?",
+      "prompt": "Which TCP field helps order data correctly?",
       "choices": [
-        "Connected component",
-        "Parity group",
-        "Socket pool",
-        "ARP cache"
+        "Sequence number",
+        "TTL",
+        "Destination IP",
+        "Protocol"
       ],
-      "answer": "Connected component",
-      "explanation": "A connected component groups the vertices that can reach one another when edge directions are ignored.",
+      "answer": "Sequence number",
+      "explanation": "The sequence number identifies byte position in the stream.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-server-first",
+      "id": "quiz-tcp-ack-number",
       "type": "multiple-choice",
-      "prompt": "For a basic client-server socket program, which process should run first?",
+      "prompt": "Which TCP field says what byte is expected next?",
       "choices": [
-        "Server",
-        "Client",
-        "Either one",
-        "ARP resolver"
+        "Acknowledgment number",
+        "Window size",
+        "Source port",
+        "Checksum"
       ],
-      "answer": "Server",
-      "explanation": "The server must already be listening when the client attempts to connect. Starting the client first results in a connection error because there is no server to connect to.",
+      "answer": "Acknowledgment number",
+      "explanation": "ACK number tells the sender what the receiver expects next.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-java-socket",
-      "type": "multiple-choice",
-      "prompt": "Which transport protocol is used by Java `Socket` and `ServerSocket` classes?",
-      "choices": [
-        "TCP",
-        "UDP",
-        "ARP",
-        "ICMP"
-      ],
-      "answer": "TCP",
-      "explanation": "The classes provide reliable connection-oriented communication using TCP.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-connect-info",
+      "id": "quiz-port-purpose",
       "type": "short-answer",
-      "prompt": "Name the two pieces of information required to connect to a server.",
-      "answer": "IP address and port number",
-      "explanation": "The IP address identifies the host and the port identifies the listening service.",
+      "prompt": "What do TCP/UDP port numbers identify?",
+      "answer": "The sending and receiving applications/processes on hosts.",
+      "explanation": "IP identifies the host; port identifies the application inside the host.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-multiple-client",
+      "id": "quiz-ip-protocol-field",
       "type": "multiple-choice",
-      "prompt": "Which approach helps a server handle multiple clients simultaneously?",
+      "prompt": "What does the IP Protocol field indicate?",
       "choices": [
-        "Multithreading or asynchronous programming",
-        "Only static ARP entries",
-        "CRC division",
-        "Wireshark display filters"
+        "The payload type such as TCP, UDP, or ICMP",
+        "The destination application port",
+        "The physical distance",
+        "The domain name"
       ],
-      "answer": "Multithreading or asynchronous programming",
-      "explanation": "Concurrent or asynchronous execution prevents one client from blocking all others.",
+      "answer": "The payload type such as TCP, UDP, or ICMP",
+      "explanation": "It tells IP what next-layer protocol receives the payload.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-udp-reliability",
-      "type": "multiple-choice",
-      "prompt": "Can an application add reliability even when it uses UDP?",
-      "choices": [
-        "Yes, in the application layer",
-        "No, UDP makes reliability impossible",
-        "Only with ARP",
-        "Only by switching to HTTP"
-      ],
-      "answer": "Yes, in the application layer",
-      "explanation": "Applications can add acknowledgements, retransmission, or other reliability mechanisms above UDP.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-centralized",
-      "type": "multiple-choice",
-      "prompt": "Which architectural model uses a central server that all clients connect to, as opposed to peers communicating directly with each other?",
-      "choices": [
-        "Client-server model",
-        "Peer-to-peer model",
-        "Multithreaded model",
-        "Datagram model"
-      ],
-      "answer": "Client-server model",
-      "explanation": "In the client-server model, a single central server provides the service. Peer-to-peer (P2P) is the alternative where every node can act as both client and server.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-mkdir",
-      "type": "multiple-choice",
-      "prompt": "Which shell command creates a directory named `exams`?",
-      "choices": [
-        "mkdir exams",
-        "cd exams",
-        "mv exams",
-        "rm -rf exams"
-      ],
-      "answer": "mkdir exams",
-      "explanation": "`mkdir` creates a new directory.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-parent-directory",
-      "type": "multiple-choice",
-      "prompt": "Which shell command moves from the current directory to its parent?",
-      "choices": [
-        "cd ..",
-        "mkdir ..",
-        "mv ..",
-        "rm .."
-      ],
-      "answer": "cd ..",
-      "explanation": "`cd ..` changes the working directory to the parent directory.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-rename-directory",
+      "id": "quiz-ttl",
       "type": "short-answer",
-      "prompt": "Write the Linux or macOS command that renames the `presentation` directory to `projects`.",
-      "answer": "mv presentation projects",
-      "explanation": "`mv` renames or moves filesystem entries.",
+      "prompt": "What happens when TTL reaches 0?",
+      "answer": "The router drops the packet and usually sends an ICMP Time Exceeded message.",
+      "explanation": "TTL prevents infinite loops and supports traceroute.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf",
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-remove-directory",
+      "id": "quiz-link-state-knowledge",
       "type": "multiple-choice",
-      "prompt": "Which command recursively removes the `labs` directory and its contents without prompting?",
+      "prompt": "Which routing type has full topology knowledge?",
       "choices": [
-        "rm -rf labs",
-        "cd labs",
-        "mkdir labs",
-        "mv labs"
+        "Link state",
+        "Distance vector",
+        "CSMA",
+        "NAT"
       ],
-      "answer": "rm -rf labs",
-      "explanation": "`rm -rf` recursively and forcibly removes the specified directory. It should be used carefully.",
+      "answer": "Link state",
+      "explanation": "Link state protocols flood link information and build a full map.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-two-host-filter",
+      "id": "quiz-distance-vector-knowledge",
+      "type": "multiple-choice",
+      "prompt": "Which routing type exchanges information mainly with neighbors?",
+      "choices": [
+        "Distance vector",
+        "Link state",
+        "DNS",
+        "CDMA"
+      ],
+      "answer": "Distance vector",
+      "explanation": "Distance vector routers exchange distance info with neighbors.",
+      "sourceFilenames": [
+        "Network Final Review.pdf"
+      ]
+    },
+    {
+      "id": "quiz-dijkstra-rule",
       "type": "short-answer",
-      "prompt": "Write a Wireshark display filter that shows only traffic between `10.0.55.1` and `10.0.55.2`.",
-      "answer": "ip.addr == 10.0.55.1 and ip.addr == 10.0.55.2",
-      "explanation": "Both `ip.addr` conditions must match, so each displayed packet involves both endpoints.",
+      "prompt": "In Dijkstra, which node is processed next?",
+      "answer": "The unprocessed node with the smallest current distance from the source.",
+      "explanation": "This is the core selection rule of Dijkstra.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-ipconfig-renew",
+      "id": "quiz-dijkstra-final-d",
       "type": "multiple-choice",
-      "prompt": "What does `ipconfig /renew` do on Windows?",
+      "prompt": "In the final review graph, shortest distance from A to D is:",
       "choices": [
-        "Requests a renewed IP configuration",
-        "Deletes a directory",
-        "Decrypts captured TCP traffic",
-        "Creates a static ARP entry"
-      ],
-      "answer": "Requests a renewed IP configuration",
-      "explanation": "The command renews the network interface's IP configuration.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-tcp-sniffing",
-      "type": "multiple-choice",
-      "prompt": "Is TCP inherently protected from packet sniffing?",
-      "choices": [
-        "No",
-        "Yes",
-        "Only on port 22",
-        "Only when ARP is disabled"
-      ],
-      "answer": "No",
-      "explanation": "TCP traffic can be captured; encryption is needed for confidentiality.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-encrypted-payload",
-      "type": "multiple-choice",
-      "prompt": "Can Wireshark normally interpret an encrypted application payload without decryption material?",
-      "choices": [
-        "No",
-        "Yes",
-        "Only after `ipconfig /renew`",
-        "Only for multicast addresses"
-      ],
-      "answer": "No",
-      "explanation": "The packet can be captured, but its encrypted contents remain protected without the required keys or secrets.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-coloring-rules",
-      "type": "multiple-choice",
-      "prompt": "Can Wireshark packet-coloring rules be configured and extended?",
-      "choices": [
-        "Yes",
-        "No",
-        "Only for UDP",
-        "Only for static ARP entries"
-      ],
-      "answer": "Yes",
-      "explanation": "Wireshark supports configurable coloring rules.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-arp-physical-address",
-      "type": "short-answer",
-      "prompt": "What does the Physical Address column in an ARP cache represent?",
-      "answer": "The device's MAC address",
-      "explanation": "ARP maps an Internet Address to a physical MAC address on the local network.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-broadcast-address",
-      "type": "multiple-choice",
-      "prompt": "Which address is the limited broadcast address?",
-      "choices": [
-        "255.255.255.255",
-        "224.0.0.22",
-        "127.0.0.1",
-        "10.0.55.1"
-      ],
-      "answer": "255.255.255.255",
-      "explanation": "`255.255.255.255` is the limited broadcast address.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-crc-example",
-      "type": "multiple-choice",
-      "prompt": "Compute the CRC remainder for data `100101` using generator `101`. What are the check bits?",
-      "choices": [
-        "10",
-        "01",
-        "11",
-        "100"
-      ],
-      "answer": "10",
-      "explanation": "Append 2 zeros (degree of generator) to get `10010100`, then XOR-divide by `101` step by step. The 2-bit remainder is `10`.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-crc-code",
-      "type": "short-answer",
-      "prompt": "For data `100101` and CRC remainder `10`, what complete transmitted code is produced?",
-      "answer": "10010110",
-      "explanation": "Concatenate the original data with the two-bit remainder: `100101` + `10` = `10010110`.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-directed-edge",
-      "type": "multiple-choice",
-      "prompt": "In a directed adjacency matrix, what does a `1` in row A and column B mean?",
-      "choices": [
-        "There is an edge from A to B",
-        "There is an edge from B to A",
-        "A and B are always connected both ways",
-        "A and B have no edge"
-      ],
-      "answer": "There is an edge from A to B",
-      "explanation": "The matrix is read from row node to column node.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-f-ping-b",
-      "type": "multiple-choice",
-      "prompt": "In a directed graph, the only edges reachable from node F are `F → A`, `A → D`, and `A → F`. Can node F successfully ping node B?",
-      "choices": [
-        "No",
-        "Yes, through A → D",
-        "Yes, through A → F",
-        "Only if B can ping F first"
-      ],
-      "answer": "No",
-      "explanation": "F reaches A, and A reaches D and F. There is no directed path from F to B.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-udp-class",
-      "type": "multiple-choice",
-      "prompt": "Which Java class represents a UDP socket?",
-      "choices": [
-        "DatagramSocket",
-        "ServerSocket",
-        "Socket",
-        "DataOutputStream"
-      ],
-      "answer": "DatagramSocket",
-      "explanation": "`DatagramSocket` sends and receives UDP datagrams.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-udp-bind",
-      "type": "multiple-choice",
-      "prompt": "Which constructor call binds a UDP server socket to port `8080`?",
-      "choices": [
-        "new DatagramSocket(8080)",
-        "new DatagramPacket(8080)",
-        "new ServerSocket()",
-        "new Socket(8080)"
-      ],
-      "answer": "new DatagramSocket(8080)",
-      "explanation": "The UDP server socket should bind to a specific local port.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-runtime-failure",
-      "type": "multiple-choice",
-      "prompt": "Which option can explain a program failure even after known code errors are fixed and the network is stable?",
-      "choices": [
-        "Missing dependencies",
-        "Only a Wireshark coloring rule",
-        "Only an ARP-cache display",
-        "Only a renamed folder"
-      ],
-      "answer": "Missing dependencies",
-      "explanation": "Programs can still fail because of resources, operating-system differences, dependencies, updates, unexpected input, or undiscovered bugs.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-rarp-shell-command",
-      "type": "multiple-choice",
-      "prompt": "Which statement about `rarp` is correct?",
-      "choices": [
-        "It is a Wireshark display filter keyword but not a general shell command like `arp -a`",
-        "It is a shell command that displays the reverse ARP cache",
-        "It works identically to `arp -a` on both Windows and Linux",
-        "It is both a Wireshark filter and a shell command with identical behavior"
-      ],
-      "answer": "It is a Wireshark display filter keyword but not a general shell command like `arp -a`",
-      "explanation": "`rarp` can be entered as a Wireshark display filter to show Reverse ARP packets, but it is not a standard interactive shell command available in a Windows or Linux terminal the way `arp` is.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-crc-xor-arithmetic",
-      "type": "multiple-choice",
-      "prompt": "What arithmetic operation replaces subtraction in CRC binary division?",
-      "choices": [
-        "XOR (modulo-2)",
-        "Regular integer subtraction",
-        "Bitwise AND",
-        "Bitwise OR"
-      ],
-      "answer": "XOR (modulo-2)",
-      "explanation": "CRC uses modulo-2 arithmetic where each bit subtraction is a bitwise XOR. There are no carries or borrows: 1 XOR 1 = 0 and 0 XOR 0 = 0.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-parity-zero-case",
-      "type": "multiple-choice",
-      "prompt": "The data string `110011` has four `1` bits. What parity bit is appended under an **even parity** scheme?",
-      "choices": [
-        "0",
-        "1",
-        "It depends on the generator",
-        "No parity bit is needed"
-      ],
-      "answer": "0",
-      "explanation": "The data already contains an even count of `1` bits (four), so appending `0` keeps the total even. The resulting string is `1100110`.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-graph-cluster-count",
-      "type": "multiple-choice",
-      "prompt": "The directed graph below has edges: A→D, A→F, B→C, B→G, F→A, G→B, G→E (nodes C, D, E have no outgoing edges).\n\n```\n    A  B  C  D  E  F  G\nA [ 0  0  0  1  0  1  0 ]\nB [ 0  0  1  0  0  0  1 ]\nF [ 1  0  0  0  0  0  0 ]\nG [ 0  1  0  0  1  0  0 ]\n```\n\nHow many clusters (strongly connected components) does this graph have?",
-      "choices": [
-        "5",
-        "2",
         "3",
-        "7"
+        "4",
+        "5",
+        "2"
       ],
-      "answer": "5",
-      "explanation": "A and F form a mutual cycle (A→F, F→A). B and G form a mutual cycle (B→G, G→B). C, D, and E each have no outgoing edges and cannot return to any other node, making them singleton clusters. Total: {A,F}, {B,G}, {C}, {D}, {E} = 5 clusters.",
+      "answer": "3",
+      "explanation": "A→B→C→D costs 1+1+1=3.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-server-accept-return",
+      "id": "quiz-best-effort",
       "type": "multiple-choice",
-      "prompt": "What does `server.accept()` return in a Java TCP server?",
+      "prompt": "Best effort service means:",
       "choices": [
-        "A Socket connected to the newly accepted client",
-        "A DatagramPacket from the client",
-        "An integer port number",
-        "A new ServerSocket on a different port"
+        "No guarantees; the network only tries to deliver packets",
+        "Guaranteed delivery",
+        "Guaranteed bandwidth",
+        "Guaranteed order"
       ],
-      "answer": "A Socket connected to the newly accepted client",
-      "explanation": "`ServerSocket.accept()` blocks until a client connects, then returns a `Socket` object that the server uses to communicate with that client.",
+      "answer": "No guarantees; the network only tries to deliver packets",
+      "explanation": "Best effort can lose, delay, duplicate, or reorder packets.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-udp-no-port",
+      "id": "quiz-encapsulation",
       "type": "multiple-choice",
-      "prompt": "A UDP server is created with `new DatagramSocket()` (no port argument). What problem does this cause?",
+      "prompt": "Encapsulation means:",
       "choices": [
-        "The socket binds to a random ephemeral port clients cannot predict",
-        "The socket binds to the default port 80",
-        "The constructor throws a compile-time error",
-        "The server automatically broadcasts its port via ARP"
+        "Adding headers as data moves down the stack",
+        "Removing headers at the receiver",
+        "Computing shortest paths",
+        "Assigning IP addresses"
       ],
-      "answer": "The socket binds to a random ephemeral port clients cannot predict",
-      "explanation": "A server must bind to a well-known port so clients know where to send datagrams. Without specifying a port, the OS assigns an arbitrary ephemeral port. The fix is `new DatagramSocket(8080)` (or another agreed-upon port).",
+      "answer": "Adding headers as data moves down the stack",
+      "explanation": "Each lower layer wraps the data with its own header.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf",
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-writeUTF-method",
+      "id": "quiz-encapsulation-order",
       "type": "multiple-choice",
-      "prompt": "In the Java TCP client example, which call sends the user's input string to the server?",
+      "prompt": "Correct encapsulation order is:",
       "choices": [
-        "out.writeUTF(line)",
-        "in.readUTF()",
-        "socket.send(line)",
-        "new DatagramPacket(line)"
+        "HTTP data → TCP segment → IP packet → frame",
+        "Frame → IP packet → TCP segment → HTTP data",
+        "IP packet → HTTP data → frame",
+        "TCP segment → HTTP data → frame"
       ],
-      "answer": "out.writeUTF(line)",
-      "explanation": "`DataOutputStream.writeUTF(line)` encodes the string in UTF format and writes it over the TCP connection's output stream.",
+      "answer": "HTTP data → TCP segment → IP packet → frame",
+      "explanation": "Application data is wrapped by transport, network, then link layer.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-readUTF-method",
-      "type": "multiple-choice",
-      "prompt": "In the Java TCP server example, which call reads the string sent by the client?",
-      "choices": [
-        "in.readUTF()",
-        "out.writeUTF()",
-        "socket.receive(packet)",
-        "server.accept()"
-      ],
-      "answer": "in.readUTF()",
-      "explanation": "`DataInputStream.readUTF()` reads a UTF-encoded string from the TCP connection's input stream, exactly matching what the client wrote with `writeUTF()`.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-tcp-client-first-false",
-      "type": "multiple-choice",
-      "prompt": "A developer starts the TCP client before starting the server. What happens?",
-      "choices": [
-        "The client fails with a connection error because no server is listening",
-        "The client waits indefinitely until the server starts",
-        "The client connects successfully and the server catches up",
-        "ARP resolves the address automatically, so order does not matter"
-      ],
-      "answer": "The client fails with a connection error because no server is listening",
-      "explanation": "The server must be running and listening first. If the client attempts to connect before the server is ready, it finds no open port and throws a connection-refused error.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-crc-receiver-check",
-      "type": "multiple-choice",
-      "prompt": "How does a receiver detect transmission errors in a CRC-protected message?",
-      "choices": [
-        "Divide the received code by the generator; a zero remainder means no error was detected",
-        "Compare the received code length to the original length",
-        "Re-compute even parity on the received code",
-        "Check the ARP cache for the sender's IP address"
-      ],
-      "answer": "Divide the received code by the generator; a zero remainder means no error was detected",
-      "explanation": "The receiver performs the same modulo-2 division on the full received bit string (data + CRC bits). A zero remainder confirms integrity; any non-zero remainder signals a detected error.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-ip-src-vs-ip-addr",
-      "type": "multiple-choice",
-      "prompt": "Which Wireshark filter shows **only** packets originating from `10.0.55.1`, excluding packets where that address is only the destination?",
-      "choices": [
-        "ip.src == 10.0.55.1",
-        "ip.addr == 10.0.55.1",
-        "ip.dst == 10.0.55.1",
-        "tcp.port == 10"
-      ],
-      "answer": "ip.src == 10.0.55.1",
-      "explanation": "`ip.src` matches only the source address field. `ip.addr` would match packets where `10.0.55.1` appears in either the source or destination.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-parity-data-1101",
+      "id": "quiz-circuit-advantage",
       "type": "short-answer",
-      "prompt": "Data `1101` has three `1` bits. Write the complete 5-bit string after appending an **even parity bit**.",
-      "answer": "11011",
-      "explanation": "Three `1` bits is odd, so the parity bit must be `1` to make the total even (four `1` bits). The parity bit is appended at the end: `1101` + `1` = `11011`.",
+      "prompt": "Give one advantage of circuit switching.",
+      "answer": "Predictable/stable performance because resources are reserved.",
+      "explanation": "Reserved resources give stable bandwidth/delay behavior.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-five-layers-order",
-      "type": "multiple-choice",
-      "prompt": "Which lists the five TCP/IP layers from top (closest to the application) to bottom?",
-      "choices": [
-        "Application, Transport, Network, Link, Physical",
-        "Physical, Link, Network, Transport, Application",
-        "Application, Network, Transport, Link, Physical",
-        "Transport, Application, Network, Physical, Link"
-      ],
-      "answer": "Application, Transport, Network, Link, Physical",
-      "explanation": "Data flows down from the application to the physical layer when sending, and up when receiving.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-pdu-transport",
-      "type": "multiple-choice",
-      "prompt": "What is the transport-layer PDU called for TCP?",
-      "choices": [
-        "Segment",
-        "Frame",
-        "Network-layer datagram",
-        "Message"
-      ],
-      "answer": "Segment",
-      "explanation": "TCP uses segments at the transport layer. UDP transport data is commonly called a datagram, while the link-layer PDU is a frame.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-pdu-link-frame",
-      "type": "multiple-choice",
-      "prompt": "At which layer is the data unit called a 'frame'?",
-      "choices": [
-        "Link",
-        "Transport",
-        "Network",
-        "Application"
-      ],
-      "answer": "Link",
-      "explanation": "A frame is the link-layer PDU; it is what arrives at the network card and is processed first on receive.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-ports-layer",
-      "type": "multiple-choice",
-      "prompt": "Port numbers belong to which layer?",
-      "choices": [
-        "Transport",
-        "Network",
-        "Link",
-        "Application"
-      ],
-      "answer": "Transport",
-      "explanation": "Ports identify which process/program receives the data, which is a transport-layer concern.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-ip-vs-mac",
-      "type": "multiple-choice",
-      "prompt": "Which statement correctly distinguishes an IP address from a MAC address?",
-      "choices": [
-        "IP is a logical network-layer address; MAC identifies a link-layer interface and can be overridden by software",
-        "IP is fixed to the hardware; MAC is assigned by DHCP",
-        "Both are assigned by ARP at the link layer",
-        "IP works only on one link; MAC routes across networks"
-      ],
-      "answer": "IP is a logical network-layer address; MAC identifies a link-layer interface and can be overridden by software",
-      "explanation": "IP is a logical network-layer address used for routing. A MAC address identifies a link-layer interface for local delivery; it is often manufacturer-assigned but can be overridden or randomized.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-subnet-mask-24",
-      "type": "multiple-choice",
-      "prompt": "What does a `/24` subnet mask indicate?",
-      "choices": [
-        "The first 24 bits are the network portion",
-        "The first 24 bits are the host portion",
-        "There are 24 usable hosts",
-        "The broadcast address ends in .24"
-      ],
-      "answer": "The first 24 bits are the network portion",
-      "explanation": "`/24` (255.255.255.0) means 24 network bits and 8 host bits.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-broadcast-derivation",
+      "id": "quiz-circuit-disadvantage",
       "type": "short-answer",
-      "prompt": "For the subnet `192.168.1.0/24`, what is the broadcast address?",
-      "answer": "192.168.1.255",
-      "explanation": "Set all host bits to 1. With a /24, the host portion is the last octet, so it becomes 255.",
+      "prompt": "Give one disadvantage of circuit switching.",
+      "answer": "It wastes resources when reserved capacity is not being used.",
+      "explanation": "The circuit stays reserved even during idle periods.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-multicast-range",
+      "id": "quiz-delay-congestion",
       "type": "multiple-choice",
-      "prompt": "Which IPv4 range is reserved for multicast?",
+      "prompt": "Which delay depends most on congestion?",
       "choices": [
-        "224.0.0.0 - 239.255.255.255",
-        "127.0.0.0 - 127.255.255.255",
-        "10.0.0.0 - 10.255.255.255",
-        "240.0.0.0 - 255.255.255.255"
+        "Queueing delay",
+        "Propagation delay",
+        "Transmission delay",
+        "Processing delay"
       ],
-      "answer": "224.0.0.0 - 239.255.255.255",
-      "explanation": "Multicast (one-to-a-group) uses the 224.0.0.0/4 range.",
+      "answer": "Queueing delay",
+      "explanation": "Congestion increases buffer waiting time.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf",
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-capture-filter-syntax",
+      "id": "quiz-transmission-formula",
       "type": "multiple-choice",
-      "prompt": "Which is valid *capture filter* (BPF) syntax for SSH traffic, as opposed to a display filter?",
+      "prompt": "Transmission delay formula is:",
       "choices": [
-        "tcp port 22",
-        "tcp.port == 22",
-        "ssh.port = 22",
-        "capture: 22"
+        "L/R",
+        "D/s",
+        "R/L",
+        "s/D"
       ],
-      "answer": "tcp port 22",
-      "explanation": "Capture filters use BPF syntax (`tcp port 22`); the display-filter equivalent is `tcp.port == 22`.",
+      "answer": "L/R",
+      "explanation": "It is packet length divided by link rate.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf",
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-bytes-encoding",
+      "id": "quiz-propagation-formula",
       "type": "multiple-choice",
-      "prompt": "Why must a Java socket send a String as `byte[]` (via `getBytes()`)?",
+      "prompt": "Propagation delay formula is:",
       "choices": [
-        "Networks transmit only bytes, so the String must be encoded",
-        "Strings are too large for TCP",
-        "UDP cannot send text at all",
-        "getBytes compresses the data"
+        "D/s",
+        "L/R",
+        "R/L",
+        "s/D"
       ],
-      "answer": "Networks transmit only bytes, so the String must be encoded",
-      "explanation": "Below the application layer everything is bytes; text is encoded to bytes when sent and decoded with new String(...) when received.",
+      "answer": "D/s",
+      "explanation": "It is distance divided by propagation speed.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf",
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-relative-sibling",
+      "id": "quiz-store-forward",
       "type": "short-answer",
-      "prompt": "You are inside `exams/ce326`. Write the command to delete the sibling folder `exams/ce308/presentation` using `rm -rf`.",
-      "answer": "rm -rf ../ce308/presentation",
-      "explanation": "`..` goes up to the parent (exams); from there you descend into ce308/presentation.",
+      "prompt": "What does store-and-forward mean?",
+      "answer": "A switch must fully receive a packet before forwarding it.",
+      "explanation": "Forwarding cannot begin until the full packet is stored.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-server-loop",
+      "id": "quiz-q9-no-segmentation-time",
       "type": "multiple-choice",
-      "prompt": "Why should a server's receive/handle code be in `while(true)` instead of `if(true)`?",
+      "prompt": "Q9 no-segmentation total time is:",
       "choices": [
-        "So it keeps serving many clients instead of handling one and exiting",
-        "Because if(true) does not compile",
-        "To open multiple ports at once",
-        "Because UDP requires it specifically"
+        "15 seconds",
+        "5.002 seconds",
+        "5 seconds",
+        "1 ms"
       ],
-      "answer": "So it keeps serving many clients instead of handling one and exiting",
-      "explanation": "`if(true)` runs the body once then the program ends; a server must loop to serve repeated requests.",
+      "answer": "15 seconds",
+      "explanation": "One full-message transmission is 5 seconds and there are 3 links.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-tcp-vs-udp-handshake",
+      "id": "quiz-q9-segmentation-time",
       "type": "multiple-choice",
-      "prompt": "Which is true of TCP but not UDP?",
+      "prompt": "Q9 segmented total time is:",
       "choices": [
-        "It establishes a connection (handshake) before sending data",
-        "It is connectionless",
-        "It uses DatagramSocket",
-        "It cannot guarantee ordered delivery"
+        "5.002 seconds",
+        "15 seconds",
+        "3 ms",
+        "5000 seconds"
       ],
-      "answer": "It establishes a connection (handshake) before sending data",
-      "explanation": "TCP is connection-oriented and reliable; UDP is connectionless with no handshake.",
+      "answer": "5.002 seconds",
+      "explanation": "(3+5000-1)×1 ms = 5002 ms.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-link-state-info",
+      "id": "quiz-wifi-access",
       "type": "multiple-choice",
-      "prompt": "In link-state routing (Dijkstra), what information does each router use after link-state information has been distributed?",
+      "prompt": "Which multiple access protocol is associated with Wi-Fi?",
       "choices": [
-        "The network topology and link costs",
-        "Only the cost to its direct neighbors",
-        "Only its own IP address",
-        "A list of MAC addresses"
+        "CSMA/CA",
+        "CSMA/CD",
+        "RIP",
+        "BGP"
       ],
-      "answer": "The network topology and link costs",
-      "explanation": "After link-state information is distributed, each router builds a topology view and computes shortest paths independently.",
+      "answer": "CSMA/CA",
+      "explanation": "Wi-Fi tries to avoid collisions before they happen.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-distance-vector-info",
+      "id": "quiz-hidden-terminal",
       "type": "multiple-choice",
-      "prompt": "In distance-vector routing (Bellman-Ford), what does each router initially know?",
+      "prompt": "Hidden terminal collision occurs:",
       "choices": [
-        "Only the cost to its direct neighbors",
-        "The full network topology",
-        "Every shortest path in advance",
-        "Nothing at all"
+        "At the common receiver",
+        "At the DNS server",
+        "At the NAT router only",
+        "At the source only"
       ],
-      "answer": "Only the cost to its direct neighbors",
-      "explanation": "It learns about farther destinations by exchanging distance vectors with neighbors over several rounds.",
+      "answer": "At the common receiver",
+      "explanation": "Two hidden senders transmit to the same receiver and collide there.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-dijkstra-relax",
+      "id": "quiz-rts-cts",
       "type": "multiple-choice",
-      "prompt": "In Dijkstra, when relaxing neighbor v through a just-confirmed node w, the updated estimate is:",
+      "prompt": "RTS/CTS is used to help solve:",
       "choices": [
-        "D(v) = min(D(v), D(w) + cost(w, v))",
-        "D(v) = cost(w, v)",
-        "D(v) = D(w) - cost(w, v)",
-        "D(v) = D(v) + D(w)"
+        "Hidden terminal problem",
+        "DNS lookup",
+        "Dijkstra routing",
+        "Subnetting"
       ],
-      "answer": "D(v) = min(D(v), D(w) + cost(w, v))",
-      "explanation": "You add the new edge cost to w's accumulated distance and keep it only if it beats the current estimate.",
+      "answer": "Hidden terminal problem",
+      "explanation": "CTS tells nearby nodes to stay silent while the receiver receives data.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "Network Final Review.pdf"
       ]
     },
     {
-      "id": "quiz-routing-next-hop",
+      "id": "quiz-forwarding-plane",
       "type": "multiple-choice",
-      "prompt": "What is the 'next hop' in a routing table entry?",
+      "prompt": "Forwarding is mainly a:",
       "choices": [
-        "The first neighbor along the shortest path to the destination",
-        "The destination's MAC address",
-        "The total path cost",
-        "The source IP address"
+        "Data-plane function",
+        "Control-plane function",
+        "Application-layer function",
+        "Physical-layer signal"
       ],
-      "answer": "The first neighbor along the shortest path to the destination",
-      "explanation": "The router forwards the packet to the next hop, which is the first node on the computed shortest path.",
+      "answer": "Data-plane function",
+      "explanation": "Forwarding moves a packet locally through a router.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-dijkstra-worked",
+      "id": "quiz-routing-plane",
+      "type": "multiple-choice",
+      "prompt": "Routing is mainly a:",
+      "choices": [
+        "Control-plane function",
+        "Data-plane function",
+        "Transport-layer checksum",
+        "Physical-layer encoding"
+      ],
+      "answer": "Control-plane function",
+      "explanation": "Routing computes paths and builds forwarding tables.",
+      "sourceFilenames": [
+        "midterm review(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-nat",
+      "type": "multiple-choice",
+      "prompt": "NAT mainly:",
+      "choices": [
+        "Translates private IPs to a public IP",
+        "Translates domain names to IPs",
+        "Detects bit errors",
+        "Finds shortest paths"
+      ],
+      "answer": "Translates private IPs to a public IP",
+      "explanation": "NAT allows many private devices to share one public IP.",
+      "sourceFilenames": [
+        "midterm review(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-dns",
+      "type": "multiple-choice",
+      "prompt": "DNS mainly:",
+      "choices": [
+        "Translates domain names to IP addresses",
+        "Assigns IP addresses automatically",
+        "Detects collisions",
+        "Computes CRC"
+      ],
+      "answer": "Translates domain names to IP addresses",
+      "explanation": "DNS maps names such as google.com to IP addresses.",
+      "sourceFilenames": [
+        "midterm review(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-demux",
+      "type": "multiple-choice",
+      "prompt": "Demultiplexing delivers data using:",
+      "choices": [
+        "Port numbers",
+        "TTL values",
+        "Subnet masks only",
+        "Parity bits"
+      ],
+      "answer": "Port numbers",
+      "explanation": "Ports identify the receiving application/process.",
+      "sourceFilenames": [
+        "midterm review(1).pdf"
+      ]
+    },
+    {
+      "id": "quiz-timeout-small",
       "type": "short-answer",
-      "prompt": "Network: S-A=1, S-B=4, A-B=2, A-C=5, B-C=1. Using Dijkstra from S, what is the shortest cost to C?",
-      "answer": "4",
-      "explanation": "S-A-B-C = 1 + 2 + 1 = 4, which beats S-B-C (5) and S-A-C (6).",
+      "prompt": "What happens if timeout is smaller than actual RTT?",
+      "answer": "The sender may retransmit unnecessarily while the ACK is still on the way.",
+      "explanation": "Too-short timeout causes premature retransmission.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-detection-vs-correction",
+      "id": "quiz-dhcp",
       "type": "multiple-choice",
-      "prompt": "What can a Hamming code do that a simple parity bit cannot?",
+      "prompt": "DHCP mainly gives a joining device:",
       "choices": [
-        "Locate and correct a single-bit error",
-        "Detect any number of errors",
-        "Encrypt the data",
-        "Compress the data"
+        "An IP address and network settings",
+        "A CRC remainder",
+        "A TCP sequence number",
+        "A BGP route only"
       ],
-      "answer": "Locate and correct a single-bit error",
-      "explanation": "Parity only detects an error; Hamming's syndrome pinpoints the bad bit so it can be flipped back.",
+      "answer": "An IP address and network settings",
+      "explanation": "DHCP automates IP configuration.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "midterm review(1).pdf"
       ]
     },
     {
-      "id": "quiz-hamming-positions",
-      "type": "multiple-choice",
-      "prompt": "In a Hamming code, parity bits are placed at which positions?",
-      "choices": [
-        "Powers of 2 (1, 2, 4, 8, ...)",
-        "Even positions only",
-        "The last r positions",
-        "Prime positions"
-      ],
-      "answer": "Powers of 2 (1, 2, 4, 8, ...)",
-      "explanation": "Parity bits sit at positions 1, 2, 4, 8, ...; data bits fill the rest.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-hamming-syndrome",
-      "type": "multiple-choice",
-      "prompt": "In a Hamming code, what does the syndrome value indicate?",
-      "choices": [
-        "The position of the single erroneous bit (0 = no error)",
-        "The number of errors that occurred",
-        "The number of data bits",
-        "Which parity scheme was used"
-      ],
-      "answer": "The position of the single erroneous bit (0 = no error)",
-      "explanation": "The failed checks, read as a binary number, give the position of the bad bit.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-hamming-encode",
+      "id": "quiz-subnet-27",
       "type": "short-answer",
-      "prompt": "Encode the data `1001` (D1 D2 D3 D4) with a (7,4) even-parity Hamming code. Give the 7-bit codeword.",
-      "answer": "0011001",
-      "explanation": "Data at 3,5,6,7 -> P1=0, P2=0, P4=1, giving 0 0 1 1 0 0 1.",
+      "prompt": "A /27 subnet has how many host bits, total addresses, and usable addresses?",
+      "answer": "5 host bits, 32 total addresses, and 30 usable addresses.",
+      "explanation": "Host bits = 32-27 = 5, total = 2^5 = 32, usable = 32-2 = 30.",
       "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-hamming-correct",
-      "type": "short-answer",
-      "prompt": "A (7,4) Hamming receiver gets `1101110` and knows there is one bit error. Which position is wrong?",
-      "answer": "4",
-      "explanation": "Checks C1 and C2 pass (even) and C4 fails (odd), so the syndrome is 100 = position 4.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-icmp-purpose",
-      "type": "multiple-choice",
-      "prompt": "What is ICMP primarily used for?",
-      "choices": [
-        "Error reporting and network diagnostics",
-        "Carrying web page data",
-        "Assigning IP addresses",
-        "Resolving IP addresses to MAC addresses"
-      ],
-      "answer": "Error reporting and network diagnostics",
-      "explanation": "ICMP is a network-layer protocol for diagnostics and error messages; it underlies ping and traceroute.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-ping-messages",
-      "type": "multiple-choice",
-      "prompt": "Which ICMP messages does ping use?",
-      "choices": [
-        "Echo Request and Echo Reply",
-        "Time Exceeded and Redirect",
-        "Discover and Offer",
-        "SYN and ACK"
-      ],
-      "answer": "Echo Request and Echo Reply",
-      "explanation": "ping sends an Echo Request and expects an Echo Reply; the sender times the round trip.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-ttl-zero",
-      "type": "multiple-choice",
-      "prompt": "What happens when a router decrements a packet's TTL to 0?",
-      "choices": [
-        "It discards the packet and sends ICMP Time Exceeded to the source",
-        "It forwards the packet anyway",
-        "It increases the TTL and retries",
-        "It converts the packet to UDP"
-      ],
-      "answer": "It discards the packet and sends ICMP Time Exceeded to the source",
-      "explanation": "TTL hitting 0 stops looping packets; the router drops it and notifies the source, which traceroute exploits.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-traceroute-ttl",
-      "type": "multiple-choice",
-      "prompt": "How does traceroute reveal the second router on a path?",
-      "choices": [
-        "It sends a probe with TTL=2, which expires at the second router",
-        "It sends a probe with TTL=0",
-        "It pings the destination twice",
-        "It reads the local ARP cache"
-      ],
-      "answer": "It sends a probe with TTL=2, which expires at the second router",
-      "explanation": "TTL=2 survives router 1 (decremented to 1) and expires at router 2, which replies with Time Exceeded.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-ping-no-reply",
-      "type": "multiple-choice",
-      "prompt": "ping gets no reply, but the host is actually up. What is a likely cause?",
-      "choices": [
-        "A firewall is blocking ICMP",
-        "The host has no MAC address",
-        "TCP is disabled on the host",
-        "The network cable is too long"
-      ],
-      "answer": "A firewall is blocking ICMP",
-      "explanation": "Firewalls often drop ICMP Echo Requests/Replies, so silence does not prove the host is down.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-dhcp-purpose",
-      "type": "multiple-choice",
-      "prompt": "What does DHCP do?",
-      "choices": [
-        "Automatically assigns IP configuration to hosts",
-        "Resolves IP addresses to MAC addresses",
-        "Encrypts network traffic",
-        "Routes packets between networks"
-      ],
-      "answer": "Automatically assigns IP configuration to hosts",
-      "explanation": "DHCP leases out IP address, subnet mask, gateway, and DNS settings automatically.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-dhcp-dora-list",
-      "type": "short-answer",
-      "prompt": "Name the four steps of the DHCP process in order (the DORA acronym).",
-      "answer": "Discover, Offer, Request, Acknowledge",
-      "explanation": "Client Discovers, server Offers, client Requests, server Acknowledges the lease.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
-      ]
-    },
-    {
-      "id": "quiz-dhcp-dora-order",
-      "type": "multiple-choice",
-      "prompt": "Which is the correct order of the DHCP handshake?",
-      "choices": [
-        "Discover, Offer, Request, Acknowledge",
-        "Offer, Discover, Acknowledge, Request",
-        "Request, Acknowledge, Discover, Offer",
-        "Discover, Request, Offer, Acknowledge"
-      ],
-      "answer": "Discover, Offer, Request, Acknowledge",
-      "explanation": "DORA: the client broadcasts a Discover, a server makes an Offer, the client sends a Request, the server sends an Acknowledge.",
-      "sourceFilenames": [
-        "CE 326 EXAMPLE LAB MIDTERM.pdf"
+        "midterm review(1).pdf"
       ]
     }
   ]

@@ -368,6 +368,16 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
     }
   }
 
+  function restartSession() {
+    haptics.tap();
+    setCards(shuffle(activeCards(bundle)));
+    setIndex(0);
+    setCompletedCount(0);
+    setRevealed(false);
+    setAnswers({});
+    session.clearFlashcards(bundle.course.id);
+  }
+
   if (!card) {
     return (
       <section className="page compact-page">
@@ -386,7 +396,7 @@ function FlashcardSession({ bundle, onBack, onProgress }: { bundle: CourseBundle
   }
   return (
     <section className="page study-page">
-      <StudyTopBar title="Flashcards" index={index} total={cards.length} onBack={onBack} onPrevious={hasPrevious ? () => goToCard(index - 1) : undefined} />
+      <StudyTopBar title="Flashcards" index={index} total={cards.length} onBack={onBack} onPrevious={hasPrevious ? () => goToCard(index - 1) : undefined} onRestart={completedCount > 0 ? restartSession : undefined} />
       <div className="study-stage">
         <div
           className={`flashcard ${revealed ? "revealed" : ""}`}
@@ -573,6 +583,16 @@ function QuizSession({ bundle, questions: initialQuestions, onBack, onProgress, 
     }
   }
 
+  function restartQuiz() {
+    haptics.tap();
+    const reshuffled = shuffleQuizChoices(questions);
+    setQuestions(reshuffled);
+    setIndex(0);
+    setResults([]);
+    setAnswerStates(reshuffled.map((item) => ({ questionId: item.id, revealed: false })));
+    session.clearQuiz(bundle.course.id);
+  }
+
   async function archiveCurrentQuestion() {
     if (saving || !question) return;
     setSaving(true);
@@ -606,7 +626,7 @@ function QuizSession({ bundle, questions: initialQuestions, onBack, onProgress, 
 
   return (
     <section className="page study-page">
-      <StudyTopBar title="Quiz" index={index} total={questions.length} onBack={onBack} onPrevious={index > 0 ? () => goToQuestion(index - 1) : undefined} />
+      <StudyTopBar title="Quiz" index={index} total={questions.length} onBack={onBack} onPrevious={index > 0 ? () => goToQuestion(index - 1) : undefined} onRestart={results.length > 0 ? restartQuiz : undefined} />
       <div className="quiz-card">
         <div className="quiz-content" key={question.id}>
           <p className="eyebrow">{question.type === "multiple-choice" ? "Choose one answer" : "Write your answer"}</p>
@@ -679,7 +699,7 @@ function BackButton({ onClick, children }: { onClick: () => void; children: Reac
   return <button className="back-button" onClick={onClick}><ArrowLeft size={17} />{children}</button>;
 }
 
-function StudyTopBar({ title, index, total, onBack, onPrevious }: { title: string; index: number; total: number; onBack: () => void; onPrevious?: () => void }) {
+function StudyTopBar({ title, index, total, onBack, onPrevious, onRestart }: { title: string; index: number; total: number; onBack: () => void; onPrevious?: () => void; onRestart?: () => void }) {
   return (
     <div className="study-topbar">
       <BackButton onClick={onBack}>Exit {title.toLowerCase()}</BackButton>
@@ -688,6 +708,7 @@ function StudyTopBar({ title, index, total, onBack, onPrevious }: { title: strin
         <div className="progress-track"><span style={{ width: `${((index + 1) / total) * 100}%` }} /></div>
       </div>
       <div className="topbar-actions">
+        {onRestart && <button className="secondary-button" onClick={onRestart}><RotateCcw size={17} />Restart</button>}
         <button className="secondary-button" disabled={!onPrevious} onClick={onPrevious}><ArrowLeft size={17} />Previous</button>
       </div>
     </div>
