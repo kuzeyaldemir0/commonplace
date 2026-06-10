@@ -535,12 +535,6 @@
       "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
     },
     {
-      "id": "bios-int10-clear-screen",
-      "front": "How is BIOS **INT 10H function 06H** commonly used to clear the screen?",
-      "back": "Function 06H scrolls a window upward. To clear the full 80x25 screen, use **AH = 06H**, **AL = 00H**, **BH = attribute**, **CX = 0000H** for upper-left row/column, and **DX = 184FH** for lower-right row/column, then execute `INT 10H`.",
-      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
-    },
-    {
       "id": "dos-int21-output",
       "front": "Compare DOS **INT 21H functions 09H and 02H** for output.",
       "back": "**AH = 09H** displays a string whose offset is in **DX** and whose data in DS ends with **`$`**. **AH = 02H** displays a single character from **DL**, and can display `$` because it is not using `$` as a terminator.",

@@ -933,15 +933,15 @@
     {
       "id": "quiz-int10-screen-corner",
       "type": "multiple-choice",
-      "prompt": "In normal 80x25 text mode, what are the row,column coordinates of the bottom-right screen position?",
+      "prompt": "In 80x25 text mode the bottom-right cell is addressed as (row 24, column 79), not (25, 80). Why?",
       "choices": [
-        "24,79",
-        "25,80",
-        "0,79",
-        "79,24"
+        "Rows and columns are numbered starting from 0",
+        "The last row and column are reserved by BIOS",
+        "DOS uses one-based indexing internally",
+        "The 80th column is reserved for the cursor"
       ],
-      "answer": "24,79",
-      "explanation": "Rows are numbered 0-24 and columns 0-79, so the bottom-right position is row 24, column 79.",
+      "answer": "Rows and columns are numbered starting from 0",
+      "explanation": "Screen coordinates are zero-indexed: rows run 0-24 and columns 0-79, so 80x25 mode ends at (24, 79). This is the concept to remember rather than the literal corner values.",
       "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
     },
     {
@@ -959,11 +959,17 @@
       "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
     },
     {
-      "id": "quiz-int10-clear-dx",
-      "type": "short-answer",
-      "prompt": "To clear the full 80x25 text screen with `INT 10H` function 06H, what hex value is commonly loaded into DX for the lower-right row/column?",
-      "answer": "184FH",
-      "explanation": "DH = 18H is row 24 decimal and DL = 4FH is column 79 decimal, so DX = 184FH.",
+      "id": "quiz-int21-input-echo",
+      "type": "multiple-choice",
+      "prompt": "Which DOS `INT 21H` function inputs one keyboard character **with echo** and returns it in AL?",
+      "choices": [
+        "AH = 01H",
+        "AH = 07H",
+        "AH = 09H",
+        "AH = 0AH"
+      ],
+      "answer": "AH = 01H",
+      "explanation": "Function 01H waits for one character, echoes it, and returns it in AL. Function 07H does not echo.",
       "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
     },
     {
@@ -992,20 +998,6 @@
       ],
       "answer": "AH = 02H with DL = '$'",
       "explanation": "Function 09H treats `$` as the string terminator. Function 02H outputs the single character in DL, so it can print `$`.",
-      "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
-    },
-    {
-      "id": "quiz-int21-input-echo",
-      "type": "multiple-choice",
-      "prompt": "Which DOS `INT 21H` function inputs one keyboard character **with echo** and returns it in AL?",
-      "choices": [
-        "AH = 01H",
-        "AH = 07H",
-        "AH = 09H",
-        "AH = 0AH"
-      ],
-      "answer": "AH = 01H",
-      "explanation": "Function 01H waits for one character, echoes it, and returns it in AL. Function 07H does not echo.",
       "sourceFilenames": ["CE 342 Lecture Slides Week 10 v4.pdf"]
     },
     {
@@ -1193,17 +1185,17 @@
       "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
     },
     {
-      "id": "quiz-nmi-pc6-pc7",
+      "id": "quiz-nmi-sources",
       "type": "multiple-choice",
-      "prompt": "In the IBM PC NMI source check, which 8255 Port C bits indicate IOCHK and PCK?",
+      "prompt": "What are the three sources that can activate the NMI in the IBM PC?",
       "choices": [
-        "PC6 = IOCHK, PC7 = PCK",
-        "PC6 = PCK, PC7 = IOCHK",
-        "PC0 = IOCHK, PC1 = PCK",
-        "PC3 = PCK, PC4 = IOCHK"
+        "8087 coprocessor request, memory parity check, and I/O channel check",
+        "Keyboard, system timer, and floppy disk",
+        "Divide error, single step, and breakpoint",
+        "IR0, IR1, and IR2 of the 8259"
       ],
-      "answer": "PC6 = IOCHK, PC7 = PCK",
-      "explanation": "The PC checks 8255 Port C: PC6 for I/O channel check and PC7 for parity check. If neither is active, the NMI source is the 8087.",
+      "answer": "8087 coprocessor request, memory parity check, and I/O channel check",
+      "explanation": "An NMI is triggered by the 8087 math coprocessor, a memory parity check (PCK), or an I/O channel check (IOCHK). Unlike INTR, the NMI cannot be masked with CLI/STI. (The CPU reads 8255 Port C to tell which source fired.)",
       "sourceFilenames": ["CE 342 Week 13 v5 - Interrupts(1).pdf"]
     }
   ]
