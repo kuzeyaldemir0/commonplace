@@ -38,6 +38,13 @@ export const session = {
   clearFlashcards(courseId: string) {
     localStorage.removeItem(`cp:fc:${courseId}`);
   },
+  appendFlashcards(courseId: string, cardIds: string[]) {
+    const saved = load<SavedFlashcards>(`cp:fc:${courseId}`);
+    if (!saved) return;
+    const additions = cardIds.filter((id) => !saved.cardIds.includes(id));
+    if (additions.length === 0) return;
+    this.saveFlashcards({ ...saved, cardIds: [...saved.cardIds, ...additions] });
+  },
   saveQuiz(data: SavedQuiz) {
     localStorage.setItem(`cp:qz:${data.courseId}`, JSON.stringify(data));
   },
@@ -46,5 +53,12 @@ export const session = {
   },
   clearQuiz(courseId: string) {
     localStorage.removeItem(`cp:qz:${courseId}`);
+  },
+  appendQuiz(courseId: string, questionIds: string[]) {
+    const saved = load<SavedQuiz>(`cp:qz:${courseId}`);
+    if (!saved) return;
+    const additions = questionIds.filter((id) => !saved.questionIds.includes(id));
+    if (additions.length === 0) return;
+    this.saveQuiz({ ...saved, questionIds: [...saved.questionIds, ...additions] });
   },
 };

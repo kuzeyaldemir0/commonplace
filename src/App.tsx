@@ -50,6 +50,14 @@ function plural(count: number, singular: string) {
   return `${count} ${singular}${count === 1 ? "" : "s"}`;
 }
 
+function plainText(markdown: string) {
+  return markdown
+    .replace(/`+/g, "")
+    .replace(/[#*_>~]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function archivedIds(bundle: CourseBundle, type: ArchiveItemType) {
   return new Set(bundle.progress.archivedItems.filter((item) => item.type === type).map((item) => item.itemId));
 }
@@ -213,15 +221,34 @@ function CourseHome({ bundle, onBack, onCards, onQuiz, onProgress }: { bundle: C
   const score = latest ? latest.results.filter((item) => item.correct).length : 0;
   const availableCards = activeCards(bundle);
   const availableQuizzes = activeQuizzes(bundle);
+  const [showArchived, setShowArchived] = useState(false);
   const archivedCardCount = bundle.progress.archivedItems.filter((item) => item.type === "flashcard").length;
   const archivedQuizCount = bundle.progress.archivedItems.filter((item) => item.type === "quiz").length;
   const archivedTotal = archivedCardCount + archivedQuizCount;
 
+  const cardMap = new Map(bundle.cards.map((card) => [card.id, card]));
+  const quizMap = new Map(bundle.quizzes.map((quiz) => [quiz.id, quiz]));
+  const archivedList = [...bundle.progress.archivedItems]
+    .sort((a, b) => b.archivedAt.localeCompare(a.archivedAt))
+    .map((item) => ({
+      ...item,
+      label: item.type === "flashcard" ? cardMap.get(item.itemId)?.front : quizMap.get(item.itemId)?.prompt
+    }));
+
   async function restoreAllArchived() {
     haptics.tap();
+    const cardIds = bundle.progress.archivedItems.filter((item) => item.type === "flashcard").map((item) => item.itemId);
+    const quizIds = bundle.progress.archivedItems.filter((item) => item.type === "quiz").map((item) => item.itemId);
     onProgress(await api.restoreArchive(bundle.course.id));
-    session.clearFlashcards(bundle.course.id);
-    session.clearQuiz(bundle.course.id);
+    session.appendFlashcards(bundle.course.id, cardIds);
+    session.appendQuiz(bundle.course.id, quizIds);
+  }
+
+  async function restoreOne(type: ArchiveItemType, itemId: string) {
+    haptics.tap();
+    onProgress(await api.setArchive(bundle.course.id, type, itemId, false));
+    if (type === "flashcard") session.appendFlashcards(bundle.course.id, [itemId]);
+    else session.appendQuiz(bundle.course.id, [itemId]);
   }
 
   return (
@@ -267,7 +294,27 @@ function CourseHome({ bundle, onBack, onCards, onQuiz, onProgress }: { bundle: C
           <p className="eyebrow">Archived</p>
           <h3>{archivedTotal === 0 ? "Nothing hidden" : `${archivedTotal} hidden`}</h3>
           <p>{archivedTotal === 0 ? "Archive cards or questions during a session when they are not useful." : `${plural(archivedCardCount, "card")} and ${plural(archivedQuizCount, "question")} are excluded from future sessions.`}</p>
-          {archivedTotal > 0 && <button className="secondary-button panel-button" onClick={() => void restoreAllArchived()}><ArchiveRestore size={17} />Restore all</button>}
+          {archivedTotal > 0 && (
+            <div className="archive-actions">
+              <button className="secondary-button panel-button" onClick={() => { haptics.tap(); setShowArchived((value) => !value); }}>
+                <Layers3 size={17} />{showArchived ? "Hide list" : "Review items"}
+              </button>
+              <button className="secondary-button panel-button" onClick={() => void restoreAllArchived()}><ArchiveRestore size={17} />Restore all</button>
+            </div>
+          )}
+          {archivedTotal > 0 && showArchived && (
+            <ul className="archive-list">
+              {archivedList.map((item) => (
+                <li key={`${item.type}:${item.itemId}`}>
+                  <div className="archive-item-label">
+                    <span className="archive-item-type">{item.type === "flashcard" ? "Card" : "Question"}</span>
+                    <span className="archive-item-text">{item.label ? plainText(item.label) : "Item no longer in this course"}</span>
+                  </div>
+                  <button className="secondary-button archive-restore-one" onClick={() => void restoreOne(item.type, item.itemId)}><ArchiveRestore size={15} />Restore</button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </section>
